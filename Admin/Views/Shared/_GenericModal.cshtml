@@ -1,0 +1,56 @@
+﻿
+@* Success/Error Modal *@
+<div class="modal fade" id="GenericModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
+
+    <div class="modal-dialog" role="document">
+        <input type="hidden" id="ShowGenericModal" value="@ViewBag.ShowModal" />
+
+        <div class="modal-content text-center rounded">
+            <div class="modal-body p-5">
+
+                <div class="spinner-border text-success" style="width: 4rem; height: 4rem;display:none;" role="status" id="savingGenericLoader">
+                    <span class="sr-only">Loading...</span>
+                </div>
+
+                <i class="far fa-check-circle fa-5x link-color" id="successIcon" style="display:none;"></i>
+                <i class="far fa-times-circle fa-5x text-danger" id="errorIcon" style="display:none;"></i>
+
+                <h5 class="font-weight-normal mt-3 mb-3" id="GenericModalTitle">@ViewBag.ModalTitle</h5>
+
+                <p id="GenericModalMsg">@ViewBag.ModalMessage </p>
+
+                <button type="button" class="btn login-button btn-padding w-50" data-dismiss="modal" id="successBtn" style="display:none;">Close</button>
+                <button type="button" class="btn login-button btn-padding w-50" data-dismiss="modal" id="errorBtn" style="display: none;">Close</button>
+                <button type="button" class="btn login-button btn-padding w-50" data-dismiss="modal" id="calendarErrorBtn" style="display: none;">Close</button>
+                <button type="button" class="btn login-button btn-padding w-50" data-dismiss="modal" id="errorCoachBtn" style="display: none;">Close</button>
+                <button type="button" class="btn login-button btn-padding w-50" data-dismiss="modal" id="facilityAddErrorBtn" style="display: none;">Close</button>
+                <button type="button" class="btn login-button btn-padding w-50" data-dismiss="modal" id="facilityAddSuccessBtn" style="display: none;">Close</button>
+                <button type="button" class="btn login-button btn-padding w-50" data-dismiss="modal" id="facility-pitch-error-btn" style="display: none;">Close</button>
+                <button type="button" class="btn login-button btn-padding w-50" data-dismiss="modal" id="successCoachingBtn" style="display: none;">Close</button>
+                <button type="button" class="btn login-button btn-padding w-50" data-dismiss="modal" id="successAddCoachBtn" style="display: none;">Close</button>
+                <button type="button" class="btn login-button btn-padding w-50" data-dismiss="modal" id="successAddPlayerBtn" style="display: none;">Close</button>
+                <button type="button" class="btn login-button btn-padding w-50" data-dismiss="modal" id="errorAddPlayerBtn" style="display: none;">Close</button>
+                <button type="button" class="btn login-button btn-padding w-50" data-dismiss="modal" id="successAddSlotBtn" style="display: none;">Close</button>
+                <button type="button" class="btn login-button btn-padding w-50" data-dismiss="modal" id="errorAddSlotBtn" style="display: none;">Close</button>
+                <button type="button" class="btn login-button btn-padding w-50" data-dismiss="modal" id="successAddCoachingBtn" style="display: none;">Close</button>
+                <button type="button" class="btn login-button btn-padding w-50" data-dismiss="modal" id="errorAddCoachingBtn" style="display: none;">Close</button>
+                <button type="button" class="btn login-button btn-padding w-50" data-dismiss="modal" id="successAddBannerBtn" style="display: none;">Close</button>
+                <button type="button" class="btn login-button btn-padding w-50" data-dismiss="modal" id="errorAddBannerBtn" style="display: none;">Close</button>
+                <button type="button" class="btn login-button btn-padding w-50" data-dismiss="modal" id="successAddPromoBtn" style="display: none;">Close</button>
+                <button type="button" class="btn login-button btn-padding w-50" data-dismiss="modal" id="errorAddPromoBtn" style="display: none;">Close</button>
+                <button type="button" class="btn login-button btn-padding w-50" data-dismiss="modal" id="successBtnFaq" style="display: none;">Close</button>
+                <button type="button" class="btn login-button btn-padding w-50" data-dismiss="modal" id="errorBtnFaq" style="display: none;">Close</button>
+                 <button type="button" class="btn login-button btn-padding w-50" data-dismiss="modal" id="successBtnPrivacy" style="display: none;">Close</button>
+                <button type="button" class="btn login-button btn-padding w-50" data-dismiss="modal" id="errorBtnPrivacy" style="display: none;">Close</button>
+                 <button type="button" class="btn login-button btn-padding w-50" data-dismiss="modal" id="successBtnCancellationPolicy" style="display: none;">Close</button>
+                <button type="button" class="btn login-button btn-padding w-50" data-dismiss="modal" id="errorBtnCancellationPolicy" style="display: none;">Close</button>
+                  <button type="button" class="btn login-button btn-padding w-50" data-dismiss="modal" id="successBtnTerms" style="display: none;">Close</button>
+                <button type="button" class="btn login-button btn-padding w-50" data-dismiss="modal" id="errorBtnTerms" style="display: none;">Close</button>
+                 <button type="button" class="btn login-button btn-padding w-50" data-dismiss="modal" id="successCancelBooking" style="display: none;">Close</button>
+                <button type="button" class="btn login-button btn-padding w-50" data-dismiss="modal" id="errorCancelBooking" style="display: none;">Close</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+

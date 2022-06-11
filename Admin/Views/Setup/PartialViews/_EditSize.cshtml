@@ -1,0 +1,39 @@
+﻿@model Sidekick.Model.SetupConfiguration.Size.TeamSize;
+
+<div class="modal fade"
+     id="editSizeModal"
+     tabindex="-1"
+     aria-labelledby="editSizeModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body px-5 py-0">
+                <div class="text-center">
+                    <h5 class="modal-title font-weight-bold mb-3" id="userModalLabel">Edit Size</h5>
+                </div>
+                <form asp-controller="Setup" asp-action="AddOrEditTeamSize" method="post">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Edit Size</label>
+                                <div class="d-flex align-items-center">
+                                    <input type="text" class="form-control" id="size-name" asp-for="SizeName">
+                                    @Html.HiddenFor(x => x.SizeId)
+                                </div>
+                                <span asp-validation-for="SizeName" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 text-center">
+                        <input type="submit" value="Edit Size" class="btn login-button btn-padding" id="ok-sports-btn" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,39 @@
+﻿@model Sidekick.Model.Location;
+
+<div class="modal fade"
+     id="editLocationModal"
+     tabindex="-1"
+     aria-labelledby="editLocationModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body px-5 py-0">
+                <div class="text-center">
+                    <h5 class="modal-title font-weight-bold mb-3" id="userModalLabel">Edit Location</h5>
+                </div>
+                <form asp-controller="Setup" asp-action="AddOrEditLocation" method="post">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Pitch Location</label>
+                                <div class="d-flex align-items-center">
+                                    <input type="text" class="form-control" id="location-name" asp-for="Name">
+                                    @Html.HiddenFor(x => x.LocationId)
+                                </div>
+                                <span asp-validation-for="Name" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 text-center">
+                        <input type="submit" value="Edit Location" class="btn login-button btn-padding" id="ok-sports-btn" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

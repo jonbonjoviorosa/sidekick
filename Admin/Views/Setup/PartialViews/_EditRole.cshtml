@@ -1,0 +1,37 @@
+﻿@model Sidekick.Model.FacilityUserType;
+
+<div class="modal fade"
+     id="editRoleModal"
+     tabindex="-1"
+     aria-labelledby="editRoleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-controller="Setup" asp-action="AddOrEditRole" method="post">
+                <div class="modal-body px-5 py-0">
+                    <div class="text-center">
+                        <h5 class="modal-title font-weight-bold mb-3" id="userModalLabel">Edit Role</h5>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">User role</label>
+                                <input type="text" class="form-control" asp-for="FacilityRoleName" id="role-name">
+                                <span asp-validation-for="FacilityRoleName" class="text-danger small"></span>
+                                @Html.HiddenFor(x => x.FacilityRoleId)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 text-center">
+                    <input type="submit" value="Edit Role" class="btn login-button btn-padding" id="save" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

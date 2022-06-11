@@ -1,0 +1,178 @@
+﻿@model Sidekick.Model.DasboardViewModel; 
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<partial name="~/Views/Shared/_GenericModal.cshtml" />
+
+<div class="row p-3 p-lg-5">
+    <div class="col-sm-12">
+        <nav aria-label="breadcrumb">
+            <h3 class="mb-4">Dashboard</h3>
+        </nav>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-3 col-md-6 col-lg-3 mb-0 mb-md-3">
+                    <div class="dash-box">
+                        <h3 class="text-default">@Model.FacilityPlayers.Count()</h3>
+                        <p>Total Players</p>
+                    </div>
+                </div>
+                <div class="col-sm-3 col-md-6 col-lg-3 mb-0 mb-md-3">
+                    <div class="dash-box">
+                        <h3 class="text-warning">@Model.Facilities.Count()</h3>
+                        <p>Total Facilities</p>
+                    </div>
+                </div>
+                <div class="col-sm-3 col-md-6 col-lg-3 mb-0 mb-md-3">
+                    <div class="dash-box">
+                        <h3 class="text-default">@Model.Coaches.Count()</h3>
+                        <p>Total Coach</p>
+                    </div>
+                </div>
+                <div class="col-sm-3 col-md-6 col-lg-3 mb-0 mb-md-3">
+                    <div class="dash-box">
+                        @*dynamic for now*@
+                        <h3 class="text-success">@Model.TotalRevenue AED</h3>
+                        <p>Total Income</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-5 mb-1">
+                <div class="col-sm-12 d-flex justify-content-between align-items-center">
+                    <div class="d-flex">
+                        <a href="#" class="report-users-dashboard-filter active" id="users-reports">Users Report</a>
+                        <p class="mx-2 report-dashboard-divider">|</p>
+                        <a href="#" class="report-bookings-dashboard-filter" id="bookings-report">Bookings Reports</a>
+                        <p class="mx-2 report-dashboard-divider">|</p>
+                        <a href="#" class="report-incomes-dashboard-filter" id="incomes-report">Incomes</a>
+                    </div>
+                    <div style="display:-webkit-box !important">
+                        @*<select class="transparent px-4 py-1 mr-2 border-0">
+            <option>2020</option>
+            <option>2021</option>
+        </select>*@
+                        @Html.DropDownList("year", Model.Years, new { @class = "transparent px-4 py-1 mr-2 border-0", @id = "YearId", @name = "YearId" })
+                        @*<a class="btn login-button border-0 report-button-dashboard" href="#">Submit</a>*@
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <ul class="nav nav-pills" id="pills-tab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link report-link-nav active" id="pills-year-tab" data-toggle="pill" href="#pills-year" role="tab" aria-controls="pills-year" aria-selected="true">Year</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link report-link-nav" id="pills-lastmonth-tab" data-toggle="pill" href="#pills-lastmonth" role="tab" aria-controls="pills-lastmonth" aria-selected="false">Last Month</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link report-link-nav" id="pills-thismonth-tab" data-toggle="pill" href="#pills-thismonth" role="tab" aria-controls="pills-thismonth" aria-selected="false">This Month</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link report-link-nav" id="pills-7days-tab" data-toggle="pill" href="#pills-7days" role="tab" aria-controls="pills-7days" aria-selected="false">Last 7 days</a>
+                        </li>
+                        <li class="nav-item ml-auto">
+                           @* <a class="nav-link" id="export" href="#">Export in Excel</a>*@
+                           <a href="@Url.Action("Export","Admin")">Export in Excel</a>
+                        </li>
+                    </ul>
+                    <div id="this-year-stats">
+                        <partial name="~/Views/Admin/PartialViews/_YearsStats.cshtml" model="Model" />
+                    </div>
+                    <div id="last-month-stats" hidden>
+                        <partial name="~/Views/Admin/PartialViews/_LastMonthsStats.cshtml" model="Model" />
+                    </div>
+                    <div id="this-month-stats" hidden>
+                        <partial name="~/Views/Admin/PartialViews/_ThisMonthStats.cshtml" model="Model" />
+                    </div>
+                    <div id="last-sevenday-stats" hidden>
+                        <partial name="~/Views/Admin/PartialViews/_LastSevenDays.cshtml" model="Model" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        let dataObject = @Html.Raw(Json.Serialize(Model));
+        //let dataObject = JSON.parse('@Html.Raw(Json.Serialize(Model))');
+        let selectedYear = $('#YearId').val();
+        renderStatistics(dataObject, selectedYear, false);
+        renderLastMonthStatistics(dataObject, selectedYear, false);
+        renderThisMonthStatistics(dataObject, selectedYear, false);
+        renderLastSevenDaysStatistics(dataObject, selectedYear, false);
+
+        $('#YearId').change(function () {
+            let dataObject = @Html.Raw(Json.Serialize(Model));
+            getUserCount(dataObject.users, $(this).val());
+            let isUpdate = true;
+            if ($('#users-reports').hasClass('active')) {
+                renderStatistics(dataObject, $(this).val(), isUpdate);
+                renderLastMonthStatistics(dataObject, $(this).val(), isUpdate);
+                renderThisMonthStatistics(dataObject, $(this).val(), isUpdate);
+                renderLastSevenDaysStatistics(dataObject, $(this).val(), isUpdate);
+            }
+
+            if ($('#bookings-report').hasClass('active')) {
+                renderBookingsStatisticsYear(dataObject, $(this).val(), isUpdate);
+                renderLastMonthBookingsStatistics(dataObject, $(this).val());
+                renderCurrentMonthBookingsStatistics(dataObject, $(this).val());
+                renderLastSevenDaysBookingsStatistics(dataObject, $(this).val());
+            }
+
+            if($('#incomes-report').hasClass('active')){
+                renderPaymentStatistics(dataObject, $(this).val(), isUpdate);
+                renderPaymentLastMonthStatistics(dataObject, $(this).val(), isUpdate);
+                renderPaymentThisMonthStatistics(dataObject, $(this).val(), isUpdate);
+                renderPaymentLastSevenDaysStatistics(dataObject, $(this).val(), isUpdate);
+            }
+           
+        });
+
+        $('#bookings-report').click(function () {
+           let dataObject = @Html.Raw(Json.Serialize(Model));
+            let selectedYear = $('#YearId').val();
+            $('.report-bookings-dashboard-filter').addClass('active');
+            $('.report-users-dashboard-filter').removeClass('active');
+            $('.report-incomes-dashboard-filter').removeClass('active');
+            renderBookingsStatisticsYear(dataObject, selectedYear);
+            renderLastMonthBookingsStatistics(dataObject, selectedYear);
+            renderCurrentMonthBookingsStatistics(dataObject, selectedYear);
+            renderLastSevenDaysBookingsStatistics(dataObject, selectedYear);
+        });
+
+        $('#users-reports').click(function () {
+             let dataObject = @Html.Raw(Json.Serialize(Model));
+             let selectedYear = $('#YearId').val();
+            $('.report-bookings-dashboard-filter').removeClass('active');
+            $('.report-users-dashboard-filter').addClass('active');
+            $('.report-incomes-dashboard-filter').removeClass('active');
+            renderStatistics(dataObject, selectedYear, false);
+            renderLastMonthStatistics(dataObject, selectedYear, false);
+            renderThisMonthStatistics(dataObject, selectedYear, false);
+            renderLastSevenDaysStatistics(dataObject, selectedYear, false);
+        });
+
+        $('#incomes-report').click(function(){
+            let dataObject = @Html.Raw(Json.Serialize(Model));
+             let selectedYear = $('#YearId').val();
+            $('.report-bookings-dashboard-filter').removeClass('active');
+            $('.report-users-dashboard-filter').removeClass('active');
+            $('.report-incomes-dashboard-filter').addClass('active');
+            renderPaymentStatistics(dataObject, selectedYear, false);
+            renderPaymentLastMonthStatistics(dataObject, selectedYear, false);
+            renderPaymentThisMonthStatistics(dataObject, selectedYear, false);
+            renderPaymentLastSevenDaysStatistics(dataObject, selectedYear, false);
+        });
+    });
+</script>
+}
+

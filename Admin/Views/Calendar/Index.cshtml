@@ -1,0 +1,227 @@
+﻿@using Sidekick.Model;
+
+@model UnavailableSlot
+@{
+    ViewData["Title"] = "Calendar";
+    Layout = "~/Views/Shared/_FLayout.cshtml";
+    var data = ViewBag.Bookings;
+    var timings = ViewBag.Timings;
+    var pitches = new List<SelectListItem>();
+    pitches.Add(new SelectListItem { Value = "AllPitches", Text = "All Pitches" });
+    if (ViewBag.Pitches != null)
+    {
+        foreach (var pitch in ViewBag.Pitches)
+        {
+            pitches.Add(new SelectListItem
+                    {
+                        Value = pitch.FacilityPitchId.ToString(),
+                        Text = pitch.Name
+                    });
+        }
+    }
+
+    var blockedSlots = ViewBag.UnavailableSlots;
+}
+
+<partial name="~/Views/Shared/_GenericModal.cshtml" />
+
+@*Unavailable Slot Modal*@
+<div class="row">
+    <div class="modal fade top-0"
+         id="slotModal"
+         tabindex="-1"
+         aria-labelledby="slotModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="post">
+                    @Html.HiddenFor(m => m.UnavailableSlotId)
+                    <div class="modal-body px-5 py-0">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="text-center mb-3">
+                                    <h5 class="modal-title font-weight-bold" id="userModalLabel">Unavailable Slot</h5>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center my-3">
+                                    <h6>All Day Today - @DateTime.Now.ToString("dd MMM yyyy")</h6>
+                                    <input type="text" class="form-control" id="startDay" hidden>
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input" id="IsActiveDay">
+                                        <label class="custom-control-label red-text font-weight-bold" for="IsActiveDay" id="lblActiveDay"></label>
+                                    </div>
+                                </div>
+                                <div class="row align-items-center my-3">
+                                    <div class="col-2">
+                                        <label class="form-label medium text-gray mb-0">Starts</label>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="text" class="form-control" id="start" autocomplete="off" asp-for="@Model.Starts">
+                                    </div>
+                                    <div class="col-4">
+                                        <select class="browser-default custom-select" id="selected-start-time"
+                                                asp-items="@(new SelectList(ViewBag.TimeSlotsAM, "Key", "Value"))">
+                                            @* <option value="00:00:00">12:00 AM</option>*@
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row align-items-center my-3">
+                                    <div class="col-2">
+                                        <label class="form-label medium text-gray mb-0">Ends</label>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="text" class="form-control" id="end" autocomplete="off" asp-for="@Model.Ends">
+                                    </div>
+                                    <div class="col-4">
+                                        <select class="browser-default custom-select" id="selected-end-time"
+                                                asp-items="@(new SelectList(ViewBag.TimeSlotsPM, "Key", "Value"))">
+                                            @*<option value="0">Close</option>*@
+                                        </select>
+                                    </div>
+                                </div>
+                                <hr class="hr-modal" />
+                                <div class="form-group">
+                                    <div class="custom-control custom-checkbox mr-5">
+                                        <input type="checkbox" class="custom-control-input" id="repeatCheck">
+                                        <label class="custom-control-label font-weight-bold" for="repeatCheck">Repeat every week</label>
+                                    </div>
+                                </div>
+                                <div class="row align-items-center my-3">
+                                    @* <div class="col-2">
+                                        <label class="form-label medium text-gray mb-0">During</label>
+                                        </div>*@
+                                    @*<div class="col-3">
+                                        <select class="browser-default custom-select" id="selected-duration">
+                                        <option value="0">Select</option>
+                                        <option value="1">1st</option>
+                                        <option value="2">2nd</option>
+                                        <option value="3">3rd</option>
+                                        <option value="4">4th</option>
+                                        <option value="5">5th</option>
+                                        <option value="6">6th</option>
+                                        <option value="7">7th</option>
+                                        <option value="8">8th</option>
+                                        <option value="9">9th</option>
+                                        <option value="10">10th</option>
+                                        <option value="11">11th</option>
+                                        <option value="12">12th</option>
+                                        </select>
+                                        </div>*@
+
+                                    @* <select class="browser-default custom-select" id="selected-duration-season">
+                                        <option value="">Select</option>
+                                        <option value="Month">Month</option>
+                                        <option value="Year">Year</option>
+                                        </select>*@
+
+                                </div>
+                                <hr class="hr-modal" />
+                                <div class="d-flex justify-content-between align-items-center my-3">
+                                    <div class="col-2" style="margin-left:-15px">
+                                        <h6>Pitches</h6>
+                                    </div>
+                                    <div class="col-6">
+                                        @Html.DropDownList("facilityPitchId", pitches, new { @class = "browser-default custom-select", @id = "selected-pitch" })
+                                    </div>
+                                    <div class="col-4">
+                                    </div>
+                                </div>
+                                <hr class="hr-modal" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-2">
+                                <label class="form-label medium text-gray mb-0">Title</label>
+                            </div>
+                            <div class="col">
+                                <input type="text" class="form-control" id="title" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label medium text-gray mb-0">Notes</label>
+                            <textarea class="form-control" rows="4" id="notes"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 text-center">
+                        @*<a href="#" class="btn login-button btn-save">Save</a>*@
+                        <input type="submit" value="Save" id="saveUnavailableSlot" class="btn login-button btn-save" />
+                        @*<button class="btn login-button btn-save btn-light" id="cancel-slot">Cancel Slot</button>*@
+                        <a class="btn login-button btn-save btn-light disabled" id="cancel-slot" href="#cancelModal" data-toggle="modal" data-target="#cancelModal">Cancel Slot</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Cancellation Booking Modal*@
+<div class="row">
+    <div class="modal fade top-0"
+         id="cancelModal"
+         tabindex="-1"
+         aria-labelledby="cancelModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form>
+                    <div class="modal-body px-5 py-0">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="text-center mb-3">
+                                    <h5 class="modal-title font-weight-bold" id="unavailable-slot">Unavailable Slot</h5>
+                                    <p class="my-4">Are you sure you want to cancel this slot?</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="text" id="id-value" hidden />
+                    <input type="text" id="isFacilityPitch" hidden />
+                    <div class="modal-footer border-0 text-center">
+                        <button class="btn login-button btn-save" id="yes-button">Yes</button>
+                        <button type="button" class="btn btn-save btn-light" data-dismiss="modal" id="no-button">No</button>
+                         <button type="button" class="btn btn-save btn-light" data-dismiss="modal" id="no-timing-button">No</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="text-right">
+                    <a class="yellow py-2 px-4 rounded border-0 text-black font-weight-semi-bold" id="click-unavailable-slot" href="#slotModal" data-toggle="modal" data-target="#slotModal">
+                        <i class="icon ion-plus"></i>
+                        Unavailable Slot
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div id="calendar" class="mt-3 mb-4"></div>
+    </div>
+</div>
+
+@section Scripts {
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+        var obj = JSON.parse('@Html.Raw(Json.Serialize(data))');
+        var unavailableSlots = JSON.parse('@Html.Raw(Json.Serialize(blockedSlots))');
+        var facilityPitchTiming = JSON.parse('@Html.Raw(Json.Serialize(timings))');
+        let bookedPitch = [];
+        renderBookedPitch(bookedPitch, obj, unavailableSlots, facilityPitchTiming);
+        renderCalendar(calendarEl, bookedPitch)
+    });
+</script>
+}

@@ -1,0 +1,428 @@
+﻿@using Sidekick.Model
+@model FacilityProfile
+
+@{
+    ViewData["Title"] = "Edit Facility";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<partial name="~/Views/Shared/_GenericModal.cshtml" />
+<partial name="~/Views/Shared/_AddSportModal.cshtml" />
+
+<div class="row p-3 p-lg-5">
+    <div class="col-sm-12">
+        <nav aria-label="breadcrumb">
+            <h3 class="mb-4">Edit Facility</h3>
+        </nav>
+
+        <form asp-controller="Facility" asp-action="Edit" method="post">
+
+            <div class="row mt-3 mb-3">
+                <div class="col-sm-12 d-flex justify-content-end">
+                    <a href="/Facility" class="btn login-button btn-light btn-padding text-dark">Cancel</a>
+                    <button class="btn login-button btn-padding" type="submit" disabled>Save</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-sm-6">
+
+                            <div class="row mb-4 align-items-center">
+                                <div class="col-sm-3 col-md-4 col-lg-3">
+                                    <img style="width: 125px; height: 125px;" class="rounded" src="~/img/default-img.jpg" />
+                                </div>
+                                <div class="col-sm-9 mt-lg-0 mt-md-2">
+                                    <div class="form-group">
+                                        <label class="form-label font-weight-bold">Facility Name</label>
+                                        <input type="text" class="form-control" asp-for="Name">
+                                        <span asp-validation-for="Name" class="text-danger small"></span>
+                                    </div>
+                                    <a href="" id="UploadProfileImage_link" class="text-warning">Edit Profile Photo</a>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+
+                                <label class="form-label font-weight-bold">Description</label>
+                                <textarea class="form-control" rows="5" asp-for="Description" onKeyDown="limitText(this.form.Description,this.form.countdown1,1500);"
+                                          onKeyUp="limitText(this.form.Description,this.form.countdown1,1500);"></textarea>
+
+                                <div class="mt-2">
+                                    <font size="1">
+                                        <span>(Maximum Characters: 1500)</span>
+                                        <span class="float-right">You have <input readonly type="text" name="countdown1" size="3" value="1500" class="text-danger"> characters left.</span>
+                                    </font>
+                                </div>
+                                <span asp-validation-for="Description" class="text-danger small"></span>
+                            </div>
+
+                            @*<label class="form-label font-weight-bold">Facility Owner</label>
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="First Name" asp-for="OwnerFirstName">
+                    <span asp-validation-for="OwnerFirstName" class="text-danger small"></span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Last Name" asp-for="OwnerLastName">
+                    <span asp-validation-for="OwnerLastName" class="text-danger small"></span>
+                </div>
+            </div>
+        </div>*@
+
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Email</label>
+                                <input type="email" class="form-control" asp-for="Email" autocomplete="off">
+                                <span asp-validation-for="Email" class="text-danger small"></span>
+                            </div>
+
+                            <div class="row pt-3">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label class="form-label font-weight-bold">Password</label>
+                                        <input type="password" class="form-control" asp-for="Password">
+                                        <span asp-validation-for="Password" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label class="form-label font-weight-bold">Confirm Password</label>
+                                        <input type="password" class="form-control" asp-for="ConfirmPassword">
+                                        <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Mobile Number</label>
+                                <input type="text" class="form-control" asp-for="MobileNumber">
+                                <span asp-validation-for="MobileNumber" class="text-danger small"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Owner First Name</label>
+                                <input type="text" class="form-control" asp-for="OwnerFirstName">
+                                <span asp-validation-for="OwnerFirstName" class="text-danger small"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Owner Last Name</label>
+                                <input type="text" class="form-control" asp-for="OwnerLastName">
+                                <span asp-validation-for="OwnerLastName" class="text-danger small"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="d-flex justify-content-between">
+                                    <label class="form-label font-weight-bold">Sports</label>
+                                    <a href="#" class="text-warning"><i class="fas fa-plus"></i> Add Sport</a>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-12 col-lg-12 mb-2">
+                                        <select class="browser-default selectpicker">
+                                            <option selected>Sport</option>
+                                            <option value="1">Sport 1</option>
+                                            <option value="2">Sport 2</option>
+                                            <option value="3">Sport 3</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-6 col-md-12 col-lg-6 mb-2">
+                                        <select class="browser-default selectpicker">
+                                            <option selected>Sport</option>
+                                            <option value="1">Sport 1</option>
+                                            <option value="2">Sport 2</option>
+                                            <option value="3">Sport 3</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!-- START::Facility Staff -->
+                            <div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <p class="font-weight-bold">Staff</p>
+                                    </div>
+                                    <div class="col-6 d-flex justify-content-end">
+                                        <a href="#" class="text-warning"><i class="fas fa-plus"></i> Add Staff</a>
+                                    </div>
+                                </div>
+                                <small class="font-weight-bold">Staff 1</small>
+                                <div class="row">
+                                    <div class="col">
+                                        <input type="text" class="form-control" placeholder="First Name">
+                                    </div>
+                                    <div class="col">
+                                        <input type="text" class="form-control" placeholder="Last Name">
+                                    </div>
+                                </div>
+                                <div class="row pt-3">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <select class="browser-default selectpicker">
+                                                <option value="1">Role 1</option>
+                                                <option value="2">Role 2</option>
+                                                <option value="3">Role 3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <input type="email" class="form-control" placeholder="Email">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- END::Facility Staff -->
+
+
+                        <div class="col-sm-6">
+                            <label class="form-label font-weight-bold">Location</label>
+
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="Street" asp-for="Street">
+                                        <span asp-validation-for="Street" class="text-danger small"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="Area" asp-for="Area">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <img src="~/img/MAP.png" class="img-fluid" />
+
+                            <div class="form-group pt-3">
+                                <label class="form-label font-weight-bold">Photos</label>
+                            </div>
+                            <div class="row d-flex align-items-center">
+                                <div class="col-2">
+                                    <input type="text" asp-for="ImageUrl" style="display:none;">
+                                    <img class="img-fluid" id="imgPrevUploadProfileImage" src="@ViewBag.DefaultIcon" />
+                                </div>
+                                <div class="col-2 d-flex align-items-center">
+                                    <input type="file" class="custom-file-input" id="UploadProfileImage" accept="image/*">
+                                    <a href="" id="UploadProfileImage_link"><i class="fas fa-plus text-black-50"></i></a>
+                                </div>
+                            </div>
+
+                            <div class="form-group pt-3">
+                                <div class="d-flex justify-content-between">
+                                    <label class="form-label font-weight-bold">Pitches (4)</label>
+                                    <a href="#" class="text-warning"><i class="fas fa-plus"></i> Add Pitch</a>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-3 col-md-6 col-lg-3 my-1">
+                                    <h6>#1</h6>
+                                    <div class="per-pitch pitch-1 white rounded scroll-none h-100">
+                                        <div class="pitch-title">
+                                            <div class="white-opacity-70 py-3 px-2">
+                                                <h6 class="font-weight-bold mb-1">Pitch Name</h6>
+                                                <p class="mb-1 font-weight-semi-bold pitch-name">Football</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-md-6 col-lg-3 my-1">
+                                    <h6>#2</h6>
+                                    <div class="per-pitch pitch-2 white rounded scroll-none h-100">
+                                        <div class="pitch-title">
+                                            <div class="white-opacity-70 py-3 px-2">
+                                                <h6 class="font-weight-bold mb-1">Pitch Name</h6>
+                                                <p class="mb-1 font-weight-semi-bold pitch-name">Basketball</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-md-6 col-lg-3 my-1">
+                                    <h6>#3</h6>
+                                    <div class="per-pitch pitch-3 white rounded scroll-none h-100">
+                                        <div class="pitch-title">
+                                            <div class="white-opacity-70 py-3 px-2">
+                                                <h6 class="font-weight-bold mb-1">Pitch Name</h6>
+                                                <p class="mb-1 font-weight-semi-bold pitch-name">Paddle</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group pt-4 mb-0">
+                                <label class="form-label font-weight-bold">Open Slot</label>
+                            </div>
+
+                            <div class="row d-flex justify-content-center align-items-center">
+                                <div class="col-sm-3 col-md-12 col-lg-3">
+                                    <div class="custom-control custom-checkbox">
+                                        @Html.CheckBoxFor(x => x.IsEveryday, new { @class = "custom-control-input ckbx-workhours" })
+                                        <label class="custom-control-label" for="IsEveryday">Everyday</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-1 col-md-6 col-lg-1">
+                                    <label class="form-label font-weight-bold">From</label>
+                                </div>
+
+                                <div class="col-sm-3 col-md-6 col-lg-3">
+                                    <select class="browser-default custom-select" asp-for="TimeStart.TimeOfDay"
+                                            asp-items="@(new SelectList(ViewBag.TimeSlotsAM, "Key", "Value"))">
+                                        <option value="00:00:00">Close</option>
+                                    </select>
+                                    <span asp-validation-for="TimeStart" class="text-danger small"></span>
+                                </div>
+
+                                <div class="col-sm-1 col-md-6 col-lg-1">
+                                    <label class="form-label font-weight-bold">To</label>
+                                </div>
+
+                                <div class="col-sm-3 col-md-6 col-lg-3">
+                                    <select class="browser-default custom-select" asp-for="TimeEnd.TimeOfDay"
+                                            asp-items="@(new SelectList(ViewBag.TimeSlotsPM, "Key", "Value"))">
+                                        <option value="00:00:00">Close</option>
+                                    </select>
+                                    <span asp-validation-for="TimeEnd" class="text-danger small"></span>
+                                </div>
+                                <div class="col-1"></div>
+                            </div>
+
+                            <div class="row pt-4">
+                                <div class="col-6">
+                                    <div class="custom-control custom-checkbox">
+                                        @Html.CheckBoxFor(x => x.IsHalfHourAllowed, new { @class = "custom-control-input ckbx-workhours" })
+                                        <label class="custom-control-label" for="IsHalfHourAllowed">Personalized</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-6 d-flex justify-content-end">
+                                    <a href="#" class="text-warning"><i class="fas fa-plus"></i> Add a Day</a>
+                                </div>
+                            </div>
+
+                            <div class="row pt-3 d-flex justify-content-center align-items-center">
+                                <div class="col-sm-3 col-md-12 col-lg-3 mb-0 mb-md-3">
+                                    <select class="browser-default selectpicker">
+                                        <option value="@DayOfWeek.Sunday">Sunday</option>
+                                        <option value="@DayOfWeek.Monday">Monday</option>
+                                        <option value="@DayOfWeek.Tuesday">Tuesday</option>
+                                        <option value="@DayOfWeek.Wednesday">Wednesday</option>
+                                        <option value="@DayOfWeek.Thursday">Thursday</option>
+                                        <option value="@DayOfWeek.Friday">Friday</option>
+                                        <option value="@DayOfWeek.Saturday">Saturday</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-lg-1 col-sm-3">
+                                    <label class="form-label font-weight-bold">From</label>
+                                </div>
+
+                                <div class="col-lg-3 col-sm-9">
+                                    <select class="browser-default custom-select"
+                                            asp-items="@(new SelectList(ViewBag.TimeSlotsAM, "Key", "Value"))">
+                                        <option value="0">Close</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-1 col-sm-3">
+                                    <label class="form-label font-weight-bold">To</label>
+                                </div>
+                                <div class="col-lg-3 col-sm-7">
+                                    <select class="browser-default custom-select"
+                                            asp-items="@(new SelectList(ViewBag.TimeSlotsPM, "Key", "Value"))">
+                                        <option value="0">Close</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-1 col-sm-2">
+                                    <a href="#" class="text-warning"><i class="fas fa-plus"></i></a>
+                                </div>
+                            </div>
+
+                            <div class="custom-control custom-checkbox my-3">
+                                <input type="checkbox" class="custom-control-input" id="bookCheck" name="example1">
+                                <label class="custom-control-label" for="bookCheck">Allow players to book 30 minutes</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+<script type="text/javascript">
+
+        //JS to hide input upload
+        $(function () {
+            $("#UploadProfileImage_link").on('click', function (e) {
+                e.preventDefault();
+                $("#UploadProfileImage").trigger('click');
+            });
+        });
+
+        $("#UploadProfileImage").change(function () {
+            validateFacilityImages("UploadProfileImage");
+        });
+
+        $(document).ready(function () {
+            $("#imageLoadingUploadProfileImage").hide();
+            $(".spinner-border").hide();
+
+            console.log($('#Email').val());
+
+            var retrieveImage = $("#ImageUrl").val();
+            $("#imgPrevUploadProfileImage").attr("src", retrieveImage);
+            $("#imgPrevUploadProfileImage").show();
+
+             var facilityObj = @Html.Raw(Json.Serialize(Model));
+            $('select[name="FacilitySports"] > option').each(function () {
+                for (var x = 0; x < facilityObj.facilitySports.length; x++) {
+                    if ($(this).val() == facilityObj.facilitySports[x].sportId) {
+                        $(this).attr('selected', 'selected');
+                    }
+                }
+            });
+        });
+
+        $(".ckbx-workhours").click(function () {
+            $(".ckbx-workhours").not(this).prop('checked', false);
+        });
+
+        $("#successBtn").on('click', function () {
+            window.location.replace(BASEPATH + "/Facility");
+        });
+
+        $("#ok-sports-btn").click(function () {
+            var selectedSports = [];
+            var sport = [];
+
+            $("#sportsList").html("");
+            $.each($("input[name='sports']:checked"), function () {
+                sport = {
+                    SportId: $(this).val()
+                };
+                selectedSports.push(sport);
+
+                $("#sportsList").append(('<p class="badge badge-light p-2 mr-3">' + " #" + $(this).next('label').text() + '</p>'));
+            });
+
+            $("#SelectedSports").val(JSON.stringify(selectedSports));
+            $("#sportModal").modal('hide');
+        });
+</script>
+}

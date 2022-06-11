@@ -1,0 +1,41 @@
+﻿@model Sidekick.Model.LoginCredentials
+
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_Startup.cshtml";
+}
+
+<div class="container">
+    <div class="Login">
+
+        <form class="text-center" asp-action="Index" method="post">
+            <img src="~/img/logo.svg" class="img-fluid mb-3" />
+
+            <div class="md-form md-outline">
+                <span class="label-error small">@TempData["ErrorMessage"]</span>
+            </div>
+
+            <div class="md-form md-outline">
+                <input type="email" class="form-control custom-form" placeholder="email address" asp-for="Email">
+                <span class="far fa-envelope field-icon"></span>
+                <span asp-validation-for="Email" class="label-error small"></span>
+            </div>
+
+            <div class="md-form md-outline">
+                <input id="Password" type="password" class="form-control custom-form" placeholder="password" asp-for="Password">
+                <span toggle="#Password" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                <span asp-validation-for="Password" class="label-error small"></span>
+            </div>
+
+            <button class="btn login-button mb-4 m-0 w-100" type="submit">Login</button>
+            <br />
+
+            <a href="~/Home/ForgotPassword" class="link-color">Forgot Password?</a>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

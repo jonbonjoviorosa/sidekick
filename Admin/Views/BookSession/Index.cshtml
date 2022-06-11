@@ -1,0 +1,38 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <script type="text/javascript" src="~/mdb/js/jquery.min.js" asp-append-version="true"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if (navigator.userAgent.toLowerCase().indexOf("android") > -1) {
+                const url = "intent://SidekickApp/#Intent;scheme=https;package=com.SidekickApp;end";
+                window.location.replace(url);
+                setTimeout(function () {
+                    window.location.href = "https://play.google.com/store/apps/details?id=com.app.sidekick";
+                }, 1000);
+            }
+            else if (navigator.userAgent.toLowerCase().indexOf("iphone") > -1) {
+                const url = "com.SidekickApp";
+                window.location.replace(url);
+                setTimeout(function () {
+                    window.location.href = "https://apps.apple.com/app/sidekick-beta/id1575700102";
+                }, 1000);
+            }
+            else {
+                window.location.href = "https://sidekick.fit/";
+            }
+        });
+    </script>
+
+</head>
+<body>
+
+</body>
+</html>

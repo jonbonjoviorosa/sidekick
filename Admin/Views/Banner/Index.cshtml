@@ -1,0 +1,119 @@
+﻿@using Sidekick.Model
+@model IEnumerable<BannerList>
+
+@{
+    ViewData["Title"] = "Banner List";
+}
+
+<partial name="~/Views/Shared/_GenericModal.cshtml" />
+
+<div class="row p-3 p-lg-5">
+    <div class="col-sm-12">
+        <nav aria-label="breadcrumb">
+            <h3 class="mb-4">Banner List</h3>
+        </nav>
+        <div class="col-sm-12 d-flex justify-content-end mb-3">
+            <a class="btn login-button border-0 btn-padding" href="~/Banner/Add">Add Banner</a>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table cellspacing="5" cellpadding="5">
+                                <tbody>
+                                    <tr>
+                                        <td><b>Filter by Dates:</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align:center"><b>From</b></td>
+                                        <td><input type="text" class="form-control" id="minDateBanner" name="minDateBanner"></td>
+                                        <td class=""><b>To</b></td>
+                                        <td><input type="text" class="form-control" id="maxDateBanner" name="maxDateBanner"></td>
+                                    </tr>
+
+
+                                </tbody>
+                            </table>
+                            <table class="table table-hover table-bordered table-striped display" id="dtMainList">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th scope="col" class="w-auto font-weight-bold">Title</th>
+                                        <th scope="col" class="w-auto font-weight-bold">Link to</th>
+                                        <th scope="col" class="w-auto font-weight-bold">Starts from</th>
+                                        <th scope="col" class="w-auto font-weight-bold">Ends to</th>
+                                        <th scope="col" class="w-auto font-weight-bold">Status</th>
+                                        <th scope="col" class="w-auto font-weight-bold">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model != null)
+                                    {
+                                        foreach (BannerList item in Model)
+                                        {
+                                            <tr>
+                                                @*<td hidden>@item.BannerId</td>*@
+                                                <td>@item.Title</td>
+                                                <td>@item.FacilityName</td>
+                                                <td>@item.StartDate.ToString("dd/MM/yyyy")</td>
+                                                <td>@item.EndDate.ToString("dd/MM/yyyy")</td>
+                                                <td>
+                                                    @if (item.IsActive == true)
+                                                    {
+                                                        <p class="badge badge-success text-capitalize">ACTIVE</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p class="badge badge-light text-capitalize">INACTIVE</p>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex">
+                                                        <a href="~/Banner/Edit?b=@item.BannerId"><i class="fas fa-pen fa-lg mr-3 text-warning"></i></a>
+                                                        @using (Html.BeginForm("Delete", "Banner", new { _bannerID = @item.BannerId }, FormMethod.Post))
+                                                        {
+                                                            <button type="submit" class="deactivate-link border-0 bg-transparent"><i class="fas fa-times fa-lg text-dark"></i></button>
+                                                        }
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            renderDatePickerBanner();
+            retainDataTablePages();
+
+            var ShowModal = $("#ShowGenericModal").val();
+            if (ShowModal == 'true') {
+                $("#GenericModal").modal('show');
+                $("#successIcon").show();
+                $("#successBtn").hide();
+                $('#successAddBannerBtn').show();
+            }
+
+            //duplicate entry
+            if (ShowModal == 'false') {
+                $("#GenericModal").modal('show');
+                $("#errorIcon").show();
+                $("#errorBtn").show();
+            }
+
+            $("#successAddBannerBtn").on('click', function () {
+                window.location.replace(BASEPATH + "/Banner");
+            });
+        });
+    </script>
+}

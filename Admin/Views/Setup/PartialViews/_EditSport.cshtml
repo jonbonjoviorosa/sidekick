@@ -1,0 +1,59 @@
+﻿@model Sidekick.Model.SportDto;
+
+<div class="modal fade"
+     id="editSportModal"
+     tabindex="-1"
+     aria-labelledby="editSportModal"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body px-5 py-0">
+                <div class="text-center">
+                    <h5 class="modal-title font-weight-bold mb-3" id="userModalLabel">Edit Sport</h5>
+                </div>
+                <form method="post" asp-controller="Setup" asp-action="EditSport">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <input type="text" asp-for="Icon" style="display:none;" id="edited-sport-icon">
+                            <img src="~/img/default-img.jpg" class="img-fluid rounded" id="imgPrevEditSportIconImage" />
+                            <input type="file" class="custom-file-input img-fluid rounded-circle mr-3" id="EditSportIconImage" style="width: 100px; height: 55px;" accept="image/*">
+                            <a id="EditSportIcon_link" class="text-warning py-3" style="margin-left:-100px"><i class="fas fa-plus"></i> Upload Sport Image</a>
+                        </div>
+                        <div class="col-sm-8">
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Sports Name</label>
+                                <input type="text" class="form-control" asp-for="Name" id="name">
+                                @Html.HiddenFor(x => x.SportId)
+                                <span asp-validation-for="Name" class="text-danger small"></span>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label class="form-label font-weight-bold">Players max</label>
+                                        <input type="number" class="form-control" id="max-players" asp-for="MaxPlayers">
+                                    </div>
+                                    <span asp-validation-for="MaxPlayers" class="text-danger small"></span>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label class="form-label font-weight-bold">Price max</label>
+                                        <input type="number" class="form-control" id="max-price" asp-for="MaxPrice">
+                                    </div>
+                                    <span asp-validation-for="MaxPrice" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 text-center">
+                        <input type="submit" value="Edit Sport" class="btn login-button btn-padding" id="ok-sports-btn" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

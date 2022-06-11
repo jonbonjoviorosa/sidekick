@@ -1,0 +1,31 @@
+﻿@model Sidekick.Model.SetupConfiguration.SetupConfiguration
+
+<div class="card yellow-top">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="d-flex justify-content-between my-3 align-items-center">
+                    <h6 class="m-0">Users management</h6>
+                    <a href="#addRoleModal" data-toggle="modal" data-target="#addRoleModal" class="text-warning"><i class="fas fa-plus"></i> Add Role</a>
+                </div>
+                <div class="row">
+                    @if (Model != null)
+                    {
+                        @foreach (var role in Model.FacilityUserTypes)
+                        {
+                            <div class="col-sm-4">
+                                <h6><i class="fas fa-circle text-warning mr-3"></i> @role.FacilityRoleName</h6>                      
+                            </div>
+                            <div class="col-sm-1">
+                                <a href="#editRoleModal" data-toggle="modal" data-target="#editRoleModal" class="text-warning mr-3" onclick="editRole(`@role.FacilityRoleId`, `@role.FacilityRoleName`)">Edit</a>
+                            </div>
+                            <div class="col-sm-1">
+                                <a href="#deleteRoleCategoryModal" data-toggle="modal" data-target="#deleteRoleCategoryModal" onclick="deleteRole(`@role.FacilityRoleId`, `@role.FacilityRoleName`)" class="text-danger">Delete</a>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

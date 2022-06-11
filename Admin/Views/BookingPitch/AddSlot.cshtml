@@ -1,0 +1,160 @@
+﻿@model Sidekick.Model.AddSlotViewModel;
+
+@{
+    ViewData["Title"] = "Add New Slot";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<partial name="~/Views/Shared/_GenericModal.cshtml" />
+<div class="row p-3 p-lg-5">
+    <div class="col-sm-12">
+        <nav aria-label="breadcrumb">
+            <h3 class="mb-4">Add New Slot</h3>
+        </nav>
+        <form>
+            <div class="row mt-3 mb-3">
+                <div class="col-sm-12 d-flex justify-content-end">
+                    <a href="/BookingPitch" class="btn login-button btn-light btn-padding text-dark">Cancel</a>
+                    <button class="btn login-button btn-padding" type="submit" id="save-slot">Save</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Facility</label>
+                                <select class="browser-default custom-select" asp-for="FacilityId" asp-items="ViewBag.Facilities">
+                                    <option value="0" disabled selected>Select an option</option>
+                                </select>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label class="form-label font-weight-bold">Sport</label>
+                                        <select class="browser-default custom-select" asp-for="SportId">
+                                            <option value="0" disabled selected>Select an option</option>
+                                        </select>
+                                        <span asp-validation-for="SportId" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label class="form-label font-weight-bold">Pitch</label>
+                                        <select class="browser-default custom-select" asp-for="FacilityPitchId">
+                                            <option value="0" disabled selected>Select an option</option>
+                                        </select>
+                                        <span asp-validation-for="FacilityPitchId" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row d-flex justify-content-center align-items-center">
+                                <div class="col-sm-6 col-md-12 col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-label font-weight-bold">Day</label>
+                                        @*<input type="text" class="form-control" id="start" asp-for="Date" autocomplete="off">*@
+                                        <select class="browser-default custom-select" asp-for="Day">
+                                            <option value="@DayOfWeek.Sunday">Sunday</option>
+                                            <option value="@DayOfWeek.Monday">Monday</option>
+                                            <option value="@DayOfWeek.Tuesday">Tuesday</option>
+                                            <option value="@DayOfWeek.Wednesday">Wednesday</option>
+                                            <option value="@DayOfWeek.Thursday">Thursday</option>
+                                            <option value="@DayOfWeek.Friday">Friday</option>
+                                            <option value="@DayOfWeek.Saturday">Saturday</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 col-lg-6">
+                                    @*<div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="repeatCheck" name="example1">
+                                            <label class="custom-control-label" for="repeatCheck">Repeat every week</label>
+                                        </div>*@
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label class="form-label font-weight-bold">From</label>
+                                        <select class="browser-default custom-select"
+                                                asp-items="@(new SelectList(ViewBag.TimeSlotsAM, "Key", "Value"))" asp-for="Start">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label class="form-label font-weight-bold">To</label>
+                                        <select class="browser-default custom-select"
+                                                asp-items="@(new SelectList(ViewBag.TimeSlotsPM, "Key", "Value"))" asp-for="End">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="check-if-free" hidden>
+                                <div class="row pt-4">
+                                    <div class="col-sm-9 col-md-6 col-lg-9">
+                                        <p class="font-weight-bold">Invitation Players</p>
+                                    </div>
+
+                                </div>
+
+                                <div id="add-player">
+                                    @foreach (var facilityPlayer in Model.FacilityPlayers)
+                                    {
+                                        <partial name="~/Views/BookingPitch/PartialViews/_AddPlayer.cshtml" model="facilityPlayer" />
+                                    }
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col">
+                                        <a class="text-warning" onclick="addPlayer()"><i class="fas fa-plus"></i>Add a Player</a>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="col-sm-6">
+                            @*<div class="form-group">
+                                <label class="form-label font-weight-bold">Players</label>
+                                <div class="d-flex justify-content-center align-items-center">
+                                <input type="text" class="form-control" asp-for="MaxPlayers"> <span class="font-weight-bold ml-2">max</span>
+                                </div>
+                                </div>*@
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Booking Commission / Player</label>
+                                <div class="d-flex justify-content-center align-items-center">
+                                    <input type="text" class="form-control" asp-for="TotalPrice" readonly> <span class="font-weight-bold ml-2">AED</span>
+                                    <div class="custom-control custom-checkbox mx-5">
+                                        <input type="checkbox" class="custom-control-input" id="freeCheck" name="example1">
+                                        <label class="custom-control-label" for="freeCheck">Free</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group pt-3">
+                                <label class="form-label font-weight-bold">Description</label>
+                                <textarea class="form-control" rows="5" asp-for="Description" onKeyDown="limitText(this.form.Description,this.form.countdown1,1500);"
+                                          onKeyUp="limitText(this.form.Description,this.form.countdown1,1500);"></textarea>
+
+                                <div class="mt-2">
+                                    <font size="1">
+                                        <span>(Maximum Characters: 1500)</span>
+                                        <span class="float-right">You have <input readonly type="text" name="countdown1" size="3" value="1500" class="text-danger"> characters left.</span>
+                                    </font>
+                                </div>
+                                <span asp-validation-for="Description" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript">
+
+    </script>
+}

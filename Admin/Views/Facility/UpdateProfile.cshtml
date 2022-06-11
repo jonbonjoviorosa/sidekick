@@ -1,0 +1,692 @@
+﻿@using Sidekick.Model
+@model FacilityProfile
+
+@{
+    ViewData["Title"] = "Facility Profile";
+    Layout = "~/Views/Shared/_FLayout.cshtml";
+    if (Model.FacilityTimings != null)
+    {
+        if (Model.FacilityTimings.Count == 0)
+        {
+            Model.FacilityTimings.Add(new FacilityTiming());
+        }
+    }
+
+}
+
+<partial name="~/Views/Shared/_GenericModal.cshtml" />
+<partial name="~/Views/Shared/_AddSportModal.cshtml" />
+
+<div class="row pb-5">
+    <div class="col-sm-12 col-lg-3">
+        <div class="box-settings">
+            <ul class="list-unstyled">
+                <li class="active px-3"><a href="~/Facility/UpdateProfile"><i class="fas fa-user mr-3 text-warning"></i>Facility Information</a></li>
+                <li class="px-3"><a href="~/FacilityPitch"><i class="fas fa-th text-warning mr-3"></i>Pitch Management</a></li>
+                <li class="px-3"><a href="~/FacilityUser"><i class="fas fa-users text-warning mr-3"></i>User Management</a></li>
+                <li class="px-3"><a href="~/FacilityPlayer"><i class="fas fa-user-friends text-warning mr-3"></i>Player Management</a></li>
+                <li class="px-3"><a href="~/Facility/PaymentHistory"><i class="fas fa-file-invoice-dollar text-warning mr-3"></i>Payment History</a></li>
+                <li class="px-3"><a href="~/Facility/Reports"><i class="fas fa-cog text-warning mr-3"></i>Reports</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-lg-9">
+
+        <form asp-controller="Facility" asp-action="UpdateFacilityProfile" method="post">
+            @Html.HiddenFor(x => x.FacilityId)
+            <div class="row mb-3">
+                <div class="col-sm-12 d-flex justify-content-sm-between align-items-center">
+                    <small class="text-white">Facility Information</small>
+                    <input value="Save" class="btn login-button btn-save" type="submit" id="save-facility" />
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-sm-5">
+
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Facility Name</label>
+                                <input type="text" class="form-control" asp-for="Name">
+                                <span asp-validation-for="Name" class="text-danger small"></span>
+                            </div>
+
+                            <div class="form-group">
+
+                                <label class="form-label font-weight-bold">Description</label>
+                                <textarea class="form-control" rows="5" asp-for="Description" onKeyDown="limitText(this.form.Description,this.form.countdown1,1500);"
+                                          onKeyUp="limitText(this.form.Description,this.form.countdown1,1500);"></textarea>
+
+                                <div class="mt-2">
+                                    <font size="1">
+                                        <span>(Maximum Characters: 1500)</span>
+                                        <span class="float-right">You have <input readonly type="text" name="countdown1" size="3" value="1500" class="text-danger"> characters left.</span>
+                                    </font>
+                                </div>
+                                <span asp-validation-for="Description" class="text-danger small"></span>
+                            </div>
+
+                            @*<label class="form-label font-weight-bold">Facility Owner</label>
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="First Name" asp-for="OwnerFirstName">
+                    <span asp-validation-for="OwnerFirstName" class="text-danger small"></span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Last Name" asp-for="OwnerLastName">
+                    <span asp-validation-for="OwnerLastName" class="text-danger small"></span>
+                </div>
+            </div>
+        </div>*@
+
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Email</label>
+                                <input type="email" class="form-control" asp-for="Email" autocomplete="off" readonly>
+                                <span asp-validation-for="Email" class="text-danger small"></span>
+                            </div>
+
+                            @*<div class="form-group">
+                                <label class="form-label font-weight-bold">Password</label>
+                                <input type="password" class="form-control" autocomplete="off" asp-for="Password">
+                                <span asp-validation-for="Password" class="text-danger small"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Confirm Password</label>
+                                <input type="password" class="form-control" autocomplete="off" asp-for="ConfirmPassword">
+                                <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                            </div>*@
+
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Mobile Number</label>
+                                <input type="text" class="form-control" asp-for="MobileNumber" autocomplete="off">
+                                <span asp-validation-for="MobileNumber" class="text-danger small"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Owner First Name</label>
+                                <input type="text" class="form-control" asp-for="OwnerFirstName">
+                                <span asp-validation-for="OwnerFirstName" class="text-danger small"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Owner Last Name</label>
+                                <input type="text" class="form-control" asp-for="OwnerLastName">
+                                <span asp-validation-for="OwnerLastName" class="text-danger small"></span>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <label class="form-label font-weight-bold">Sports</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 col-sm-12">
+                                    <div class="form-group">
+                                        <select class="browser-default selectpicker" asp-for="FacilitySports" id="FacilitySports"
+                                                asp-items="@(new SelectList(ViewBag.Sports, "SportId", "Name"))">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="SelectedSports" hidden>
+
+                            </div>
+
+
+                            <!-- START::Facility Staff -->
+                            @*<div class="row">
+            <div class="col-6">
+                <p class="font-weight-bold">Staff</p>
+            </div>
+            <div class="col-6 d-flex justify-content-end">
+                <a href="#" class="text-warning"><i class="fas fa-plus"></i> Add Staff</a>
+            </div>
+        </div>
+        <small class="font-weight-bold">Staff 1</small>
+        <div class="row">
+            <div class="col-lg-6 col-sm-12">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="First Name">
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-12">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Last Name">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-12">
+                <div class="form-group">
+                    <select class="browser-default selectpicker">
+                        <option value="1">Role 1</option>
+                        <option value="2">Role 2</option>
+                        <option value="3">Role 3</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-12">
+                <div class="form-group">
+                    <input type="email" class="form-control" placeholder="Email">
+                </div>
+            </div>
+        </div>*@
+
+                            <!-- END::Facility Staff -->
+
+                        </div>
+                        <div class="col-sm-7">
+                            <label class="form-label font-weight-bold">Location</label>
+                            <div class="row">
+                                <div class="col-lg-6 col-sm-12">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="Address" asp-for="Street">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6 col-sm-12">
+                                    <div class="form-group">
+                                        <select class="browser-default selectpicker" asp-for="AreaId"
+                                                asp-items="@(new SelectList(Model.Areas, "AreaId", "AreaName"))">
+                                            <option value="" disabled selected>Select an Area</option>
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label class="form-label font-weight-bold">Latitude</label>
+                                        <input type="text" readonly class="form-control" placeholder="Street" asp-for="Latitude">
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label class="form-label font-weight-bold">Longitude</label>
+                                        <input type="text" readonly class="form-control" placeholder="Street" asp-for="Longitude">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col">
+                                    <div id="map" style="height: 300px;"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group pt-3">
+                                <label class="form-label font-weight-bold">Photos</label>
+                            </div>
+                            <div class="row d-flex align-items-center">
+                                <div class="col-2">
+                                    <input type="text" asp-for="ImageUrl" style="display:none;">
+                                    <img class="img-fluid" id="imgPrevUploadProfileImage" src="@ViewBag.DefaultIcon" />
+                                </div>
+                                <div class="col-2 d-flex align-items-center">
+                                    <input type="file" class="custom-file-input" id="UploadProfileImage" accept="image/*">
+                                    <a href="" id="UploadProfileImage_link"><i class="fas fa-plus text-black-50"></i></a>
+                                </div>
+                            </div>
+
+                            <div class="form-group pt-3 mb-0">
+                                <label class="form-label font-weight-bold">Opening Hours</label>
+                            </div>
+
+                            <div class="row d-flex justify-content-center align-items-center">
+                                <div class="col-lg-3 col-sm-12">
+                                    <div class="custom-control custom-checkbox">
+                                        @Html.CheckBoxFor(x => x.IsEveryday, new { @class = "custom-control-input ckbx-workhours" })
+                                        <label class="custom-control-label" for="IsEveryday">Everyday</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-1 col-sm-6">
+                                    <label class="form-label font-weight-bold mb-0">From</label>
+                                </div>
+
+                                <div class="col-lg-3 col-sm-6">
+                                    <select class="browser-default custom-select" asp-for="TimeStart.TimeOfDay"
+                                            asp-items="@(new SelectList(ViewBag.TimeSlotsAM, "Key", "Value"))">
+                                        @*<option value="00:00:00">Close</option>*@
+                                    </select>
+                                    <span asp-validation-for="TimeStart" class="text-danger small"></span>
+                                </div>
+
+                                <div class="col-lg-1 col-sm-6">
+                                    <label class="form-label font-weight-bold mb-0">To</label>
+                                </div>
+
+                                <div class="col-lg-3 col-sm-6">
+                                    <select class="browser-default custom-select" asp-for="TimeEnd.TimeOfDay"
+                                            asp-items="@(new SelectList(ViewBag.TimeSlotsPM, "Key", "Value"))">
+                                        @* <option value="00:00:00">Close</option>*@
+                                    </select>
+                                    <span asp-validation-for="TimeEnd" class="text-danger small"></span>
+                                </div>
+                                <div class="col-1"></div>
+                            </div>
+
+                            <div class="row pt-4">
+                                <div class="col-6">
+                                    <div class="custom-control custom-checkbox">
+                                        @*@Html.CheckBoxFor(x => x.IsHalfHourAllowed, new { @class = "custom-control-input ckbx-workhours" })*@
+                                        <input type="checkbox" class="custom-control-input ckbx-workhours" id="IsPersonalized" name="IsPersonalized">
+                                        <label class="custom-control-label" for="IsPersonalized">Personalized</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-6 d-flex justify-content-end">
+                                    <div class="text-warning" onclick="addDay()" id="add-day"><i class="fas fa-plus"></i> Add a Day</div>
+                                </div>
+                            </div>
+
+                            <div id="add-day-slot">
+                                @foreach (var facilityTiming in Model.FacilityTimings)
+                                {
+                                    <partial name="~/Views/Facility/PartialViews/_AddDay.cshtml" model="facilityTiming" />
+                                }
+                            </div>
+
+
+                            <div class="form-group pt-4">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="IsHalfHourAllowed" name="IsHalfHourAllowed">
+                                    <label class="custom-control-label font-weight-bold" for="IsHalfHourAllowed">Allow players to book 30 minutes</label>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+<script type="text/javascript">
+
+    //JS to hide input upload
+    $(function () {
+        $("#UploadProfileImage_link").on('click', function (e) {
+            e.preventDefault();
+            $("#UploadProfileImage").trigger('click');
+        });
+    });
+
+    $("#UploadProfileImage").change(function () {
+        validateImages("UploadProfileImage");
+    });
+
+    function addDay() {
+        console.log('test');
+        $.ajax({
+            url: "AddDaySlot",
+            cache: false,
+            success: function (html) {
+                $('#add-day-slot').append(html);
+
+                $('select[name="TimeEnd"]').each(function (i) {
+                    if($(this).val() == "00:00:00"){
+                        $(this).val("23:30:00");
+                    }
+
+                });
+            }
+        });
+    }
+
+    $('#IsEveryday').change(function () {
+
+        $('select[name="Day"]').each(function (i) {
+            $(this).attr('disabled', true);
+        });
+
+        $('select[name="TimeStart"]').each(function (i) {
+            $(this).attr('disabled', true);
+        });
+
+        $('select[name="TimeEnd"]').each(function (i) {
+            $(this).attr('disabled', true);
+        });
+
+        document.getElementById("add-day").style.pointerEvents = 'none';
+
+        $('select[name="TimeStart.TimeOfDay"]').each(function (i) {
+            $(this).attr('disabled', false);
+        });
+
+        $('select[name="TimeEnd.TimeOfDay"]').each(function (i) {
+            $(this).attr('disabled', false);
+        });
+    });
+
+    $('#IsPersonalized').change(function () {
+
+        $('select[name="TimeStart.TimeOfDay"]').each(function (i) {
+            $(this).attr('disabled', true);
+        });
+        $('select[name="TimeEnd.TimeOfDay"]').each(function (i) {
+            $(this).attr('disabled', true);
+        });
+
+        $('select[name="Day"]').each(function (i) {
+            $(this).attr('disabled', false);
+        });
+
+        $('select[name="TimeStart"]').each(function (i) {
+            $(this).attr('disabled', false);
+        });
+
+        $('select[name="TimeEnd"]').each(function (i) {
+            $(this).attr('disabled', false);
+        });
+
+        document.getElementById("add-day").style.pointerEvents = 'auto';
+    });
+
+    $(document).ready(function () {
+
+        $("#Password").rules("remove");
+
+            var ShowModal = $("#ShowGenericModal").val();
+            if (ShowModal == 'true') {
+                $("#GenericModal").modal('show');
+                $("#successIcon").show();
+                $("#successBtn").show();
+            }
+
+            //duplicate entry
+            if (ShowModal == 'false') {
+                $("#GenericModal").modal('show');
+                $("#errorIcon").show();
+                $("#errorBtn").show();
+            }
+
+            $("#imageLoadingUploadProfileImage").hide();
+            $(".spinner-border").hide();
+
+            var retrieveImage = $("#ImageUrl").val();
+            $("#imgPrevUploadProfileImage").attr("src", retrieveImage);
+            $("#imgPrevUploadProfileImage").show();
+
+            $("#TimeEnd_TimeOfDay").val("23:30:00");
+            $('#TimeEnd').val("23:30:00");
+
+            var facilityObj = @Html.Raw(Json.Serialize(Model));
+            console.log(facilityObj);
+            var facilityTimings = facilityObj.facilityTimings;
+
+            $('#IsHalfHourAllowed').prop('checked', facilityObj.isHalfHourAllowed);
+
+            if (!facilityObj.isEveryday) {
+                $('#IsPersonalized').prop('checked', true);
+                    $('select[name="TimeStart"]').each(function (i) {
+                        for (var x = 0; x < facilityTimings.length; x++) {
+                            if (i == x) {
+                                let parsedTimeStart = new Date(facilityTimings[x].timeStart);
+                                var time = parsedTimeStart.toLocaleTimeString([], { hour: '2-digit', minute: "2-digit", second: "2-digit", hour12: false });
+                                if (time == '24:00:00') {
+                                    $(this).val('00:00:00')
+                                }
+                                else {
+                                    $(this).val(time);
+                                }
+                            }
+                        }
+                    });
+
+                    $('select[name="TimeEnd"]').each(function (i) {
+                        for (var x = 0; x < facilityTimings.length; x++) {
+                            if (i == x) {
+                                let parsedTimeEnd = new Date(facilityTimings[i].timeEnd);
+                                var time = parsedTimeEnd.toLocaleTimeString([], { hour: '2-digit', minute: "2-digit", second: "2-digit", hour12: false });
+                                if (time == '24:00:00') {
+                                    $(this).val('00:00:00')
+                                }
+                                else {
+                                    $(this).val(time);
+                                }
+                            }
+                        }
+                    });
+
+                    $('select[name="TimeStart.TimeOfDay"]').each(function (i) {
+                        $(this).attr('disabled', true);
+                    });
+
+                    $('select[name="TimeEnd.TimeOfDay"]').each(function (i) {
+                        $(this).attr('disabled', true);
+                    });
+
+                    $('select[name="Day"]').each(function (i) {
+                        $(this).attr('disabled', false);
+                    });
+
+                    $('select[name="TimeStart"]').each(function (i) {
+                        $(this).attr('disabled', false);
+                    });
+
+                    $('select[name="TimeEnd"]').each(function (i) {
+                        $(this).attr('disabled', false);
+                    });
+
+                    document.getElementById("add-day").style.pointerEvents = 'auto';
+            }
+            else
+            {
+                $('#IsEveryday').prop('checked', facilityObj.isEveryday);
+                let parsedTimeStart = new Date(facilityObj.facilityHours.timeStart);
+                let parsedTimeEnd = new Date(facilityObj.facilityHours.timeEnd);
+                let timeStart = parsedTimeStart.toLocaleTimeString([], { hour: '2-digit', minute: "2-digit", second: "2-digit", hour12: false });
+                let timeEnd = parsedTimeEnd.toLocaleTimeString([], { hour: '2-digit', minute: "2-digit", second: "2-digit", hour12: false });
+                $('select[name="TimeStart.TimeOfDay"]').val(timeStart == '24:00:00' ? '00:00:00' : timeStart);
+                $('select[name="TimeEnd.TimeOfDay"]').val(timeEnd == '24:00:00' ? '00:00:00' : timeEnd);
+
+                $('select[name="Day"]').each(function (i) {
+                    $(this).attr('disabled', true);
+                });
+
+                $('select[name="TimeStart"]').each(function (i) {
+                    $(this).attr('disabled', true);
+                });
+
+                $('select[name="TimeEnd"]').each(function (i) {
+                    $(this).attr('disabled', true);
+                });
+
+                document.getElementById("add-day").style.pointerEvents = 'none';
+
+                $('select[name="TimeStart.TimeOfDay"]').each(function () {
+                    $(this).attr('disabled', false);
+                });
+                $('select[name="TimeEnd.TimeOfDay"]').each(function () {
+                    $(this).attr('disabled', false);
+                });
+            }
+
+            $('select[name="FacilitySports"] > option').each(function () {
+                for (var x = 0; x < facilityObj.facilitySports.length; x++) {
+                    if ($(this).val() == facilityObj.facilitySports[x].sportId) {
+                        $(this).attr('selected', 'selected');
+                    }
+                }
+            });
+        });
+
+        $(".ckbx-workhours").click(function () {
+            $(".ckbx-workhours").not(this).prop('checked', false);
+        });
+
+        $("#successBtn").on('click', function () {
+            window.location.replace(BASEPATH + "/Facility");
+        });
+
+        //$('select[name="FacilitySports"]').click(function () {
+        //    var selectedSports = [];
+        //    var sport = [];
+
+        //    $("#sportsList").html("");
+        //    $.each($("input[name='sports']:checked"), function () {
+        //        sport = {
+        //            SportId: $(this).val()
+        //        };
+        //        selectedSports.push(sport);
+
+        //        $("#sportsList").append(('<p class="badge badge-light p-2 mr-3">' + " #" + $(this).next('label').text() + '</p>'));
+        //    });
+
+        //    $("#SelectedSports").val(JSON.stringify(selectedSports));
+        //    $("#sportModal").modal('hide');
+        //});
+
+        $('#save-facility').click(function (e) {
+            e.preventDefault();
+            let formData = new FormData();
+            formData.FacilityId = $('#FacilityId').val();
+            formData.FacilityTimings = [];
+            formData.FacilityHours = {};
+            formData.Name = $('#Name').val();
+            formData.Description = $('#Description').val();
+            formData.Email = $('#Email').val();
+            formData.Password = $('#Password').val();
+            formData.ConfirmPassword = $('#ConfirmPassword').val();
+            formData.MobileNumber = $('#MobileNumber').val();
+            formData.ImageUrl = $('#ImageUrl').val();
+            formData.Street = $('#Street').val();
+            formData.AreaId = parseInt($('#AreaId').val());
+            formData.IsEveryday = $('#IsEveryday').prop('checked');
+            formData.IsHalfHourAllowed = $('#IsHalfHourAllowed').prop('checked');
+            formData.OwnerFirstName = $('#OwnerFirstName').val();
+            formData.OwnerLastName = $('#OwnerLastName').val();
+            if (!formData.IsEveryday) {
+                $('select[name="Day"]').each(function (i) {
+                    formData.FacilityTimings.push({ Day: "", TimeStart: "", TimeEnd: "" });
+                    formData.FacilityTimings[i].Day = $(this).val();
+                });
+                $('select[name="TimeStart"]').each(function (i) {
+                    formData.FacilityTimings[i].TimeStart = $(this).val();
+                });
+                $('select[name="TimeEnd"]').each(function (i) {
+                    formData.FacilityTimings[i].TimeEnd = $(this).val();
+                });
+            }
+            else {
+                formData.TimeStart = $('#TimeStart_TimeOfDay').val();
+                formData.TimeEnd = $('#TimeEnd_TimeOfDay').val();
+            }
+
+            formData.FacilitySports = [];
+            let sports = $('#FacilitySports').val();
+            for (var i = 0; i < sports.length; i++) {
+                formData.FacilitySports.push({ SportId: sports[i] });
+            }
+
+            $.ajax({
+                url: "UpdateFacilityProfile",
+                type: "POST",
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                dataType: 'json',
+                success: function (result) {
+                    console.log('test');
+                    if (result.modelError != null) {
+                        if (result.modelError[0].key == 'ConfirmPassword') {
+                            if (formData.ConfirmPassword !== undefined) {
+                                $('#GenericModalMsg').html(result.modelError[0].key + " Do Not Match with Password.");
+                            }
+                        }
+                        else if (result.modelError[0].key == 'Password') {
+                            let regexPass = new RegExp('^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{5,}$')
+                            if (!regexPass.test(formData.Password)) {
+                                $('#GenericModalMsg').html("Password must be at least 5 - 20 characters long containing only letters and numbers.");
+                            }
+                        } else {
+                            let errorMessage = [];
+                            for (var i = 0; i < result.modelError.length; i++) {
+                                errorMessage.push('<p>' + result.modelError[i].key + ' is required </p>');
+                            }
+                            $('#GenericModalMsg').html(errorMessage);
+                        }
+
+                        $("#GenericModal").modal('show');
+
+                        $("#errorIcon").show();
+                        $("#errorBtn").show();
+                    }
+                    else {
+                        $("#GenericModal").modal('show');
+                        $('#GenericModalMsg').html('Successfully updated');
+                        $("#errorIcon").hide();
+                        $("#errorBtn").hide();
+                        $("#successIcon").show();
+                        $("#successBtn").show();
+                    }
+                },
+                failure: function (result) {
+                    console.log(result);
+                }
+            });
+        });
+
+        $("#successBtn").on('click', function () {
+            window.location.replace(BASEPATH + "/Facility/UpdateProfile");
+        });
+
+        $("#errorBtn").on('click', function () {
+            $("#GenericModal").modal('hide');
+        });
+
+        (function () {
+
+            setTimeout(() => {
+
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function (position) {
+                        var location = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+
+                        var map = new google.maps.Map(
+                            document.getElementById('map'), { zoom: 17, center: location });
+                        currentMarker = new google.maps.Marker({ position: location, map: map });
+
+                        // set default values inside the modal
+                        $('#Latitude').val(location.lat);
+                        $('#Longitude').val(location.lng);
+
+                        google.maps.event.addListener(map, "click", function (e) {
+
+                            //lat and lng is available in e object
+                            var latLng = e.latLng;
+
+                            // reset marker when clicked on map
+                            var newPosition = { lat: latLng.lat(), lng: latLng.lng() };
+                            currentMarker.setMap(null);
+                            currentMarker = new google.maps.Marker({ position: newPosition, map: map });
+
+                            // set form values inside the modal
+                            $('#Latitude').val(newPosition.lat);
+                            $('#Longitude').val(newPosition.lng);
+
+                        });
+                    });
+                }
+            }, 1000);
+
+        })();
+
+</script>
+}

@@ -1,0 +1,40 @@
+﻿@model Sidekick.Model.SetupConfiguration.SetupConfiguration
+
+<div class="card-body">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="d-flex justify-content-between align-items-center my-4">
+                <h6 class="m-0">Gym Center</h6>
+                <a href="#addGymModal" data-toggle="modal" data-target="#addGymModal" class="text-warning" onclick="editGym('00000000-0000-0000-0000-000000000000', '', '/img/default-img.jpg', '', '0', '0', '0')">Add Center</a>
+            </div>
+            <div class="row">
+                @if (Model != null)
+                {
+                    @foreach (var gym in Model.Gyms)
+                    {
+
+                        <div class="col-sm-4 gray-right">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="d-flex align-items-center col-sm-9">
+                                    @if (gym.Icon != null)
+                                    {
+                                        <img src="@gym.Icon" class="mr-4 rounded-circle" style="width: 35px; height: 35px;" />
+                                    }
+                                    else
+                                    {
+                                        <img src="~/img/default-img.jpg" class="mr-4 rounded-circle" style="width: 35px; height: 35px;" />
+                                    }
+                                    <h6 class="m-0 mr-5">@gym.GymName@*<span class="center-location"><br />Al Barsha First</span>*@</h6>
+                                </div>
+                                <a href="#editGymModal" data-toggle="modal" data-target="#addGymModal" class="text-warning" onclick="editGym('@gym.GymId', '@gym.GymName', '@gym.Icon', '@gym.GymAddress', '@gym.GymLong', '@gym.GymLat', '@gym.AreaId', '@gym.Icon')">Edit</a>
+                                <a href="#deleteGymCategoryModal" data-toggle="modal" data-target="#deleteGymCategoryModal" onclick="deleteGym('@gym.GymId', '@gym.GymName')" class="text-danger">Delete</a>
+                            </div>
+                        </div>
+
+                    }
+                }
+
+            </div>
+        </div>
+    </div>
+</div>

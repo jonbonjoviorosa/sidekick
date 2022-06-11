@@ -1,0 +1,237 @@
+﻿@using Sidekick.Model
+@model FacilityPitchList
+
+@{
+    ViewData["Title"] = "Edit Facility Pitch";
+    Layout = "~/Views/Shared/_FLayout.cshtml";
+}
+
+<partial name="~/Views/Shared/_GenericModal.cshtml" />
+
+<div class="row pb-5">
+    <div class="col-sm-12 col-lg-3">
+        <div class="box-settings">
+            <ul class="list-unstyled">
+                <li class="px-3"><a href="~/Facility/UpdateProfile"><i class="fas fa-user mr-3 text-warning"></i>Facility Information</a></li>
+                <li class="active px-3"><a href="~/FacilityPitch"><i class="fas fa-th text-warning mr-3"></i>Pitch Management</a></li>
+                <li class="px-3"><a href="~/FacilityUser"><i class="fas fa-users text-warning mr-3"></i>User Management</a></li>
+                <li class="px-3"><a href="~/FacilityPlayer"><i class="fas fa-user-friends text-warning mr-3"></i>Player Management</a></li>
+                <li class="px-3"><a href="~/Facility/PaymentHistory"><i class="fas fa-file-invoice-dollar text-warning mr-3"></i>Payment History</a></li>
+                <li class="px-3"><a href="~/Facility/Reports"><i class="fas fa-cog text-warning mr-3"></i>Reports</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-lg-9">
+
+        <form asp-controller="FacilityPitch" asp-action="Edit" method="post">
+
+            <div class="row mt-3 mb-3 d-flex align-items-center">
+                <div class="col-sm-6">
+                    <a href="~/FacilityPitch" class="text-warning"><i class="fas fa-long-arrow-alt-left"></i> Go back</a>
+                </div>
+
+                <div class="col-sm-6 d-flex justify-content-end">
+                    <button type="submit" class="btn login-button btn-save mr-3">Register</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="row mb-3 d-flex align-items-center">
+                                <div class="col-sm-3 col-md-4 col-lg-3">
+                                    <img src="~/img/default-img.jpg" class="rounded" style="width:75px; height:75px;" />
+                                </div>
+                                <div class="col">
+                                    <label class="form-label font-weight-bold">@Model.Name</label>
+                                    <p class="font-weight-bold text-danger"><i class="fas fa-map-marker-alt"></i>@Model.Location</p>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label class="form-label font-weight-bold">Sport</label>
+                                        <select class="browser-default selectpicker" asp-for="Sport">
+                                            <option value="1">Sport 1</option>
+                                            <option value="2">Sport 2</option>
+                                            <option value="3">Sport 3</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label class="form-label font-weight-bold">Pitch</label>
+                                        <select class="browser-default selectpicker">
+                                            <option value="1">Pitch 1</option>
+                                            <option value="2">Pitch 2</option>
+                                            <option value="3">Pitch 3</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Date</label>
+                                <select class="browser-default selectpicker">
+                                    <option value="1">Date 1</option>
+                                    <option value="2">Date 2</option>
+                                    <option value="3">Date 3</option>
+                                </select>
+                            </div>
+
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="repeatCheck" name="example1">
+                                <label class="custom-control-label" for="repeatCheck">Repeat every week</label>
+                            </div>
+
+                            <div class="row pt-3">
+                                <div class="col">
+                                    <label class="form-label font-weight-bold">From</label>
+                                    <select class="browser-default selectpicker">
+                                        <option value="1">Time 1</option>
+                                        <option value="2">Time 2 </option>
+                                        <option value="3">Time 3</option>
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <label class="form-label font-weight-bold">To</label>
+                                    <select class="browser-default selectpicker">
+                                        <option value="1">Time 1</option>
+                                        <option value="2">Time 2 </option>
+                                        <option value="3">Time 3</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label class="form-label font-weight-bold">Total Price</label>
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <input type="text" class="form-control"> <span class="font-weight-bold ml-2">AED</span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <label class="form-label font-weight-bold">Commission</label>
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <input type="text" class="form-control"> <span class="font-weight-bold ml-2">AED</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <label class="form-label font-weight-bold">10/10 Participants</label>
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100"
+                                     aria-valuemin="0" aria-valuemax="100" style="width:100%">
+                                </div>
+                            </div>
+                            <div class="row my-3">
+                                <div class="col-sm-4 col-md-6 col-lg-4 my-3">
+                                    <div class="row align-items-center">
+                                        <div class="col-4">
+                                            <img src="~/img/default-img.jpg" class="pitch-profile-image circle" />
+                                        </div>
+                                        <div class="col">
+                                            <p class="medium m-0">David James</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 col-md-6 col-lg-4 my-3">
+                                    <div class="row align-items-center">
+                                        <div class="col-4">
+                                            <img src="~/img/default-img.jpg" class="pitch-profile-image circle" />
+                                        </div>
+                                        <div class="col">
+                                            <p class="medium m-0">David James</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 col-md-6 col-lg-4 my-3">
+                                    <div class="row align-items-center">
+                                        <div class="col-4">
+                                            <img src="~/img/default-img.jpg" class="pitch-profile-image circle" />
+                                        </div>
+                                        <div class="col">
+                                            <p class="medium m-0">David James</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 col-md-6 col-lg-4 my-3">
+                                    <div class="row align-items-center">
+                                        <div class="col-4">
+                                            <img src="~/img/default-img.jpg" class="pitch-profile-image circle" />
+                                        </div>
+                                        <div class="col">
+                                            <p class="medium m-0">David James</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 col-md-6 col-lg-4 my-3">
+                                    <div class="row align-items-center">
+                                        <div class="col-4">
+                                            <img src="~/img/default-img.jpg" class="pitch-profile-image circle" />
+                                        </div>
+                                        <div class="col">
+                                            <p class="medium m-0">David James</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 col-md-6 col-lg-4 my-3">
+                                    <div class="row align-items-center">
+                                        <div class="col-4">
+                                            <img src="~/img/default-img.jpg" class="pitch-profile-image circle" />
+                                        </div>
+                                        <div class="col">
+                                            <p class="medium m-0">David James</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 col-md-6 col-lg-4 my-3">
+                                    <div class="row align-items-center">
+                                        <div class="col-4">
+                                            <img src="~/img/default-img.jpg" class="pitch-profile-image circle" />
+                                        </div>
+                                        <div class="col">
+                                            <p class="medium m-0">David James</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 col-md-6 col-lg-4 my-3">
+                                    <div class="row align-items-center">
+                                        <div class="col-4">
+                                            <img src="~/img/default-img.jpg" class="pitch-profile-image circle" />
+                                        </div>
+                                        <div class="col">
+                                            <p class="medium m-0">David James</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 col-md-6 col-lg-4 my-3">
+                                    <div class="row align-items-center">
+                                        <div class="col-4">
+                                            <img src="~/img/default-img.jpg" class="pitch-profile-image circle" />
+                                        </div>
+                                        <div class="col">
+                                            <p class="medium m-0">David James</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 col-md-6 col-lg-4 my-3">
+                                    <div class="row align-items-center">
+                                        <div class="col-4">
+                                            <img src="~/img/default-img.jpg" class="pitch-profile-image circle" />
+                                        </div>
+                                        <div class="col">
+                                            <p class="medium m-0">David James</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

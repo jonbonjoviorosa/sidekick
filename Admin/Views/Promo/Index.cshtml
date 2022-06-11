@@ -1,0 +1,80 @@
+﻿@model IEnumerable<Sidekick.Model.Promo.Promo>;
+
+@{
+    ViewData["Title"] = "Promotions";
+}
+
+<partial name="~/Views/Shared/_GenericModal.cshtml" />
+
+<div class="row p-3 p-lg-5">
+    <div class="col-sm-12">
+        <nav aria-label="breadcrumb">
+            <h3 class="mb-4">Promotions</h3>
+        </nav>
+        <div class="col-sm-12 d-flex justify-content-end mb-3">
+            <a class="btn login-button border-0 btn-padding" href="~/Promo/Add">Create Promotion</a>
+        </div>
+        <ul class="nav nav-pills" id="pills-tab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="pills-facilities-tab" data-toggle="pill" href="#pills-facilities" role="tab" aria-controls="pills-home" aria-selected="true">Play</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-coach" role="tab" aria-controls="pills-profile" aria-selected="false">Train</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane fade show active" id="pills-facilities" role="tabpanel" aria-labelledby="pills-facilities-tab">
+                <div class="card">
+                    <div class="card-body yellow-top">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="table-responsive">
+                                    <partial name="~/Views/Promo/PartialViews/_PlayTable.cshtml" />                                  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="pills-coach" role="tabpanel" aria-labelledby="pills-coach-tab">
+                <div class="card">
+                    <div class="card-body yellow-top">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="table-responsive">
+                                    <partial name="~/Views/Promo/PartialViews/_TrainTable.cshtml" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var ShowModal = $("#ShowGenericModal").val();
+            if (ShowModal == 'true') {
+                $("#GenericModal").modal('show');
+                $("#successIcon").show();
+                $('#successBtn').hide();
+                $("#successAddPromoBtn").show();
+            }
+
+            //duplicate entry
+            if (ShowModal == 'false') {
+                $("#GenericModal").modal('show');
+                $("#errorIcon").show();
+                $("#errorBtn").show();
+            }
+
+            $("#successAddPromoBtn").on('click', function () {
+                window.location.replace(BASEPATH + "/Promo");
+            });
+        });
+    </script>
+}

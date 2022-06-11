@@ -1,0 +1,154 @@
+﻿@using Sidekick.Model
+@model BannerDto
+
+@{
+    ViewData["Title"] = "Add Banner";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<partial name="~/Views/Shared/_GenericModal.cshtml" />
+
+<div class="row p-3 p-lg-5">
+    <div class="col-sm-12">
+        <nav aria-label="breadcrumb">
+            <h3 class="mb-4">New Banner</h3>
+        </nav>
+
+        <div class="row mb-3">
+            <div class="col-sm-12 d-flex justify-content-end">
+                <div class="d-flex align-items-center mr-3">
+                    <label class="switch mr-2 my-0">
+                        <input type="checkbox" id="customSwitch1">
+                        <span class="slider round"></span>
+                    </label>
+                    <label class="red-text font-weight-bold m-0" for="customSwitch1" id="lblActive">Inactive</label>
+                </div>
+            </div>
+        </div>
+
+        <form asp-controller="Banner" asp-action="Edit">
+            <input type="text" asp-for="BannerId" hidden />
+            <input type="text" asp-for="IsActive" hidden />
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label>Title</label>
+                                        <input type="text" class="form-control" asp-for="Title">
+                                        <span asp-validation-for="Title" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label>Select Facility to link to</label>
+                                        <select class="browser-default selectpicker" asp-for="FacilityId" asp-items="@(new SelectList(ViewBag.Facilities, "FacilityId", "Name"))" required>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label>Starts to</label>
+                                        <input type="date" class="form-control" asp-for="StartDate">
+                                        <span asp-validation-for="StartDate" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label>Ends to</label>
+                                        <input type="date" class="form-control" asp-for="EndDate">
+                                        <span asp-validation-for="EndDate" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Upload Banner</label>
+                                <input type="text" asp-for="ImageUrl" style="display:none;">
+                                <div class="input-group">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="UploadBanner" accept="image/*">
+                                        <label class="custom-file-label" id="UploadBanner_link">Choose file</label>
+                                    </div>
+                                </div>
+                                <br />
+                                <img class="img-fluid" id="imgPrevUploadBanner" src="@ViewBag.DefaultIcon" />
+                                <br />
+                                <small>Recommended size: TBA</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-4 mb-4 text-center">
+                        <div class="col-sm-12">
+                            <a class="btn white-button mr-3 btn-padding" href="~/Banner">Cancel</a>
+                            <button class="btn login-button mr-3 btn-padding" type="submit">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $("#customSwitch1").change(function () {
+                if ($(this).prop("checked") == true) {
+                    $("#IsActive").val("true");
+                    $("#lblActive").text("Active");
+                    $("#lblActive").removeClass("red-text");
+                } else {
+                    $("#IsActive").val("false");
+                    $("#lblActive").text("Inactive");
+                    $("#lblActive").addClass("red-text");
+                }
+            });
+
+            if ($("#IsActive").val() == "True") {
+            $("#IsActive").val("true");
+            $('#customSwitch1').prop('checked', true);
+            $("#lblActive").text("Active");
+            $("#lblActive").removeClass("red-text");
+            } else {
+                $('#customSwitch1').prop('checked', false);
+                $("#lblActive").text("Inactive");
+                $("#lblActive").addClass("red-text");
+            }
+        });    
+
+        $(function () {
+            $("#UploadBanner_link").on('click', function (e) {
+                e.preventDefault();
+                $("#UploadBanner").trigger('click');
+            });
+        });
+
+        $("#UploadBanner").change(function () {
+            validateFacilityImages("UploadBanner");
+        });
+
+        $(document).ready(function () {
+            $("#imageLoadingUploadBanner").hide();
+            $(".spinner-border").hide();
+        });
+
+        $(document).ready(function () {
+            $("#imageLoadingUploadBanner").hide();
+            $(".spinner-border").hide();
+
+            var retrieveImage = $("#ImageUrl").val();
+            $("#imgPrevUploadBanner").attr("src", retrieveImage);
+            $("#imgPrevUploadBanner").show();
+        });
+
+        $("#successBtn").on('click', function () {
+            window.location.replace(BASEPATH + "/Banner");
+        });
+
+    </script>
+}

@@ -1,0 +1,144 @@
+﻿@using Sidekick.Model
+@model List<PlayPaymentHistory>
+
+@{
+    ViewData["Title"] = "Payment History";
+    Layout = "~/Views/Shared/_FLayout.cshtml";
+}
+
+<div class="row pb-5">
+    <div class="col-sm-12 col-lg-3">
+        <div class="box-settings">
+            <ul class="list-unstyled">
+                <li class="px-3"><a href="~/Facility/UpdateProfile"><i class="fas fa-user mr-3 text-warning"></i>Facility Information</a></li>
+                <li class="px-3"><a href="~/FacilityPitch"><i class="fas fa-th text-warning mr-3"></i>Pitch Management</a></li>
+                <li class="px-3"><a href="~/FacilityUser"><i class="fas fa-users text-warning mr-3"></i>User Management</a></li>
+                <li class="px-3"><a href="~/FacilityPlayer"><i class="fas fa-user-friends text-warning mr-3"></i>Player Management</a></li>
+                <li class="active px-3"><a href="~/Facility/PaymentHistory"><i class="fas fa-file-invoice-dollar text-warning mr-3"></i>Payment History</a></li>
+                <li class="px-3"><a href="~/Facility/Reports"><i class="fas fa-cog text-warning mr-3"></i>Reports</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-sm-12 col-lg-9">
+        <div class="row mb-3">
+            <div class="col-12 d-flex justify-content-between">
+                @*<a href="#" class="px-75 py-1 text-white mr-2 f-s11 ph-link active">All</a>*@
+                <a class="yellow py-1 px-5 rounded border-0 text-black font-weight-semi-bold medium" href="@Url.Action("ExportPlayPaymentHistory","Facility")">Export</a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-12 d-flex justify-content-end align-items-center">
+                        <div style="display:-webkit-box !important">
+                            <label class="small mr-2">From</label>
+                            @* <select class="transparent px-4 py-1 border-grey-200 small mr-3 gray-text-border-circle">
+                                <option>24 January 2020</option>
+                                </select>*@
+                            <input type="text" class="form-control transparent px-4 py-1 border-grey-200 small mr-3 gray-text-border-circle" id="from" autocomplete="off" style="width:150px">
+                            <label class="small mr-2">To</label>
+                            <input type="text" class="form-control transparent px-4 py-1 border-grey-200 small mr-2 gray-text-border-circle" id="to" autocomplete="off" style="width:150px">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered table-striped display" id="dtMainList">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col" class="w-auto font-weight-bold">Booking No.</th>
+                                <th scope="col" class="w-auto font-weight-bold">Pitch No.</th>
+                                <th scope="col" class="w-auto font-weight-bold">Pitch Name</th>
+                                <th scope="col" class="w-auto font-weight-bold">Date Booked</th>
+                                <th scope="col" class="w-auto font-weight-bold">Date Played</th>
+                                <th scope="col" class="w-auto font-weight-bold">Slot Played</th>
+                                <th scope="col" class="w-auto font-weight-bold">Total (Including VAT)</th>
+                                <th scope="col" class="w-auto font-weight-bold">Total (Excluding VAT)</th>
+                                <th scope="col" class="w-auto font-weight-bold">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var playPayment in Model)
+                            {
+                            <tr>
+                                @*<td>@playPayment.BookingId</td>*@
+                                <td>@playPayment.Id</td>
+                                <td>@playPayment.PitchNo</td>
+                                <td>@playPayment.PitchName</td>
+                                <td>@playPayment.DateBooked.ToString("dd/MM/yyyy")</td>
+                                <td>@playPayment.DatePlayed.ToString("dd/MM/yyyy")</td>
+                                <td>@playPayment.SlotPlayed</td>
+                                <td>@playPayment.TotalIncludingVat AED</td>
+                                <td>@playPayment.TotalExcludingVat AED</td>
+                                @if (playPayment.Status == PaymentStatus.Paid)
+                                {
+                                    <td>
+                                        <p class="badge badge-success text-capitalize">COMPLETED</p>
+                                    </td>
+                                }
+                                else if (playPayment.Status == PaymentStatus.Pending)
+                                {
+                                    <td><p class="badge badge-warning text-capitalize">PENDING</p></td>
+                                }
+                                else if (playPayment.Status == PaymentStatus.Failed)
+                                {
+                                    <td><p class="badge badge-danger text-capitalize">FAILED</p></td>
+                                }
+                                else if (playPayment.Status == PaymentStatus.Cancelled)
+                                {
+                                    <td><p class="badge badge-warning text-capitalize">CANCELLED</p></td>
+                                }
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @* <div class="row my-3">
+            <div class="col-12 d-flex justify-content-end">
+            <div>
+            <a href="#"><i class="icon ion-ios-arrow-back text-yellow"></i></a>
+            <a href="#" class="px-75 py-1 rounded border-yellow text-yellow mx-1 f-s11 active">1</a>
+            <a href="#" class="px-75 py-1 rounded border-yellow text-yellow mx-1 f-s11">2</a>
+            <a href="#"><i class="icon ion-ios-arrow-forward text-yellow"></i></a>
+            </div>
+            </div>
+            </div>*@
+    </div>
+</div>
+
+@section Scripts{
+<script type="text/javascript">
+    $(document).ready(function () {
+        retainDataTablePages();
+         $("#from").datepicker({
+                //onSelect: function () {
+                //    var selected = $(this).val();
+                //    let to = $('#to').val();
+                //    //if(to != ''){
+                //    //    let dataObject = JSON.parse('@Html.Raw(Json.Serialize(Model))');
+                //    //    let fromDate = new Date($(this).val());
+                //    //    let toDate = new Date(to);
+                //    //    renderRangeStatistics(dataObject, fromDate,  toDate, false);
+                //    //    }
+                //    //}
+
+            });
+            $("#to").datepicker({
+                 //onSelect: function () {
+                 //   var selected = $(this).val();
+                 //    let from = $('#from').val();
+                 //   //if(from != ''){
+                 //   //     let dataObject = JSON.parse('@Html.Raw(Json.Serialize(Model))');
+                 //   //    let toDate = new Date($(this).val());
+                 //   //    let fromDate = new Date(from);
+                 //   //    renderRangeStatistics(dataObject, fromDate,  toDate, false);
+                 //   //    }
+                 //   //}
+
+            });
+    });
+</script>
+}

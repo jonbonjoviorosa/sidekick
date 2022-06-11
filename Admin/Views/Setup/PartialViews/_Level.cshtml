@@ -1,0 +1,32 @@
+﻿@model Sidekick.Model.SetupConfiguration.SetupConfiguration;
+
+<div class="card-body">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="d-flex justify-content-between align-items-center my-4">
+                <h6 class="m-0">Levels</h6>
+                <a href="#addLevelModal" data-toggle="modal" data-target="#addLevelModal" class="text-warning"><i class="fas fa-plus"></i> Add Levels</a>
+            </div>
+            <div class="row">
+                @if (Model != null)
+                {
+                    @foreach (var level in Model.Levels)
+                    {
+
+                        <div class="col-sm-4 gray-right">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="m-0">@level.Name</h6>
+                                <div>
+                                    <a href="#editLevelModal" data-toggle="modal" data-target="#editLevelModal" class="text-warning mr-3" onclick="editLevel('@level.LevelId', '@level.Name')">Edit</a>
+                                    <a href="#deleteLevelCategoryModal" data-toggle="modal" data-target="#deleteLevelCategoryModal" onclick="deleteLevel('@level.LevelId', '@level.Name')" class="text-danger">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+                }
+
+            </div>
+        </div>
+    </div>
+</div>

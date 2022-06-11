@@ -1,0 +1,47 @@
+﻿@model Sidekick.Model.Specialty.Specialty;
+
+<div class="modal fade"
+     id="editSpecialtyModal"
+     tabindex="-1"
+     aria-labelledby="editSpecialtyModal"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body px-5 py-0">
+                <div class="text-center">
+                    <h5 class="modal-title font-weight-bold mb-3" id="userModalLabel">Edit Specialities</h5>
+                </div>
+                <form asp-controller="Setup" asp-action="AddOrEditSpecialty" method="post">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Specialities Name</label>
+                                <input type="text" class="form-control" asp-for="Name" id="specialty-name">
+                                @Html.HiddenFor(x => x.SpecialtyId)
+                                <span asp-validation-for="Name" class="text-danger small"></span>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Add Badge Thumbnail</label>
+                                <div class="d-flex align-items-center">
+                                    <input type="text" asp-for="Icon" style="display:none;" id="edited-specialty-icon">
+                                    <img class="img-fluid rounded-circle mr-3" id="editSpecialtyIconImage" src="~/img/default-img.jpg" style="width: 55px; height: 55px;" />
+                                    <input type="file" class="custom-file-input img-fluid rounded-circle mr-3" id="EditSpecialtyIconImage" style="width: 55px; height: 55px;" accept="image/*">
+                                    <a href="" id="EditIcon_link" class="text-warning py-3"><i class="fas fa-plus" style="margin-left:-70px"></i> Upload Badge Image</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 text-center">
+                        <input type="submit" value="Edit Specialty" class="btn login-button btn-padding" id="ok-sports-btn" />
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>

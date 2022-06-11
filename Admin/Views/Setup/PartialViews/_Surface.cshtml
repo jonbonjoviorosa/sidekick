@@ -1,0 +1,31 @@
+﻿@model Sidekick.Model.SetupConfiguration.SetupConfiguration
+
+<div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="d-flex justify-content-between align-items-center my-4">
+                    <h6 class="m-0">Surface</h6>
+                    <a href="#addSurfaceModal" data-toggle="modal" data-target="#addSurfaceModal" class="text-warning"><i class="fas fa-plus"></i> Add Surface</a>
+                </div>
+                <div class="row">
+                    @if (Model != null)
+                    {
+                        @foreach (var surface in Model.Surfaces)
+                        {
+                            <div class="col-sm-4 gray-right">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h6 class="m-0">@surface.Name</h6>
+                                    <div>
+                                        <a href="#editSurfaceModal" data-toggle="modal" data-target="#editSurfaceModal" class="text-warning mr-3" onclick="editSurface('@surface.SurfaceId', '@surface.Name')">Edit</a>
+                                        <a href="#deleteSurfaceCategoryModal" data-toggle="modal" data-target="#deleteSurfaceCategoryModal" onclick="deleteSurface('@surface.SurfaceId', '@surface.Name')" class="text-danger">Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

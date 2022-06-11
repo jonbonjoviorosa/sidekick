@@ -1,0 +1,160 @@
+﻿@using Sidekick.Model
+@model FacilityUserProfile
+
+
+@{
+    ViewData["Title"] = "Add";
+    Layout = "~/Views/Shared/_FLayout.cshtml";
+}
+
+<partial name="~/Views/Shared/_GenericModal.cshtml" />
+
+<div class="row pb-5">
+    <div class="col-sm-12 col-lg-3">
+        <div class="box-settings">
+            <ul class="list-unstyled">
+                <li class="px-3"><a href="~/Facility/UpdateProfile"><i class="fas fa-user mr-3 text-warning"></i>Facility Information</a></li>
+                <li class="px-3"><a href="~/FacilityPitch"><i class="fas fa-th text-warning mr-3"></i>Pitch Management</a></li>
+                <li class="active px-3"><a href="~/FacilityUser"><i class="fas fa-users text-warning mr-3"></i>User Management</a></li>
+                <li class="px-3"><a href="~/FacilityPlayer"><i class="fas fa-user-friends text-warning mr-3"></i>Player Management</a></li>
+                <li class="px-3"><a href="~/Facility/PaymentHistory"><i class="fas fa-file-invoice-dollar text-warning mr-3"></i>Payment History</a></li>
+                <li class="px-3"><a href="~/Facility/Reports"><i class="fas fa-cog text-warning mr-3"></i>Reports</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-lg-9">
+
+        <form asp-controller="FacilityUser" asp-action="Add" method="post">
+            <div class="row mt-3 mb-3">
+                <div class="col-sm-6">
+                    <a href="~/FacilityUser" class="text-warning"><i class="fas fa-long-arrow-alt-left"></i> Go back</a>
+                </div>
+
+                @*<div class="col-sm-6 d-flex justify-content-end">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="IsActive">
+                        <label class="custom-control-label red-text font-weight-bold" for="IsActive" id="lblActive">Inactive</label>
+                        <input type="text" asp-for="IsEnabled" value="false" style="display: none;" />
+                    </div>
+                </div>*@
+            </div>
+
+            <div class="card">
+
+                <div class="card-body">
+
+                    <div class="row mb-4">
+                        <input type="text" asp-for="ImageUrl" class="d-none" value="@ViewBag.DefaultIcon">
+
+                        <div class="col-sm-3 col-md-4 col-lg-3">
+                            <img class="thumb" id="imgPrevUploadProfileImage" src="@ViewBag.DefaultIcon" />
+                        </div>
+                        <div class="col-sm-4 col-md-8 col-lg-4 d-flex justify-content-center flex-column text-left pl-0">
+                            <input type="file" class="custom-file-input" id="UploadProfileImage" accept="image/*">
+                            <a href="" id="UploadProfileImage_link">Upload Profile Photo</a>
+                        </div>
+                        <span asp-validation-for="ImageUrl" class="text-danger small"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>First Name</label>
+                                <input type="text" class="form-control" autocomplete="off" asp-for="FirstName">
+                                <span asp-validation-for="FirstName" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Last Name</label>
+                                <input type="text" class="form-control" autocomplete="off" asp-for="LastName">
+                                <span asp-validation-for="LastName" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="text" class="form-control" autocomplete="off" asp-for="Email">
+                                <span asp-validation-for="Email" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Role</label>
+                                @*<select class="browser-default selectpicker" asp-for="FacilityUserType">
+                                    <option value="@EFacilityUserType.ADMIN">Administrator</option>
+                                    <option value="@EFacilityUserType.ORGANIZER">Organizer</option>
+                                    <option value="@EFacilityUserType.STAFF">Staff</option>
+                                </select>*@
+                                 <select class="browser-default selectpicker" asp-for="FacilityRoleId"
+                                        asp-items="ViewBag.Roles">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input type="password" class="form-control" autocomplete="off" asp-for="Password">
+                                <span asp-validation-for="Password" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Confirm Password</label>
+                                <input type="password" class="form-control" autocomplete="off" asp-for="ConfirmPassword">
+                                <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4 mb-4 text-center">
+                        <div class="col-sm-12">
+                            <a class="btn white-button mr-3 btn-padding" href="~/FacilityUser">Cancel</a>
+                            <button class="btn login-button mr-3 btn-padding" type="submit">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+
+        //JS to hide input upload
+        $(function () {
+            $("#UploadProfileImage_link").on('click', function (e) {
+                e.preventDefault();
+                $("#UploadProfileImage").trigger('click');
+            });
+        });
+
+        $("#UploadProfileImage").change(function () {
+            validateImages("UploadProfileImage");
+        });
+
+        $(document).ready(function () {
+            $("#imageLoadingUploadProfileImage").hide();
+            $(".spinner-border").hide();
+            $("input:text,email,form").attr("autocomplete", "off");
+        });
+
+        $("#successBtn").on('click', function () {
+            window.location.replace(BASEPATH + "/FacilityUser");
+        });
+    </script>
+}

@@ -1,0 +1,93 @@
+﻿@using Sidekick.Model
+@model List<FAQsDto>
+
+@{
+    ViewData["Title"] = "FAQ's";
+    Layout = "~/Views/Shared/_Startup.cshtml";
+}
+
+<style>
+    .panel-group .panel {
+        border-radius: 0;
+        box-shadow: none;
+        font-size: 16px;
+    }
+
+    .panel-default > .panel-heading {
+        padding: 0;
+        border-radius: 0;
+        color: #212121;
+    }
+
+    .panel-title > a {
+        display: block;
+        padding: 15px;
+        text-decoration: none;
+        color: #333333;
+        font-weight: 600;
+        font-size: 18px;
+    }
+
+    .more-less {
+        float: right;
+        color: #FFC400;
+    }
+
+    .panel-default > .panel-heading + .panel-collapse > .panel-body {
+        border-top-color: #EEEEEE;
+    }
+
+    .panel-body {
+        padding: 0 15px 15px 15px;
+        color: #818A91;
+        font-size: 13px;
+        font-weight: 400;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        @*<img src="/img/logo.svg" class="img-fluid m-auto" />*@
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                        @{int i = 1;}
+                        @foreach (FAQsDto item in Model)
+                        {
+                            <div class="panel panel-default">
+                                <div class="panel-heading" role="tab" id="heading_@i">
+                                    <h4 class="panel-title">
+                                        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse_@i" aria-expanded="true" aria-controls="collapse_@i">
+                                            <i class="more-less fas fa-plus"></i>
+                                            @item.Question
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapse_@i" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading_@i">
+                                    <div class="panel-body">
+                                        @item.Answer
+                                    </div>
+                                </div>
+                            </div>
+                            i++;
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function toggleIcon(e) {
+            $(e.target)
+                .prev('.panel-heading')
+                .find(".more-less")
+                .toggleClass('fas fa-plus fa fa-minus');
+        }
+        $('.panel-group').on('hidden.bs.collapse', toggleIcon);
+        $('.panel-group').on('shown.bs.collapse', toggleIcon);
+    </script>
+}

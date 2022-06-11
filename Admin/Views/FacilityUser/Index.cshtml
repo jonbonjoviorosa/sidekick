@@ -1,0 +1,201 @@
+﻿@using Sidekick.Model
+@using Sidekick.Admin.Helpers
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor _httpCtxtAc;
+@model IEnumerable<FacilityUserList>
+
+
+@{
+    ViewData["Title"] = "Facility Users";
+    Layout = "~/Views/Shared/_FLayout.cshtml";
+
+    ISession session = _httpCtxtAc.HttpContext.Session;
+
+    var _facilityUCtxt = session.GetObjectFromJson<FacilityUserContext>("facilityUserContext");
+}
+
+<partial name="~/Views/Shared/_GenericModal.cshtml" />
+<partial name="~/Views/Shared/_YesNoModal.cshtml" />
+
+<div class="row pb-5">
+    <div class="col-sm-12 col-lg-3">
+        <div class="box-settings">
+            <ul class="list-unstyled">
+                <li class="px-3"><a href="~/Facility/UpdateProfile"><i class="fas fa-user mr-3 text-warning"></i>Facility Information</a></li>
+                <li class="px-3"><a href="~/FacilityPitch"><i class="fas fa-th text-warning mr-3"></i>Pitch Management</a></li>
+                <li class="active px-3"><a href="~/FacilityUser"><i class="fas fa-users text-warning mr-3"></i>User Management</a></li>
+                <li class="px-3"><a href="~/FacilityPlayer"><i class="fas fa-user-friends text-warning mr-3"></i>Player Management</a></li>
+                <li class="px-3"><a href="~/Facility/PaymentHistory"><i class="fas fa-file-invoice-dollar text-warning mr-3"></i>Payment History</a></li>
+                <li class="px-3"><a href="~/Facility/Reports"><i class="fas fa-cog text-warning mr-3"></i>Reports</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-lg-9">
+        <div class="row">
+            <div class="col-12 d-flex justify-content-end">
+                <a href="~/FacilityUser/Add" class="btn login-button btn-save"><i class="fas fa-plus"></i> New User</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped display" id="dtMainList">
+                        <thead class="thead-light">
+                            <tr>
+                                <th hidden>Hidden User Id</th>
+                                <th scope="col" class="w-auto font-weight-bold">Profile Image</th>
+                                <th scope="col" class="w-auto font-weight-bold">Name</th>
+                                <th scope="col" class="w-auto font-weight-bold">Email</th>
+                                <th scope="col" class="w-auto font-weight-bold">Role</th>
+                                <th scope="col" class="w-auto font-weight-bold">Date Created</th>
+                                <th scope="col" class="w-auto font-weight-bold">Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            @if (Model != null)
+                            {
+                                var itemNo = 1;
+                                foreach (FacilityUserList item in Model.Where(x => x.IsEnabled == true))
+                                {
+                                    <tr>
+                                        <td hidden class="userId">@item.FacilityUserId</td>
+                                        <td><img src="@item.ImageUrl" style='width:50px;height:50px;' class="rounded-circle"></td>
+                                        <td class="text-capitalize">@item.FullName</td>
+                                        <td>@item.Email</td>
+
+                                        @if (item.FacilityUserType == EFacilityUserType.OWNER)
+                                        {
+                                            <td class="text-capitalize">Owner</td>
+                                        }
+                                        else if (item.FacilityUserType == EFacilityUserType.ADMIN)
+                                        {
+                                            <td class="text-capitalize text-success">Admin</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="text-capitalize">Staff</td>
+                                        }
+
+                                        <td>@item.CreatedDate.GetValueOrDefault().ToString("dd/MM/yyyy")</td>
+                                        @*<td>
+                                            @if (item.IsEnabled.HasValue)
+                                            {
+                                            @if (item.IsEnabled.Value)
+                                            {
+                                            <p class="badge badge-success text-capitalize">ACTIVE</p>
+                                            }
+                                            else
+                                            {
+                                            <p class="badge badge-light text-capitalize">INACTIVE</p>
+                                            }
+                                            }
+                                            </td>*@
+                                        <td>
+                                            <button class="btn btn-action dropdown-toggle" type="button" data-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                                <i class="fas fa-bars"></i>
+                                            </button>
+                                            <div class="dropdown-menu">
+
+                                                <a class="dropdown-item" href="~/FacilityUser/Edit?u=@item.FacilityUserId">View/Edit User</a>
+
+                                                @if (_facilityUCtxt.FacilityUserInfo.FacilityUserType == EFacilityUserType.OWNER)
+                                                {
+                                                    @if(item.FacilityUserType != EFacilityUserType.OWNER)
+                                                    {
+                                                        <a class="dropdown-item text-danger deactivate-link">Delete User</a>
+                                                    }
+                                                    
+                                                }
+
+                                                      
+                                                    
+
+
+                                                @* <a class="dropdown-item text-danger deactivate-link">Delete User</a>*@
+
+                                                @*else
+                                                    {
+                                                    <a class="dropdown-item activate-link">Mark as Active</a>
+                                                    }*@
+
+
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    itemNo++;
+                                }
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+<script type="text/javascript">
+    $(document).ready(function () {
+        retainDataTablePages();
+    });
+
+    $(document).on('click', 'a.deactivate-link', function () {
+        var userId = $(this).closest("tr").find(".userId").text();
+
+        $("#YesNoModal").modal('show');
+        $('#modalMsg').text('Do you want to delete it?')
+        $("#btnYesDelete").click(function () {
+            $("#YesNoModal").modal('hide');
+
+            changeStatus(userId, false);
+        });
+    });
+
+    $(document).on('click', 'a.activate-link', function () {
+        var userId = $(this).closest("tr").find(".userId").text();
+        changeStatus(userId, true);
+    });
+
+    function changeStatus(rid, stat) {
+        var parameters = {
+            GuID: rid,
+            IsEnabled: stat
+        };
+
+        $.ajax(
+            {
+                type: 'POST',
+                url: BASEPATH + '/FacilityUser/Status',
+                contentType: 'application/json',
+                data: JSON.stringify(parameters),
+                beforeSend: function () {
+                    $("#GenericModal").modal('show');
+                    $("#GenericModalTitle").text("Please wait...");
+                    $("#savingGenericLoader").show();
+                },
+                success: function (result) {
+                    if (result.statusCode != 200) {
+                        $("#GenericModal").modal('show');
+                        $("#savingGenericLoader").hide();
+                        $("#GenericModalTitle").text("Success");
+                        $("#errorIcon").show();
+                        $("#errorBtn").show();
+                    }
+                    else {
+                        window.location.replace(BASEPATH + "/FacilityUser");
+                    }
+                },
+                failed: function (e, x, h) {
+                    console.log(e); console.log(h); console.log(x);
+                }
+            }
+        );
+    }
+</script>
+}

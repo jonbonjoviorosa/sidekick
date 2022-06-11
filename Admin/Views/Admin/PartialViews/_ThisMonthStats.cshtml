@@ -1,0 +1,27 @@
+﻿@model Sidekick.Model.DasboardViewModel
+
+<div class="tab-pane fade" id="pills-thismonth" role="tabpanel" aria-labelledby="pills-thismonth-tab">
+    <div class="card yellow-top">
+        <div class="card-body">
+            <div class="row">
+                
+                   @* <div class="box-reports-dashboard" style="margin:100px 0px">
+                        <h4 id="total-users-this-month"></h4>
+                        <p class="medium">Total users this month</p>
+                    </div>*@
+                    @*<div class="box-reports-dashboard">
+                                <h4 class="text-success" id="new-users-last-month"></h4>
+                            <p class="medium">Total New Users last month</p>
+                        </div>
+                        <div class="box-reports-dashboard">
+                                <h4 id="active-users-last-month"></h4>
+                            <p class="medium">Active Users last month</p>
+                        </div>*@
+               
+                <div class="col-sm-12" id="chart-this-month">
+                    <canvas id="myChartThisMonth"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

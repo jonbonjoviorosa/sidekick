@@ -1,0 +1,325 @@
+﻿@model Sidekick.Model.ClassRenderViewModel;
+
+@{
+    ViewData["Title"] = "Add Coaching";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row p-3 p-lg-5">
+    <div class="col-sm-12">
+        <nav aria-label="breadcrumb">
+            <h3 class="mb-4">Add Coaching</h3>
+        </nav>
+        <form asp-controller="Coaching" asp-action="AddCoaching" method="post" id="submit-now">
+            <div class="row mt-3 mb-3">
+                <div class="col-sm-12 d-flex justify-content-end">
+                    <a href="/Coaching" class="btn login-button btn-light btn-padding text-dark">Cancel</a>
+                    <input class="btn login-button btn-padding" type="submit" value="Submit" id="verifySubmit" />
+                </div>
+            </div>
+
+            <div class="card">
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label class="form-label font-weight-bold">Type</label>
+                                        <select class="browser-default selectpicker" asp-for="TrainingType">
+                                            <option value="" disabled selected>Select Type</option>
+                                            @*<option value="Individual">Individual</option>*@
+                                            <option value="Group" selected>Group </option>
+                                        </select>
+
+                                        <span asp-validation-for="TrainingType" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label class="form-label font-weight-bold">Level</label>
+                                        @Html.DropDownList("LevelId", Model.Levels, new { @class = "browser-default selectpicker", @id = "LevelId", @name = "LevelId" })
+                                        <span asp-validation-for="LevelId" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Title</label>
+                                <input type="text" class="form-control" asp-for="Title">
+                                <span asp-validation-for="Title" class="text-danger small"></span>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Coach</label>
+                                @Html.DropDownList("CoachId", Model.Coaches, new { @class = "form-control", @id = "CoachId", @name = "CoachId" })
+                                <span asp-validation-for="CoachId" class="text-danger small"></span>
+                            </div>
+
+                            <div class="row pt-3">
+                                <div class="col">
+                                    <label class="form-label font-weight-bold">Coaching Date</label>
+                                    <input type="text" class="form-control" id="start" asp-for="Date" autocomplete="off"  onkeydown="return false">
+                                    <span asp-validation-for="Date" class="text-danger small"></span>
+                                </div>
+                                <div class="col">
+                                    <label class="form-label font-weight-bold">Duration</label>
+                                    <select class="browser-default custom-select" asp-for="Duration">
+                                        <option disabled selected value="0">Select duration</option>
+                                        <option value="1">1h00</option>
+                                        <option value="2">2h00</option>
+                                        <option value="3">3h00</option>
+                                        <option value="4">4h00</option>
+                                        <option value="5">5h00</option>
+                                    </select>
+                                    <span asp-validation-for="Duration" class="text-danger small" id="errmsg-duration"></span>
+                                </div>
+                            </div>
+
+                            <div class="custom-control custom-checkbox pt-3">
+                                <input type="checkbox" class="custom-control-input" asp-for="IsRepeat">
+                                <label class="custom-control-label" for="IsRepeat">Repeat every week</label>
+                            </div>
+
+                            <div class="row pt-3">
+                                <div class="col">
+                                    <label class="form-label font-weight-bold">From</label>
+                                    <select class="browser-default custom-select" asp-for="ScheduleFrom"
+                                            asp-items="@(new SelectList(ViewBag.TimeSlotsAM, "Key", "Value"))">
+                                    </select>
+                                    <span asp-validation-for="ScheduleFrom" class="text-danger small" id="error-msg-schedFrom"></span>
+                                </div>
+                                <div class="col">
+                                    <label class="form-label font-weight-bold">To</label>
+                                    <select class="browser-default custom-select" asp-for="ScheduleTo"
+                                            asp-items="@(new SelectList(ViewBag.TimeSlotsPM, "Key", "Value"))">
+                                    </select>
+                                    <span asp-validation-for="ScheduleTo" class="text-danger small" id="error-msg-schedTo"></span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Location</label>
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="onlineCheck" name="onlineCheck">
+                                    <label class="custom-control-label" for="onlineCheck">Online</label>
+                                </div>
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" asp-for="IsLocation">
+                                    <label class="custom-control-label" for="IsLocation">Physical</label>
+                                </div>
+                            </div>
+
+                            <div class="row pt-1">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label class="form-label font-weight-bold">Gym Center</label>
+                                        @Html.DropDownList("GymId", Model.Gyms, new { @class = "form-control", @id = "GymId", @name = "GymId" })
+                                        <span asp-validation-for="GymId" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row pt-3">
+                                <div class="col">
+                                    <label class="form-label font-weight-bold">Participants</label>
+                                    <select class="browser-default custom-select" asp-for="Participants">
+                                        <option value="0" disabled selected>Select an option</option>
+                                    </select>
+                                    <span asp-validation-for="Participants" class="text-danger small"></span>
+                                </div>
+                                <div class="col">
+                                    <label class="form-label font-weight-bold">Price / Participant </label>
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <input type="number" class="form-control" asp-for="Price"> <span class="font-weight-bold ml-2">AED</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group pt-3">
+                                <label class="form-label font-weight-bold">Description</label>
+                                <textarea class="form-control" rows="5" asp-for="Description" onKeyDown="limitText(this.form.Description,this.form.countdown1,1500);"
+                                          onKeyUp="limitText(this.form.Description,this.form.countdown1,1500);"></textarea>
+
+                                <div class="mt-2">
+                                    <font size="1">
+                                        <span>(Maximum Characters: 1500)</span>
+                                        <span class="float-right">You have <input readonly type="text" name="countdown1" size="3" value="1500" class="text-danger"> characters left.</span>
+                                    </font>
+                                </div>
+                                <span asp-validation-for="Description" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#ScheduleTo').val("23:30:00");
+            for (i = 1; i <= 15; i++) {
+                $('#Participants').append($('<option></option>').val(i).html(i))
+            }
+
+            $("#start").datepicker({
+                minDate: 0
+            });
+
+            $('#start').datepicker('setDate', null);
+
+            $('#IsLocation').prop('checked', true);
+
+        });
+
+        $('#onlineCheck').change(function () {
+            if ($(this).is(':checked')) {
+                $('#GymId').attr('disabled', 'disabled');
+                $('#GymId').addClass('disabled');
+                $('#IsLocation').prop('checked', false);
+                $('#GymId').remove('rules');
+            }
+            else {
+                $('#GymId').add('rules');
+            }
+        });
+
+        $('#IsLocation').change(function () {
+            if ($(this).is(':checked')) {
+                $('#onlineCheck').prop('checked', false);
+                $('#GymId').removeAttr('disabled');
+                $('#GymId').removeClass('disabled');
+            }
+        });
+
+        //$('#verifySubmit').click(function(e){
+        //    e.preventDefault();
+        //    let hasType = $('#TrainingType').val() != "";
+        //    let hasLevel = $('#LevelId').val() != "";
+        //    let hasTitle = $('#Title').val() != "";
+        //    let hasCoach = $('#CoachId').val() != "";
+        //    let hasDate = $('#Date').val() != "";
+        //    let hasGym = $('#GymId').val() != "Select Gym";
+        //    if(!hasType){
+        //        $("#GenericModal").modal('show');
+        //        $("#GenericModalTitle").text("Type is Required");
+        //        $("#errorIcon").show();
+        //        setTimeout(function () {
+        //            3000
+        //        });
+        //    }
+        //    else if(!hasLevel){
+        //          $("#GenericModal").modal('show');
+        //        $("#GenericModalTitle").text("Level is Required");
+        //        $("#errorIcon").show();
+        //         setTimeout(function () {
+        //            3000
+        //        });
+        //    }
+        //    else if(!hasTitle){
+        //          $("#GenericModal").modal('show');
+        //        $("#GenericModalTitle").text("Level is Required");
+        //        $("#errorIcon").show();
+        //         setTimeout(function () {
+        //            3000
+        //        });
+        //    }
+        //    else if(!hasLevel){
+        //          $("#GenericModal").modal('show');
+        //        $("#GenericModalTitle").text("Title is Required");
+        //        $("#errorIcon").show();
+        //         setTimeout(function () {
+        //            3000
+        //        });
+        //    }
+        //    else if(!hasCoach){
+        //          $("#GenericModal").modal('show');
+        //        $("#GenericModalTitle").text("Coach is Required");
+        //        $("#errorIcon").show();
+        //         setTimeout(function () {
+        //            3000
+        //        });
+        //    }
+        //      else if(!hasDate){
+        //          $("#GenericModal").modal('show');
+        //        $("#GenericModalTitle").text("Date is Required");
+        //        $("#errorIcon").show();
+        //         setTimeout(function () {
+        //            3000
+        //        });
+        //    }
+        //     else if(!hasGym){
+        //          $("#GenericModal").modal('show');
+        //        $("#GenericModalTitle").text("Gym is Required");
+        //        $("#errorIcon").show();
+        //         setTimeout(function () {
+        //            3000
+        //        });
+        //    }
+        //    else {
+        //         $('#submit-now').submit();
+        //    }
+        //});
+
+        $(document).on('change', '#TrainingType', function () {
+            var thisElem = $(this);
+            if (thisElem.val() === 'Individual') {
+                $("#Participants option[value='1']").prop('selected', true);
+                $('#Participants').attr('disabled', 'disabled');
+                $('#Participants').addClass('disabled');
+
+                $('#Duration').attr('disabled', 'disabled');
+                $('#Duration').addClass('disabled');
+                $('#Duration').remove('rules');
+                $('#errmsg-duration').text('');
+            }
+            else {
+                $('#Participants').removeAttr('disabled');
+                $('#Participants').removeClass('disabled');
+
+                $('#Duration').removeAttr('disabled');
+                $('#Duration').removeClass('disabled');
+                $('#Duration').add('rules');
+            }
+        });
+
+        $(document).on('change', '#ScheduleFrom', function () {
+            var from_time = $('#ScheduleFrom').val();
+            var to_time = $('#ScheduleTo').val();
+
+            var from = Date.parse('01/01/2011 ' + from_time);
+            var to = Date.parse('01/01/2011 ' + to_time);
+
+            if (from > to) {
+                $('#error-msg-schedFrom').text("FROM time is greater than TO time.");
+                $('#verifySubmit').attr('disabled', 'disabled');
+            } else {
+                $('#error-msg-schedFrom').text('');
+                $('#verifySubmit').removeAttr('disabled', 'disabled');
+            }
+        });
+
+        $(document).on('change', '#ScheduleTo', function () {
+            var from_time = $('#ScheduleFrom').val();
+            var to_time = $('#ScheduleTo').val();
+
+            var from = Date.parse('01/01/2011 ' + from_time);
+            var to = Date.parse('01/01/2011 ' + to_time);
+
+            if (from > to) {
+                $('#error-msg-schedFrom').text("FROM time is greater than TO time.");
+                $('#verifySubmit').attr('disabled', 'disabled');
+            } else {
+                $('#error-msg-schedFrom').text('');
+                $('#verifySubmit').removeAttr('disabled', 'disabled');
+            }
+        });
+    </script>
+}

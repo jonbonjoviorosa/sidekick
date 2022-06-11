@@ -1,0 +1,31 @@
+﻿@model Sidekick.Model.SetupConfiguration.SetupConfiguration
+
+<div class="card-body">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="d-flex justify-content-between align-items-center my-4">
+                <h6 class="m-0">Goals</h6>
+                <a href="#addGoalsModal" data-toggle="modal" data-target="#addGoalsModal" class="text-warning"><i class="fas fa-plus"></i> Add Goals</a>
+            </div>
+            <div class="row">
+                @if (Model != null)
+                {
+                    @foreach (var goal in Model.Goals)
+                    {
+                        <div class="col-sm-4 gray-right">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="m-0">@goal.Name</h6>
+                                <div>
+                                    <a href="#editGoalModal" data-toggle="modal" data-target="#editGoalModal" class="text-warning mr-3" onclick="editGoal('@goal.GoalId', '@goal.Name')">Edit</a>
+                                    <a href="#deleteGoalCategoryModal" data-toggle="modal" data-target="#deleteGoalCategoryModal" onclick="deleteGoal('@goal.GoalId', '@goal.Name')" class="text-danger">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+                }
+
+            </div>
+        </div>
+    </div>
+</div>

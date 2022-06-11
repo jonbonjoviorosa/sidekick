@@ -1,0 +1,45 @@
+﻿@model Sidekick.Model.DasboardViewModel
+
+<div class="tab-content" id="pills-tabContent">
+    <div class="tab-pane fade show active" id="pills-year" role="tabpanel" aria-labelledby="pills-year-tab">
+        <div class="card yellow-top">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div class="box-reports-dashboard">
+                            <h4 id="total-year-count-object">@Model.FacilityPlayers.Count()</h4>
+                            <p class="medium" id="total-year-count-label">Total Active Players</p>
+                        </div>
+                        <div class="box-reports-dashboard">
+                           @* @if (Model.Users.Any())
+                            {
+                                <h4 class="text-success" id="new-users-year">@Model.Users.Where(u => u.CreatedDate.Value.Year == DateTime.Now.Year).Count()</h4>
+                            }
+                            else
+                            {
+                                <h4 class="text-success">0</h4>
+                            }*@
+                            <h4 id="new-users-year">@Model.FacilityPlayerGroupLastSeven.Count()</h4>
+                            <p class="medium" id="total-new-year-label">Total New Players</p>
+                        </div>
+                        <div class="box-reports-dashboard">
+                           @* @if (Model.Users.Any())
+                            {
+                                <h4 id="total-active">@Model.Users.Where(u => u.IsEnabled == true).ToList().Count()</h4>
+                            }
+                            else
+                            {
+                                <h4>0</h4>
+                            }*@
+                            <h4 id="total-active"></h4>
+                            <p class="medium" id="total-active-label">Average Number Transaction per Player</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-9" id="chart-year">
+                        <canvas id="myChart" style="width:100%;max-width:700px"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

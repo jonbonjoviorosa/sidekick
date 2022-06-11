@@ -1,0 +1,256 @@
+﻿@using Sidekick.Model
+@model ClassRenderViewModel;
+
+@{
+    ViewData["Title"] = "Edit Coaching";
+}
+
+<div class="row p-3 p-lg-5">
+    <div class="col-sm-12">
+        <nav aria-label="breadcrumb">
+            <h3 class="mb-4">Edit Coaching</h3>
+        </nav>
+        <form asp-controller="Coaching" asp-action="Edit" method="post">
+            @Html.HiddenFor(c => c.GroupClassId)
+            @Html.HiddenFor(c => c.TrainingType)
+            @Html.HiddenFor(c => c.CoachId)
+            @Html.HiddenFor(c => c.LevelId)
+            @Html.HiddenFor(c => c.Description)
+            @Html.HiddenFor(c => c.Participants)
+            <div class="row mt-3 mb-3">
+                <div class="col-sm-12 d-flex justify-content-end">
+                    <a href="/Coaching" class="btn login-button btn-light btn-padding text-dark">Cancel</a>
+                    <input class="btn login-button btn-padding" type="submit" value="Submit" id="verifySubmit" />
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="row mb-3 d-flex align-items-center">
+                                <div class="col-sm-3 col-md-4 col-lg-3">
+                                    <img src="@Model.ImageUrl" class="rounded" style="width:75px; height:75px;" />
+                                </div>
+                                <div class="col">
+                                    <label class="form-label font-weight-bold">@Model.CoachName</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Title</label>
+                                <input type="text" class="form-control" asp-for="Title">
+                            </div>
+                            <div class="custom-control custom-checkbox">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="onlineCheck" name="example1">
+                                    <label class="custom-control-label" for="onlineCheck">Online</label>
+                                </div>
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" asp-for="IsLocation" class="custom-control-input">
+                                    <label class="custom-control-label" for="IsLocation">Physical</label>
+                                </div>
+                            </div>
+                            <div class="row my-3">
+                                <div class="col">
+                                    @*<select class="browser-default selectpicker">
+                                        <option value="1">Al Barsha 1</option>
+                                        <option value="2">Al Barsha 2 </option>
+                                        <option value="3">Al Barsha 3</option>
+                                        </select>*@
+                                    <select class="browser-default custom-select" asp-items="ViewBag.Gyms" asp-for="GymId">
+                                    </select>
+
+                                </div>
+                                <div class="col">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Date</label>
+                                <input type="text" class="form-control" id="start" asp-for="Date" autocomplete="off" onkeydown="return false">
+                            </div>
+
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" asp-for="IsRepeat">
+                                <label class="custom-control-label" for="IsRepeat">Repeat every week</label>
+                            </div>
+
+                            <div class="row pt-3">
+                                <div class="col">
+                                    <label class="form-label font-weight-bold">From</label>
+                                    <select class="browser-default custom-select"
+                                            asp-items="@(new SelectList(ViewBag.TimeSlotsAM, "Key", "Value"))" asp-for="ScheduleFrom">
+                                        @*<option value="00:00:00">Close</option>*@
+                                    </select>
+                                    <span asp-validation-for="ScheduleFrom" class="text-danger small" id="error-msg-schedFrom"></span>
+                                </div>
+                                <div class="col">
+                                    <label class="form-label font-weight-bold">To</label>
+                                    <select class="browser-default custom-select"
+                                            asp-items="@(new SelectList(ViewBag.TimeSlotsPM, "Key", "Value"))" asp-for="ScheduleTo">
+                                        @*<option value="00:00:00">Close</option>*@
+                                    </select>
+                                    <span asp-validation-for="ScheduleTo" class="text-danger small" id="error-msg-schedTo"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label class="form-label font-weight-bold">Total Price</label>
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <input type="text" class="form-control" asp-for="Price" disabled> <span class="font-weight-bold ml-2"> AED</span>
+                                    </div>
+                                </div>
+                                @*<div class="col">
+                                    <label class="form-label font-weight-bold">Commission</label>
+                                    <div class="d-flex justify-content-center align-items-center">
+                                    <input type="text" class="form-control"> <span class="font-weight-bold ml-2">AED</span>
+                                    </div>
+                                    </div>*@
+                            </div>
+                            @if (Model.TrainingType == EBookingType.Individual.ToString())
+                            {
+                                <label class="form-label font-weight-bold">@Model.Players.Count()/1 Participant</label>
+                            }
+                            else
+                            {
+                                <label class="form-label font-weight-bold">@Model.Players.Count()/@Model.Participants Participants</label>
+                            }
+                            <div class="progress">
+                                @{
+                                    var totalPlayers = Model.Participants;
+                                    var playersCount = Model.Players.Count();
+                                    int progressValue = (int)Math.Round((double)(100 * playersCount) / totalPlayers);
+                                    var convertToWidth = progressValue + "%";
+                                }
+                                <div class="progress-bar progress-bar-success" role="progressbar" style="width: @convertToWidth"></div>
+                            </div>
+                            <div class="row my-3">
+                                @foreach (var player in Model.Players)
+                                {
+                                    <div class="col-sm-4 col-md-6 col-lg-4 my-3">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <img src="@player.ProfileImgUrl" class="rounded-circle participants-border-size" />
+                                            </div>
+                                            <div class="col">
+                                                <p class="medium m-0">@player.FirstName @player.LastName</p>
+                                                @{
+                                                    if (Model.Price > 0)
+                                                    {
+                                                        if (player.IsPaid == true)
+                                                        {
+                                                            <p class="medium text-success m-0">Paid</p>
+                                                        }
+                                                        else
+                                                        {
+                                                            <p class="medium text-danger m-0">Not Yet Paid</p>
+                                                        }
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+    $(document).ready(function () {
+        var obj = JSON.parse('@Html.Raw(Json.Serialize(Model))');
+        for (i = 1; i <= 15; i++) {
+            $('#Participants').append($('<option></option>').val(i).html(i))
+        }
+
+        $('#onlineCheck').prop('checked', !obj.isLocation);
+        $('#IsLocation').prop('checked', obj.isLocation);
+        if(!obj.isLocation){
+             $('#GymId').prop('disabled', 'disabled');
+             $('#GymId').val("");
+        }
+
+        $("#start").datepicker({
+            minDate: 0
+        });
+
+        $('#GymId').val(obj.gymId);
+
+        $('#start').datepicker('setDate', null);
+        $('#start').val(transformDate(obj.date));
+
+
+        let parsedTimeStart = new Date(obj.scheduleFrom);
+        let parsedTimeEnd = new Date(obj.scheduleTo);
+        let timeStart = parsedTimeStart.toLocaleTimeString([], { hour: '2-digit', minute: "2-digit", second: "2-digit", hour12: false });
+        let timeEnd = parsedTimeEnd.toLocaleTimeString([], { hour: '2-digit', minute: "2-digit", second: "2-digit", hour12: false });
+        $('select[name="ScheduleFrom"]').val(timeStart == '24:00:00' ? '00:00:00' : timeStart);
+        $('select[name="ScheduleTo"]').val(timeEnd == '24:00:00' ? '00:00:00' : timeEnd);
+    });
+
+    function transformDate(strDate) {
+        var date = new Date(strDate);
+        let dateString = [
+            date.getMonth() + 1,
+            date.getDate(),
+            date.getFullYear(),
+        ].join('/')
+
+        return dateString;
+    }
+
+    $('#onlineCheck').change(function () {
+        if ($(this).is(':checked')) {
+            $('#GymId').attr('disabled', 'disabled');
+            $('#GymId').addClass('disabled');
+            $('#IsLocation').prop('checked', false);
+        }
+    });
+
+    $('#IsLocation').change(function () {
+        if ($(this).is(':checked')) {
+            $('#onlineCheck').prop('checked', false);
+            $('#GymId').removeAttr('disabled');
+            $('#GymId').removeClass('disabled');
+        }
+    });
+
+    $(document).on('change', '#ScheduleFrom', function () {
+        var from_time = $('#ScheduleFrom').val();
+        var to_time = $('#ScheduleTo').val();
+
+        var from = Date.parse('01/01/2011 ' + from_time);
+        var to = Date.parse('01/01/2011 ' + to_time);
+
+        if (from > to) {
+            $('#error-msg-schedFrom').text("FROM time is greater than TO time.");
+            $('#verifySubmit').attr('disabled', 'disabled');
+        } else {
+            $('#error-msg-schedFrom').text('');
+            $('#verifySubmit').removeAttr('disabled', 'disabled');
+        }
+    });
+
+    $(document).on('change', '#ScheduleTo', function () {
+        var from_time = $('#ScheduleFrom').val();
+        var to_time = $('#ScheduleTo').val();
+
+        var from = Date.parse('01/01/2011 ' + from_time);
+        var to = Date.parse('01/01/2011 ' + to_time);
+
+        if (from > to) {
+            $('#error-msg-schedFrom').text("FROM time is greater than TO time.");
+            $('#verifySubmit').attr('disabled', 'disabled');
+        } else {
+            $('#error-msg-schedFrom').text('');
+            $('#verifySubmit').removeAttr('disabled', 'disabled');
+        }
+    });
+    </script>
+}

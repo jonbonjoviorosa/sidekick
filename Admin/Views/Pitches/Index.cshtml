@@ -1,0 +1,123 @@
+﻿@using Sidekick.Model
+@model IEnumerable<FacilityPitchList>
+
+@{
+    ViewData["Title"] = "Pitches";
+    Layout = "~/Views/Shared/_FLayout.cshtml";
+    var sports = new List<SelectListItem>();
+    int counter = 0;
+    sports.Add(new SelectListItem { Value = "AllSports", Text = "All Sports" });
+    foreach (var sport in Model)
+    {
+        sports.Add(new SelectListItem
+        {
+            Value = sport.Sport,
+            Text = sport.Sport
+        });
+    }
+}
+
+<div class="row pitchs-panel">
+    <div class="col-sm-12">
+        <div class="row mb-4">
+            <div class="col-sm-12 d-flex justify-content-end mb-2">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                @Html.DropDownList("sportId", sports.GroupBy(s => s.Value).Select(s => s.First()).ToList(), new { @class = "py-1 transparent px-3 border-yellow rounded text-yellow f-s12", @id = "selected-pitch" })
+            </div>
+            @*<div class="col-sm-2">
+                <input type="text" class="form-control transparent px-4 py-1 border-grey-200 small mr-3 gray-text-border-circle" id="date" autocomplete="off" style="width:150px">
+                </div>*@
+            <div class="col-sm-4">
+                <h5 class="text-white text-center pt-2">Pitches Booked</h5>
+            </div>
+            <div class="col-sm-4">
+                @*<div class="text-right">
+                    <a href="#"><i class="icon ion-ios-arrow-back text-yellow"></i></a>
+                    <a href="#" class="px-75 py-1 rounded border-yellow text-yellow mx-1  active">1</a>
+                    <a href="#" class="px-75 py-1 rounded border-yellow text-yellow mx-1 ">2</a>
+                    <a href="#"><i class="icon ion-ios-arrow-forward text-yellow"></i></a>
+                    </div>*@
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-12">
+        <div class="row py-4">
+            @foreach (var pitch in Model)
+            {
+                counter++;
+                <div class="col-lg-3 col-md-6 col-sm-12 mb-4 px-3" id="pitch-model-@counter">
+                    @Html.HiddenFor(p => pitch.FacilityPitchId)
+                    @Html.HiddenFor(p => pitch.SportId)
+                    <div class="per-pitch pitch-1 white rounded scroll-none h-100">
+                        <div class="pitch-title">
+                            <div class="white-opacity-70 p-3">
+                                <h6 class="font-weight-bold mb-1">@pitch.Name</h6>
+                                <p class="mb-1 pitch-name font-weight-semi-bold">@pitch.Sport</p>
+                                <input type="text" hidden value="@pitch.Sport" id="sport-name" />
+                                <p class="font-weight-bold pos-relative text-red ml-n2 mb-0 "><i class="icon ion-location text-red"></i>@pitch.Location</p>
+                            </div>
+                        </div>
+                        <div class="p-3">
+                            @foreach (var booking in pitch.FacilityPitchTimings)
+                            {
+                                <div class="per-datetime grey-200 rounded-sm p-3 mb-3 pos-relative">
+                                    <p class="mb-0 text-red " onclick="viewPitch('@pitch.FacilityPitchId', '@pitch.SportId', '@booking.FacilityPitchTimingId')">@booking.TimeStart.ToShortTimeString() - @booking.TimeEnd.ToShortTimeString()</p>
+                                    <p class="mb-0 pos-absolute pos-right-center  mr-3">@Enum.GetName(typeof(DayOfWeek),@booking.Day)</p>
+                                </div>
+                            }
+                        </div>
+                        @* @if (pitch.Bookings.Count > 0)
+                            {
+                                @*<div class="w-100 mb-2 text-center pos-absolute pos-bottom-center pb-3">
+                                    <a class="px-0 py-1 rounded border-yellow text-yellow mx-1 pitch-paginate">
+                                        <i class="icon ion-ios-arrow-back text-yellow f-s14"></i>
+                                    </a>
+                                    <a class="px-0 py-1 rounded border-yellow text-yellow mx-1 pitch-paginate active">
+                                        <i class="icon ion-ios-arrow-forward text-yellow f-s14"></i>
+                                    </a>
+                                </div>
+                            }*@
+
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+    $(document).ready(function(){
+        $("#date").datepicker({
+            onSelect: function(){
+                var selected = $(this).val();
+                console.log(selected);
+            }
+        });
+    });
+            //    onSelect: function () {
+            //        var selected = $(this).val();
+            //        let to = $('#to').val();
+            //        if(to != ''){
+            //            let dataObject = JSON.parse('@Html.Raw(Json.Serialize(Model))');
+            //            let fromDate = new Date($(this).val());
+            //            let toDate = new Date(to);
+            //            renderRangeStatistics(dataObject, fromDate,  toDate, false);
+            //            }
+            //        }
+
+            //});
+    function viewPitch(data, dataSport,dataTimingID) {
+        var dataList = data + ";" + dataSport + ";" + dataTimingID;
+        var url = '@Url.Action("FacilityPitchDetail", "Pitches", new { facilityPitchId = "dataList" })'
+        var params = url.replace('dataList', dataList);
+        window.location.href = params;
+    }
+
+    displayPitch();
+    </script>
+}

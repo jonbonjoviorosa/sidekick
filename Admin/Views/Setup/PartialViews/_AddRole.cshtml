@@ -1,0 +1,36 @@
+﻿@model Sidekick.Model.FacilityUserType;
+
+<div class="modal fade"
+     id="addRoleModal"
+     tabindex="-1"
+     aria-labelledby="addRoleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-controller="Setup" asp-action="AddOrEditRole" method="post">
+                <div class="modal-body px-5 py-0">
+                    <div class="text-center">
+                        <h5 class="modal-title font-weight-bold mb-3" id="userModalLabel">Add Role</h5>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">User role</label>
+                                <input type="text" class="form-control" asp-for="FacilityRoleName">
+                                <span asp-validation-for="FacilityRoleName" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 text-center">
+                    <input type="submit" value="Add Role" class="btn login-button btn-padding" id="save" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

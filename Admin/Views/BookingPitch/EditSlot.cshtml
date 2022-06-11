@@ -1,0 +1,192 @@
+﻿@model Sidekick.Model.EditSlotViewModel;
+
+@{
+    ViewData["Title"] = "Edit Slot";
+    var timingId = ViewBag.Id;
+}
+
+<partial name="~/Views/Shared/_GenericModal.cshtml" />
+<div class="row p-3 p-lg-5">
+    <div class="col-sm-12">
+        <nav aria-label="breadcrumb">
+            <h3 class="mb-4">Slot</h3>
+        </nav>
+        <form asp-action="UpdateFacilityPitchTiming" method="post">
+            @Html.HiddenFor(e => e.FacilityPitchTimingId)
+            @Html.HiddenFor(e => e.FacilityId)
+            @Html.HiddenFor(e => e.FacilityPitchIdTable)
+            <div class="row mt-3 mb-3">
+                <div class="col-sm-12 d-flex justify-content-end">
+                    <a href="/BookingPitch" class="btn login-button btn-light btn-padding text-dark">Cancel</a>
+                    <button class="btn login-button btn-padding" type="submit">Save</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    @if (Model != null)
+                    {
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row mb-3 d-flex align-items-center">
+                                    <div class="col-sm-3 col-md-4 col-lg-3">
+                                        <img src="@Model.FacilityImgUrl" class="rounded" style="width:75px; height:75px;" />
+                                    </div>
+                                    <div class="col">
+                                        <label class="form-label font-weight-bold">@Model.FacilityName</label>
+                                        <p class="font-weight-bold text-danger"><i class="fas fa-map-marker-alt"></i> @Model.Area</p>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="form-label font-weight-bold">Sport</label>
+                                            <select class="browser-default custom-select" asp-items="ViewBag.Sports" asp-for="SportId">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="form-label font-weight-bold">Pitch</label>
+                                            <select class="browser-default custom-select" asp-items="ViewBag.FacilityPitches" asp-for="FacilityPitchId">
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-12 col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-label font-weight-bold">Day</label>
+                                            <select class="browser-default custom-select" asp-for="Day">
+                                                <option value="@DayOfWeek.Sunday">Sunday</option>
+                                                <option value="@DayOfWeek.Monday">Monday</option>
+                                                <option value="@DayOfWeek.Tuesday">Tuesday</option>
+                                                <option value="@DayOfWeek.Wednesday">Wednesday</option>
+                                                <option value="@DayOfWeek.Thursday">Thursday</option>
+                                                <option value="@DayOfWeek.Friday">Friday</option>
+                                                <option value="@DayOfWeek.Saturday">Saturday</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                    @*  <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="repeatCheck" name="example1" asp-for="IsRepeatEveryWeek">
+                <label class="custom-control-label" for="repeatCheck">Repeat every week</label>
+            </div>*@
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <label class="form-label font-weight-bold">From</label>
+                                            <select class="browser-default custom-select"
+                                                    asp-items="@(new SelectList(ViewBag.TimeSlotsAM, "Key", "Value"))" asp-for="Start">
+                                            </select>
+                                        </div>
+                                        <div class="col">
+                                            <label class="form-label font-weight-bold">To</label>
+                                            <select class="browser-default custom-select"
+                                                    asp-items="@(new SelectList(ViewBag.TimeSlotsPM, "Key", "Value"))" asp-for="End">
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row mb-3">
+                                        <div class="col">
+                                            <label class="form-label font-weight-bold">Total Price</label>
+                                            <div class="d-flex justify-content-center align-items-center">
+                                                <input type="text" class="form-control" asp-for="Price" readonly> <span class="font-weight-bold ml-2">AED</span>
+                                            </div>
+                                        </div>
+                                        @*<div class="col">
+                <label class="form-label font-weight-bold">Commission</label>
+                <div class="d-flex justify-content-center align-items-center">
+                <input type="text" class="form-control"> <span class="font-weight-bold ml-2">AED</span>
+                </div>
+                </div>*@
+                                    </div>
+                                    <label class="form-label font-weight-bold">@Model.Players.Count()/@Model.MaxPlayers Participants</label>
+
+                                    <div class="progress">
+                                        @{
+                                        var totalPlayers = Model.MaxPlayers;
+                                        var playersCount = Model.Players.Count();
+                                        int progressValue = (int)Math.Round((double)(100 * playersCount) / totalPlayers);
+                                        var convertToWidth = progressValue + "%";
+                                        }
+                                        <div class="progress-bar progress-bar-success" role="progressbar" style="width: @convertToWidth"></div>
+                                    </div>
+                                    <div class="row my-3">
+                                        @foreach (var item in Model.Players)
+                                    {
+                                        <div class="col-sm-4 col-md-6 col-lg-4 my-3">
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    <img src="@item.ProfileImgUrl" class="rounded-circle participants-border-size" />
+                                                </div>
+                                                <div class="col">
+                                                    <p class="medium m-0">@item.Name</p>
+                                                    @{
+                                                        if (Model.Price > 0 && !Model.IsFree)
+                                                        {
+                                                            if (item.IsPaid == true)
+                                                            {
+                                                        <p class="medium text-success m-0">Paid</p>
+                                                            }
+                                                            else
+                                                            {
+                                                        <p class="medium text-danger m-0">Not Yet Paid</p>
+                                                            }
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                    </div>
+                                </div>
+                            </div>
+                    }
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts{
+<script type="text/javascript">
+        $(document).ready(function(){
+            var obj = JSON.parse('@Html.Raw(Json.Serialize(Model))');
+            var timingId = @Html.Raw(Json.Serialize(timingId));
+            if(obj != null){
+                 populateEditSlot(obj);
+            }
+           
+             var ShowModal = $("#ShowGenericModal").val();
+            if (ShowModal == 'true') {
+                $("#GenericModal").modal('show');
+                $("#successIcon").show();
+                $('#successBtn').hide();
+                $("#successAddSlotBtn").show();
+            }
+
+            //duplicate entry
+            if (ShowModal == 'false') {
+                $("#GenericModal").modal('show');
+                $("#errorIcon").show();
+                $('#errorBtn').hide();
+                $("#errorAddSlotBtn").show();
+            }
+
+            $("#successAddSlotBtn").on('click', function () {
+        window.location.replace(BASEPATH + "/BookingPitch");
+    });
+
+       $("#errorAddSlotBtn").on('click', function () {
+            window.location.replace(BASEPATH + "/BookingPitch/EditSlot?u="+timingId);
+        });
+        });
+</script>
+}

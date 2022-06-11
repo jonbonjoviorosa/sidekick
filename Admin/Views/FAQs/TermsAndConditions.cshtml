@@ -1,0 +1,74 @@
+﻿@using Sidekick.Model
+@model LegalDocumentDto
+
+@{
+    ViewData["Title"] = "Terms and Conditions";
+}
+
+<partial name="~/Views/Shared/_GenericModal.cshtml" />
+
+<form asp-controller="FAQs" asp-action="TermsAndConditions" method="post">
+    <div class="row p-3 p-lg-5">
+        <div class="col-sm-12">
+            <nav aria-label="breadcrumb">
+                <h3 class="mb-4">Terms and Conditions</h3>
+            </nav>
+            <div class="card">
+                <div class="card-body">
+                    @Html.HiddenFor(t => t.Body)
+                    <textarea id="terms"></textarea>
+                    <button class="btn login-button btn-padding mt-4 mb-4" type="submit" id="save-button">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function(){
+            if ($('#terms').val() == '') {
+                $('#save-button').attr('disabled', 'disabled');
+            }
+
+            var ShowModal = $("#ShowGenericModal").val();
+            if (ShowModal == 'true') {
+                $("#GenericModal").modal('show');
+                $("#successIcon").show();
+                $('#successBtn').hide();
+                $("#successBtnTerms").show();
+            }
+
+            //duplicate entry
+            if (ShowModal == 'false') {
+                $("#GenericModal").modal('show');
+                $("#errorIcon").show();
+                $("#errorBtnTerms").show();
+            }
+
+             $("#errorBtnPrivacy").on('click', function () {
+                window.location.replace(BASEPATH + "/FAQs/TermsAndConditions");
+            });
+
+            $("#successBtnPrivacy").on('click', function () {
+                window.location.replace(BASEPATH + "/FAQs/TermsAndConditions");
+            });
+        });
+        $('#terms').mdbWYSIWYG();
+        $(".mdb-wysiwyg-textarea").html($("#Body").val());
+
+        
+
+        $(".mdb-wysiwyg-textarea").on('input change keyup', function () {
+            //console.log($(".mdb-wysiwyg-textarea").html());
+            $("#Body").val($(".mdb-wysiwyg-textarea").html());
+            if ($('.mdb-wysiwyg-textarea').html() != '') {
+                $('#save-button').removeAttr('disabled');
+            }
+            else {
+                $('#save-button').attr('disabled', 'disabled');
+            }
+        });
+    </script>
+}
+

@@ -1,0 +1,52 @@
+﻿@model Sidekick.Model.ReportDto;
+
+<div class="modal fade"
+     id="userModal"
+     tabindex="-1"
+     aria-labelledby="userModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-action="UpdateOrDeleteReport" method="post">
+                @Html.HiddenFor(r => r.ReportedByUserId)
+                @Html.HiddenFor(r => r.ReportedUserId)
+                <div class="modal-body px-5 py-0">
+                    <div class="text-center mb-3">
+                        <h5 class="modal-title font-weight-bold" id="userModalLabel">Report User</h5>
+                    </div>
+                    <p class="font-weight-semi-bold" id="reportedBy">Reported by: Patrick Aguinaldo</p>
+                    <p class="font-weight-semi-bold" id="reportedUser">Reported User : Orland Salas</p>
+                    <p class="font-weight-semi-bold" id="reportedDate">Date & Time Reported : MM/DD/YYYY, mm/hh</p>
+                    <p class="font-weight-semi-bold">Details about the report :</p>
+                    <textarea class="form-control" rows="5" asp-for="Reasons"></textarea>
+                    <div class="row mt-1">
+                        <div class="col-sm-6">
+                            <label class="font-weight-semi-bold">Request status:</label>
+                            <select asp-for="Status" class="browser-default selectpicker">
+                                <option value="0">New</option>
+                                <option value="1">Pending</option>
+                                <option value="2">Closed</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <input hidden id="type" asp-for="Type" />
+                    <input hidden id="reqId" asp-for="Id" />
+                </div>
+                <div class="modal-footer border-0 text-center">
+
+                    <input type="submit" class="btn login-button btn-padding" value="Done" />
+                </div>
+            </form>
+            <div class="d-flex justify-content-center" style="padding-bottom:20px">
+                <button onclick="deleteReport()" class="btn login-button btn-light btn-padding text-dark" style="width:100px">Delete</button>
+            </div>
+            
+        </div>
+    </div>
+</div>

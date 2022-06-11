@@ -1,0 +1,54 @@
+﻿@model Sidekick.Model.SetupConfiguration.SetupConfiguration
+
+<div class="card-body">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="d-flex justify-content-between my-3 align-items-center">
+                <h6 class="m-0">Sports</h6>
+                <a href="#addSportModal" data-toggle="modal" data-target="#addSportModal" class="text-warning"><i class="fas fa-plus"></i> Add Sport</a>
+            </div>
+            <div class="row">
+                @if (Model != null)
+                {
+                    @foreach (var sport in Model.Sports)
+                    {
+                        <div class="col-sm-4 gray-right" style="margin-bottom:-10px">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="d-flex align-items-center col-sm-9">
+
+                                    @if (sport.Icon != null)
+                                    {
+                                        <img src="@sport.Icon" class="mr-3 rounded-circle img-fluid tables-profile-image" />
+                                    }
+                                    else
+                                    {
+                                        <img src="~/img/default-img.jpg" class="mr-3 rounded-circle img-fluid tables-profile-image" />
+                                    }
+                                    <div></div>
+                                    <h6 class="m-0 mr-5">@sport.Name</h6>
+                                </div>
+                                <a href="#editSportModal" data-toggle="modal" data-target="#editSportModal" class="text-warning mr-3" onclick="editSport('@sport.SportId', '@sport.Name', '@sport.MaxPlayers', '@sport.MaxPrice', '@sport.Icon')">Edit</a>
+                                <a href="#deleteCategoryModal" data-toggle="modal" data-target="#deleteCategoryModal" onclick="deleteSport('@sport.SportId', '@sport.Name')" class="text-danger">Delete</a>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mb-3"style="margin-top:-25px">
+                                <div class="d-flex align-items-center col-sm-9" >
+                                    <p style="margin-left:60px">@sport.MaxPlayers Players Max</p>
+                                </div>
+
+                                @if(@sport.MaxPrice == 0)
+                                {
+                                    <p>0.00 AED</p>
+                                }
+                                else
+                                {
+                                    <p style="margin-left:-21px">@sport.MaxPrice.ToString("0.00") AED</p>
+                                }
+
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

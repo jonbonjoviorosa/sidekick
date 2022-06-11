@@ -1,0 +1,32 @@
+﻿@model Sidekick.Model.SetupConfiguration.SetupConfiguration
+
+<div class="card-body">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="d-flex justify-content-between align-items-center my-4">
+                <h6 class="m-0">Size team</h6>
+                <a href="#addSizeModal" data-toggle="modal" data-target="#addSizeModal" class="text-warning"><i class="fas fa-plus"></i> Add size</a>
+            </div>
+            <div class="row">
+                @if (Model != null)
+                {
+                    @foreach (var size in Model.TeamSize)
+                    {
+
+                        <div class="col-sm-4 gray-right">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="m-0">@size.SizeName</h6>
+                                <div>
+                                    <a href="#editSizeModal" data-toggle="modal" data-target="#editSizeModal" class="text-warning mr-3" onclick="editSize('@size.SizeId', '@size.SizeName')">Edit</a>
+                                    <a href="#deleteSizeCategoryModal" data-toggle="modal" data-target="#deleteSizeCategoryModal" onclick="deleteSize('@size.SizeId', '@size.SizeName')" class="text-danger">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+                }
+
+            </div>
+        </div>
+    </div>
+</div>

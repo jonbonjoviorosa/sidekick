@@ -1,0 +1,80 @@
+﻿@using Sidekick.Model;
+@{
+    if (ViewBag.Sports != null)
+    {
+        foreach (var sport in ViewBag.Sports)
+        {
+            if (string.IsNullOrWhiteSpace(sport.Icon))
+            {
+                sport.Icon = "~/img/default-img.jpg";
+            }
+        }
+    }
+
+    List<CommissionPlaySportViewModel> plays = ViewBag.CommissionPlays != null ? ViewBag.CommissionPlays : new List<CommissionPlaySportViewModel>();
+}
+
+<form asp-action="AddOrEditComissionPlays" method="post">
+    <div class="card yellow-top">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-4 col-md-6 col-lg-4">
+                        </div>
+                        <div class="col-sm-8 col-md-6 col-lg-8 text-right justify-content-end">
+                            <input type="submit" id="save-commission-play" value="Save" class="btn login-button btn-padding" />
+                        </div>
+                    </div>
+                    @if (ViewBag.Sports != null)
+                    {
+                        @foreach (var item in ViewBag.Sports)
+                        {
+
+                            <div class="row align-items-center">
+
+                                <div class="col-sm-1 col-md-2 col-lg-1 mb-3">
+                                    <img src="@item.Icon" class="mr-4 rounded-circle" style="width: 55px; height: 55px;" />
+                                </div>
+                                <div class="col-sm-2 col-md-2">
+                                    <h6 class="m-0">@item.Name</h6>
+                                </div>
+                                <div class="col col-md-3">
+                                    <p class="text-gray my-0 gray-small-text">Commission per player:</p>
+                                </div>
+                                @if (plays.Any())
+                                {
+                                    <div class="col col-md-3">
+                                        @if(@plays.Where(s => s.SportId == item.SportId).FirstOrDefault() != null)
+                                        {
+                                            <input type="text" class="form-control" value="@plays.Where(s => s.SportId == item.SportId).FirstOrDefault().ComissionPerPlayer" id="commission-play-value">
+                                        }
+                                        else
+                                        {
+                                             <input type="text" class="form-control" value="0" id="commission-play-value">
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="col col-md-3">
+                                        <input type="number" class="form-control" id="commission-play-value">
+                                    </div>
+                                }
+
+                                <div class="col col-md-2">
+                                    <p class="my-0 text-danger font-weight-semi-bold">AED</p>
+                                </div>
+                                <div hidden>
+                                    <input type="text" value="@item.SportId" id="sport-id" />
+                                </div>
+                            </div>
+                        }
+                    }
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

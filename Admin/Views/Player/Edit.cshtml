@@ -1,0 +1,196 @@
+﻿@model Sidekick.Model.Player.PlayerViewModel;
+
+@{
+    ViewData["Title"] = "Edit Player";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row p-3 p-lg-5">
+    <div class="col-sm-12">
+        <nav aria-label="breadcrumb">
+            <h3 class="mb-4">Edit Player</h3>
+        </nav>
+        <form asp-action="AddOrEditUserPlayer" method="post" autocomplete="off">
+            @Html.HiddenFor(m => m.IsPasswordEdit)
+            @Html.HiddenFor(m => m.UserId)
+            <div class="row mt-3 mb-3">
+                <div class="col-sm-12 d-flex justify-content-end">
+                    <div class="d-flex align-items-center mr-3">
+                        @*<label class="switch mr-2 my-0">
+                                <input type="checkbox" asp-for="IsActive">
+                                <span class="slider round"></span>
+                            </label>
+                            <label class="font-weight-bold m-0" id="label-text">Active</label>*@
+                    </div>
+                    <a href="/Player" class="btn login-button btn-light btn-padding text-dark">Cancel</a>
+                    <button class="btn login-button btn-padding" type="submit">Save</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <input type="text" class="d-none" asp-for="ImageUrl">
+                                <div class="col-sm-4 col-md-6 col-lg-4">
+                                    <img style="width: 125px; height: 125px;" class="rounded-circle" id="imgPrevUploadProfileImage" src="@Model.ImageUrl" />
+                                </div>
+                                <div class="col-sm-8 col-md-6 col-lg-8 d-flex justify-content-center flex-column text-left pl-0">
+                                    <input type="file" class="custom-file-input" id="UploadProfileImage" accept="image/*">
+                                    <a href="" id="UploadProfileImage_link" class="text-warning">Edit Profile Photo</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 d-flex justify-content-end align-items-center">
+                            @*<div class="d-flex align-items-center">
+                                    <label class="switch mr-2 my-0">
+                                        <input type="checkbox" disabled>
+                                        <span class="slider round"></span>
+                                    </label>
+                                    <label class="font-weight-bold m-0">Switch to Coach (Phase 2)</label>
+                                </div>*@
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">First Name</label>
+                                <input type="text" class="form-control" autocomplete="off" asp-for="FirstName">
+                                <span asp-validation-for="FirstName" class="text-danger small"></span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Last Name</label>
+                                <input type="text" class="form-control" autocomplete="off" asp-for="LastName">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">E-mail</label>
+                                <input type="email" class="form-control" autocomplete="off" asp-for="Email">
+                                <span asp-validation-for="Email" class="text-danger small"></span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Location</label>
+                                <div class="d-flex">
+                                    <select class="browser-default custom-select" asp-for="AreaId"
+                                            asp-items="ViewBag.Areas">
+                                    </select>
+                                    <span asp-validation-for="AreaId" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Password</label>
+                                <input type="password" class="form-control" autocomplete="off" asp-for="Password" data-value="false">
+                                <span asp-validation-for="Password" class="text-danger small"></span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Confirm Password</label>
+                                <input type="password" class="form-control" autocomplete="off" asp-for="ConfirmPassword" data-value="false">
+                                <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Mobile number</label>
+                                <input type="text" class="form-control" autocomplete="off" asp-for="MobileNumber">
+                                <span asp-validation-for="MobileNumber" class="text-danger small"></span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Nationality</label>
+                                <select class="browser-default custom-select" asp-for="NationalityId"
+                                        asp-items="ViewBag.Nationalities">
+                                </select>
+                                <span asp-validation-for="NationalityId" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label class="form-label font-weight-bold">Booking</label>
+                            <div class="table-responsive">
+                                <table class="table table-hover table-bordered table-striped display">
+                                    <tbody>
+                                        @if (Model.Bookings != null)
+                                        {
+                                            @foreach (var booking in Model.Bookings)
+                                            {
+                                                <tr>
+                                                    <td class="font-weight-semi-bold">@booking.Title</td>
+                                                    <td>@booking.Start.ToShortTimeString() - @booking.End.ToShortTimeString()</td>
+                                                    <td>@booking.Start.ToString("dd-MM-yyyy")</td>
+                                                    <td class="text-danger font-weight-semi-bold">@booking.Price AED</td>
+                                                </tr>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td class="font-weight-semi-bold">No Available Bookings</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <label class="form-label font-weight-bold">Agreement</label>
+                            <p><i class="fas fa-check text-warning mr-2"></i> has agreed to receive promotions emails.</p>
+                            <p><i class="fas fa-check text-warning mr-2"></i> has accepted the terms of use.</p>
+                            <p><i class="fas fa-check text-warning mr-2"></i> has agreed to receive notifications.</p>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </form>
+    </div>
+</div>
+@section Scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+       $(document).ready(function () {
+
+            $("#Password").rules("remove");
+
+            let isActive = '@Model.IsActive';
+            if (isActive == 'False') {
+                $('#IsActive').prop('checked', false);
+                $('#label-text').text('Inactive');
+            }
+            else {
+                $('#IsActive').prop('checked', true);
+            }
+
+            $(function () {
+                $("#UploadProfileImage_link").on('click', function (e) {
+                    e.preventDefault();
+                    $("#UploadProfileImage").trigger('click');
+                });
+            });
+
+            $("#UploadProfileImage").change(function () {
+                validateImages("UploadProfileImage");
+            });
+    });
+    </script>
+}

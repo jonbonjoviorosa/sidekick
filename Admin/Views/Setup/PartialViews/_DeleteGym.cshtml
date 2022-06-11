@@ -1,0 +1,29 @@
+﻿@model Sidekick.Model.Gym.Gym;
+
+
+<div class="modal fade"
+     id="deleteGymCategoryModal"
+     tabindex="-1"
+     aria-labelledby="deleteGymCategoryModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-controller="Setup" asp-action="DeleteGym" method="post">
+                <div class="modal-body px-5 py-0">
+                    <div class="text-center">
+                        <h5 class="modal-title mb-3" id="appendDeleteGymText"></h5>
+                        <input type="text" class="form-control" id="delete-gym-name" asp-for="GymId" hidden />
+                    </div>
+                </div>
+                <div class="modal-footer border-0 text-center">
+                    <input type="submit" value="Delete" class="btn login-button btn-padding" id="ok-surface-btn" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

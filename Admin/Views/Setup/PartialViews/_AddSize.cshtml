@@ -1,0 +1,39 @@
+﻿@model Sidekick.Model.SetupConfiguration.Size.TeamSize;
+
+<div class="modal fade"
+     id="addSizeModal"
+     tabindex="-1"
+     aria-labelledby="addSizeModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body px-5 py-0">
+                <div class="text-center">
+                    <h5 class="modal-title font-weight-bold mb-3" id="userModalLabel">Add Size</h5>
+                </div>
+                <form asp-controller="Setup" asp-action="AddOrEditTeamSize" method="post">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Team Size</label>
+                                <div class="d-flex align-items-center">
+                                    <input type="text" class="form-control" asp-for="SizeName">
+                                    @*<a href="#" class="text-warning"><i class="fas fa-plus"></i></a>*@
+                                </div>
+                                <span asp-validation-for="SizeName" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 text-center">
+                        <input type="submit" value="Add Size" class="btn login-button btn-padding" id="ok-sports-btn" />
+                    </div>
+                </form>
+            </div>         
+        </div>
+    </div>
+</div>

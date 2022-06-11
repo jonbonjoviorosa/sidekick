@@ -1,0 +1,37 @@
+﻿@model Sidekick.Model.SetupConfiguration.Goals.Goal;
+
+<div class="modal fade"
+     id="editGoalModal"
+     tabindex="-1"
+     aria-labelledby="editGoalModal"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body px-5 py-0">
+                <div class="text-center">
+                    <h5 class="modal-title font-weight-bold mb-3" id="userModalLabel">Edit Goal</h5>
+                </div>
+                <form asp-controller="Setup" asp-action="AddOrEditGoal" method="post">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Goal Name</label>
+                                <input type="text" asp-for="Name" class="form-control" id="goal-name">
+                                <span asp-validation-for="Name" class="text-danger small"></span>
+                                @Html.HiddenFor(x => x.GoalId)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 text-center">
+                        <input type="submit" value="Edit Goal" class="btn login-button btn-padding" id="ok-sports-btn" />
+                    </div>
+                </form>          
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,272 @@
+﻿@using Sidekick.Model.Enums;
+@using Sidekick.Model;
+@model Sidekick.Admin.Models.RequestsViewModel;
+@{
+    ViewData["Title"] = "Requests";
+    int counter = 0;
+    int coachCounter = 0;
+    int userCounter = 0;
+    var reportDto = new ReportDto();
+    var coachRequest = new CoachRequestViewModel();
+    var userRequest = new UserRequestViewModel();
+}
+
+<partial name="~/Views/Shared/_GenericModal.cshtml" />
+
+@*Report User Modal Details*@
+<div class="row">
+    <partial name="~/Views/Request/PartialViews/_ReportModalView.cshtml" model="reportDto" />
+</div>
+
+<div class="row p-3 p-lg-5">
+    <div class="col-sm-12">
+        <nav aria-label="breadcrumb">
+            <h3 class="mb-4">Requests</h3>
+        </nav>
+        <ul class="nav nav-pills" id="pills-tab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link" id="pills-users-tab" data-toggle="pill" href="#pills-users" role="tab" aria-controls="pills-users" aria-selected="true">Users</a>
+            </li>
+            @*<li class="nav-item">
+                <a class="nav-link" id="pills-coach-tab" data-toggle="pill" href="#pills-coach" role="tab" aria-controls="pills-coach" aria-selected="false">Coach</a>
+            </li>*@
+            <li class="nav-item">
+                <a class="nav-link" id="pills-reported-tab" data-toggle="pill" href="#pills-reported" role="tab" aria-controls="pills-reported" aria-selected="false">Reported Users</a>
+            </li>
+        </ul>
+        @if(Model != null)
+        {
+            <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane fade show active" id="pills-users" role="tabpanel" aria-labelledby="pills-users-tab">
+                <div class="card yellow-top">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <p class="font-weight-bold">You have total of <span class="text-danger">@Model.UserRequests.Count()</span> requests</p>
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-bordered table-striped display" id="dtMainListUserRequests">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th scope="col" class="w-auto font-weight-bold">No.</th>
+                                                <th scope="col" class="w-auto font-weight-bold">Name</th>
+                                                <th scope="col" class="w-auto font-weight-bold">Description</th>
+                                                <th scope="col" class="w-auto font-weight-bold">Mobile</th>
+                                                <th scope="col" class="w-auto font-weight-bold">Date</th>
+                                                <th scope="col" class="w-auto font-weight-bold">Email</th>
+                                                <th scope="col" class="w-auto font-weight-bold">Status</th>
+                                                <th scope="col" class="w-auto font-weight-bold">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var userRequestModel in Model.UserRequests)
+                                            {
+                                                userCounter++;
+                                            <tr>
+                                                <td>@userCounter</td>
+                                                <td>@userRequestModel.Name</td>
+                                                <td>@userRequestModel.Description</td>
+                                                <td>@userRequestModel.MobileNumber</td>
+                                                <td>@userRequestModel.Date.ToString("dd/MM/yyyy")</td>
+                                                <td>@userRequestModel.Email</td>
+                                                <td>
+                                                    @if (userRequestModel.Status == RequestStatus.New)
+                                                    {
+                                                        <p class="badge badge-success text-capitalize">NEW</p>
+                                                    }
+                                                    else if (userRequestModel.Status == RequestStatus.Closed)
+                                                    {
+                                                        <p class="badge badge-warning text-capitalize">CLOSED</p>
+                                                    }
+                                                    else if (userRequestModel.Status == RequestStatus.Pending)
+                                                    {
+                                                        <p class="badge badge-warning text-capitalize">PENDING</p>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    <a href="#userModal" data-toggle="modal" data-target="#userModal" class="text-warning mr-3 font-weight-semi-bold" onclick="viewReport('@userRequestModel.Name',
+                                                                                                                                                                                            '@userRequestModel.Name',
+                                                                                                                                                                                            '@userRequestModel.Description',
+                                                                                                                                                                                            '@userRequestModel.Date',
+                                                                                                                                                                                            '@((int)userRequestModel.Status)',
+                                                                                                                                                                                            '@userRequestModel.Id',
+                                                                                                                                                                                            '@userRequestModel.Id',
+                                                                                                                                                                                             1)">View</a>
+                                                </td>
+                                            </tr>
+                                            }
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @*<div class="tab-pane fade" id="pills-coach" role="tabpanel" aria-labelledby="pills-coach-tab">
+                <div class="card yellow-top">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <p class="font-weight-bold">You have total of <span class="text-danger">@Model.CoachRequests.Count()</span> requests</p>
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-bordered table-striped display" id="dtMainListCoachRequest">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th scope="col" class="w-auto font-weight-bold">No.</th>
+                                                <th scope="col" class="w-auto font-weight-bold">Name</th>
+                                                <th scope="col" class="w-auto font-weight-bold">Description</th>
+                                                <th scope="col" class="w-auto font-weight-bold">Mobile</th>
+                                                <th scope="col" class="w-auto font-weight-bold">Date</th>
+                                                <th scope="col" class="w-auto font-weight-bold">Email</th>
+                                                <th scope="col" class="w-auto font-weight-bold">Status</th>
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var coachRequestModel in Model.CoachRequests)
+                                            {
+                                                coachCounter++;
+                                                <tr>
+
+                                                    <td>@coachCounter</td>
+                                                    <td>@coachRequestModel.Name</td>
+                                                    <td>@coachRequestModel.Description</td>
+                                                    <td>@coachRequestModel.MobileNumber</td>
+                                                    <td>@coachRequestModel.Date.ToString("dd/MM/yyyy")</td>
+                                                    <td>@coachRequestModel.Email</td>
+                                                    <td>
+                                                        @if (coachRequestModel.Status == RequestStatus.New)
+                                                        {
+                                                            <p class="badge badge-success text-capitalize">NEW</p>
+                                                        }
+                                                        else if (coachRequestModel.Status == RequestStatus.Closed)
+                                                        {
+                                                            <p class="badge badge-warning text-capitalize">CLOSED</p>
+                                                        }
+                                                        else if (coachRequestModel.Status == RequestStatus.Pending)
+                                                        {
+                                                            <p class="badge badge-warning text-capitalize">PENDING</p>
+                                                        }
+                                                    </td>
+                                                    
+
+                                                </tr>
+                                            }
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+            <div class="tab-pane fade" id="pills-reported" role="tabpanel" aria-labelledby="pills-coach-tab">
+                <div class="card yellow-top">
+                    <div class="card-body">
+                        <div class="row">
+                            @if (Model != null)
+                            {
+                                <div class="col-sm-12">
+                                    <p class="font-weight-bold">You have total of <span class="text-danger">@Model.Reports.Count()</span> reported users</p>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover table-bordered table-striped display" id="dtMainListReportList">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th scope="col" class="w-auto font-weight-bold">No.</th>
+                                                    <th scope="col" class="w-auto font-weight-bold">Reported by</th>
+                                                    <th scope="col" class="w-auto font-weight-bold">Reported User</th>
+                                                    <th scope="col" class="w-auto font-weight-bold">Description</th>
+                                                    <th scope="col" class="w-auto font-weight-bold">Date</th>
+                                                    <th scope="col" class="w-auto font-weight-bold">Status</th>
+                                                   <th scope="col" class="w-auto font-weight-bold">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var report in Model.Reports)
+                                                {
+                                                    counter++;
+                                                    <tr>
+                                                        <td>@counter</td>
+                                                        <td>@report.ReportedByUser</td>
+                                                        <td>@report.ReportedUser</td>
+                                                        <td>@report.Reasons</td>
+                                                        <td>@report.ReportedDate.ToString("dd/MM/yyyy")</td>
+                                                        <td>
+                                                            @if (report.Status == RequestStatus.New)
+                                                            {
+                                                                <p class="badge badge-success text-capitalize">NEW</p>
+                                                            }
+                                                            else if (report.Status == RequestStatus.Closed)
+                                                            {
+                                                                <p class="badge badge-warning text-capitalize">CLOSED</p>
+                                                            }
+                                                            else if (report.Status == RequestStatus.Pending)
+                                                            {
+                                                                <p class="badge badge-warning text-capitalize">PENDING</p>
+                                                            }
+                                                        </td>
+                                                        <td>
+                                                            <a href="#userModal" data-toggle="modal" data-target="#userModal" class="text-warning mr-3 font-weight-semi-bold" onclick="viewReport('@report.ReportedByUser',
+                                                                                                                                                                                            '@report.ReportedUser',
+                                                                                                                                                                                            '@report.Reasons',
+                                                                                                                                                                                            '@report.ReportedDate',
+                                                                                                                                                                                            '@((int)report.Status)',
+                                                                                                                                                                                            '@report.ReportedByUserId',
+                                                                                                                                                                                            '@report.ReportedUserId',
+                                                                                                                                                                                            0)">View</a>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+        
+    </div>
+</div>
+
+@section Scripts{
+<script type="text/javascript">
+    retainReposrtListDataTablePages();
+    retainUserRequestListDataTablePages();
+/*    retainCoachRequestListDataTablePages();*/
+
+    $("#pills-users-tab").on('click', function () {
+        sessionStorage.setItem("clicked-request-tab", 0);
+    });
+
+    $("#pills-reported-tab").on('click', function () {
+        sessionStorage.setItem("clicked-request-tab", 1);
+    });
+
+    $(document).ready(function () {
+        var activeTab = sessionStorage.getItem("clicked-request-tab");
+        if (activeTab == 0) {
+            $("#pills-users-tab").addClass('active');
+            $("#pills-users").addClass('active');
+            $("#pills-users").addClass('show');
+            $("#pills-reported-tab").removeClass('active');
+            $("#pills-reported").removeClass('active');
+            $("#pills-reported").removeClass('show');
+        }
+        else {
+            $("#pills-users-tab").removeClass('active');
+            $("#pills-users").removeClass('active');
+            $("#pills-users").removeClass('show');
+            $("#pills-reported-tab").addClass('active');
+            $("#pills-reported").addClass('active');
+            $("#pills-reported").addClass('show');
+        }
+    });
+</script>
+}

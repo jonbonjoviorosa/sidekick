@@ -1,0 +1,20 @@
+﻿@using Sidekick.Model
+@model LegalDocumentDto
+
+@{
+    ViewData["Title"] = "Cancellation Policy";
+    Layout = "~/Views/Shared/_Startup.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        @*<img src="/img/logo.svg" class="img-fluid m-auto" />*@
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    @Html.Raw(Model.Body)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

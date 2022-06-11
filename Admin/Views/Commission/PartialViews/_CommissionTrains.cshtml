@@ -1,0 +1,44 @@
+﻿@model Sidekick.Model.CommissionTrain;
+
+<div class="card yellow-top">
+    <form asp-action="AddOrEditCommissionTrains" method="post">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12 text-right justify-content-end">
+                
+                    <button class="btn login-button btn-padding" type="submit">Save</button>
+                </div>
+                <div class="col-sm-6 col-md-12 col-lg-6 p-4">
+                    <h6 class="font-weight-bold">Coaching Group</h6>
+                    <hr />
+                    <div class="row align-items-center">
+                        <div class="col-5">
+                            <p class="text-gray my-0 gray-small-text">Commission per player:</p>
+                        </div>
+                        <div class="col-4">
+                            <input type="number" class="form-control" asp-for="@Model.CoachingGroupComission">
+                        </div>
+                        <div class="col-3">
+                            <p class="my-0 text-danger font-weight-semi-bold">AED</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-12 col-lg-6 p-4">
+                    <h6 class="font-weight-bold">Coaching Individual</h6>
+                    <hr />
+                    <div class="row align-items-center">
+                        <div class="col-5">
+                            <p class="text-gray my-0 gray-small-text">Commission per session:</p>
+                        </div>
+                        <div class="col-4">
+                            <input type="number" class="form-control" asp-for="@Model.CoachingIndividualComission">
+                        </div>
+                        <div class="col-3">
+                            <p class="my-0 text-danger font-weight-semi-bold">AED</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

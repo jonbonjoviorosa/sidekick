@@ -1,0 +1,174 @@
+﻿@using Sidekick.Model
+@using Sidekick.Admin.Helpers
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor _httpCtxtAc;
+@model List<SlotRenderViewModel>
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_FLayout.cshtml";
+    ISession session = _httpCtxtAc.HttpContext.Session;
+
+    var _facilityUCtxt = session.GetObjectFromJson<FacilityUserContext>("facilityUserContext");
+}
+
+<div class="row mx-0 mb-4">
+    <div class="col-sm-12 px-3">
+        <h6 class="text-white mt-3 mb-4">Analytics</h6>
+    </div>
+    <div class="col-sm-12 col-lg-4 px-3">
+        <div class="row white rounded p-3 mb-3 mx-0">
+            <div class="col-9 px-0">
+                <p class="font-weight-semi-bold">Bookings (Last 7 days)</p>
+                <canvas class="font-weight-semi-bold chart-panel w-100 mt-4 text-center" id="chart_1">
+                </canvas>
+            </div>
+            <div class="col-3 px-0 text-center">
+                <label class="green px-3 mb-2 rounded small text-white" id="booking-percentage">+25%</label>
+                <h3 class="mb-0 font-weight-bold" id="new-booking-today">20</h3>
+                <p class="mb-0 small mt-n2 font-weight-semi-bold">TODAY</p>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="col-sm-12 col-lg-4 px-3">
+        <div class="row white rounded p-3 mb-3 mx-0">
+            <div class="col-9 px-0">
+                <p class="font-weight-semi-bold">New Pitch (Last 7 days)</p>
+                <canvas class="chart-panel w-100 mt-4 text-center" id="chart_2">
+                </canvas>
+            </div>
+            <div class="col-3 px-0 text-center">
+                <label class="yellow px-3 mb-2 rounded small text-white" id="pitch-percentage">-15%</label>
+                <h3 class="mb-0 font-weight-bold" id="new-pitch-today"></h3>
+                <p class="mb-0 small mt-n2 font-weight-semi-bold">TODAY</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-lg-4 px-3">
+        <div class="row white rounded p-3 mb-3 mx-0">
+            <div class="col-9 px-0">
+                <p class="font-weight-semi-bold">New players (Last 7 days)</p>
+                <canvas class="chart-panel w-100 mt-4 text-center" id="chart_3">
+                </canvas>
+            </div>
+            <div class="col-3 px-0 text-center">
+                <label class="red px-3 mb-2 rounded small text-white" id="player-percentage">-34%</label>
+                <h3 class="mb-0 font-weight-bold" id="new-player-today">03</h3>
+                <p class="mb-0 small mt-n2 font-weight-semi-bold">TODAY</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 col-lg-6 px-3 mt-4">
+        <h6 class="text-white my-4">Last Bookings</h6>
+        @if (Model != null)
+        {
+            @foreach (var pitch in Model)
+            {
+                <div class="per-pitch-booked white mb-3 rounded-right" onclick="viewBookDetail('@pitch.FacilityPitchID', '@pitch.SportID', '@pitch.FacilityPitchTimingID', '@pitch.BoookingID')">
+                    <div class="row mx-0 py-2 px-3 align-items-center">
+                        <div class="col-4 px-0">
+                            <div class="row mx-0 border-right align-items-center">
+                                <div class="col-3 px-0">
+                                    <img src="~/img/default-img.jpg" class="w-100 circle">
+                                </div>
+                                <div class="col-9 px-2">
+                                    <p class="mb-0 font-weight-semi-bold">@pitch.PitchName</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3 px-0">
+                            <p class="mb-0 text-green text-center font-weight-semi-bold">@pitch.PitchStart.ToShortTimeString() - @pitch.PitchEnd.ToShortTimeString()</p>
+                        </div>
+                        <div class="col-2 px-0">
+                            <p class="mb-0 text-green text-center font-weight-semi-bold">@pitch.PitchDate.ToString("dd MMM yyyy")</p>
+                        </div>
+                        <div class="col-3 px-0">
+                            <p class="mb-0 text-right pr-3 font-weight-semi-bold">
+                                <i class="icon ion-person-stalker f-s14"></i> @pitch.PlayerCount/@pitch.MaxPlayers
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+
+
+
+        <div class="my-3 text-center">
+            <a class="transparent border-yellow py-1 px-3 rounded text-white medium" href="~/Pitches">View All Bookings</a>
+        </div>
+
+    </div>
+
+    <div class="col-md-12 col-lg-6 px-3 mt-4">
+        <h6 class="text-white my-4">Players</h6>
+        @if (ViewBag.FacilityPlayers != null)
+        {
+            <div class="white rounded p-3">
+                @foreach (var facilityPlayer in ViewBag.FacilityPlayers)
+                {
+
+                    <div class="per-new-player grey-100 mb-2 rounded">
+                        <div class="row mx-0">
+                            <div class="col-4 px-0">
+                                <div class="row mx-0 px-3 pt-3 align-items-center">
+                                    <div class="col-3 px-0">
+                                        <img src="@facilityPlayer.ProfileImgUrl" class="w-100 circle">
+                                    </div>
+                                    <div class="col-9 px-2">
+                                        <p class="mb-0 py-1 font-weight-semi-bold">@facilityPlayer.Name</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-5 px-0">
+                                <p class="pos-relative text-red text-center mt-1 pt-3 font-weight-semi-bold"><i class="icon ion-location text-red"></i>@facilityPlayer.AreaName</p>
+                            </div>
+                            <div class="col-3 pr-0 pl-4">
+                                <p class="mb-0 py-2 pr-3 mt-1 small font-weight-semi-bold">
+                                    @facilityPlayer.CreatedDate.ToShortTimeString() <br>
+                                    @facilityPlayer.CreatedDate.ToString("dd MMM yyyy")
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                }
+            </div>
+
+        }
+
+        <div class="my-3 text-center">
+            <a class="transparent border-yellow py-1 px-3 rounded text-white medium" href="~/FacilityPlayer">View All Players</a>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript">
+
+               let facilityPlayerData = JSON.parse('@Html.Raw(Json.Serialize(ViewBag.FacilityPlayersData))');
+               let facilityPitchesData = JSON.parse('@Html.Raw(Json.Serialize(ViewBag.FacilityPitchesData))');
+               let bookingsData = JSON.parse('@Html.Raw(Json.Serialize(ViewBag.UserBookings))');
+               populatePlayerGraph(facilityPlayerData);
+               populatePitchGraph(facilityPitchesData);
+               populateBookingsGraph(bookingsData);
+                //$('.per-pitch-booked').click(function () {
+                //    window.location.href = "/Pitches";
+                //});
+
+                $('.per-new-player').click(function () {
+                    window.location.href = "/FacilityPlayer";
+                });
+
+
+                function viewBookDetail(data, dataSport,dataTimingID,bookingID) {
+                    var dataList = data + ";" + dataSport + ";" + dataTimingID + ";" + bookingID;
+                    var url = '@Url.Action("FacilityPitchDetail", "Pitches", new { facilityPitchId = "dataList" })'
+                    var params = url.replace('dataList', dataList);
+                    window.location.href = params;
+                }
+    </script>
+}

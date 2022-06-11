@@ -1,0 +1,264 @@
+﻿@using Sidekick.Admin.Helpers
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor _httpCtxtAc;
+@using Sidekick.Model;
+
+@{
+    ISession session = _httpCtxtAc.HttpContext.Session;
+
+    var _facilityUCtxt = session.GetObjectFromJson<FacilityUserContext>("facilityUserContext");
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Sidekick Facilities</title>
+    <link rel="icon" type="image/png" href="~/favicon.png" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+    <link rel="stylesheet" href="~/mdb/css/mdb.min.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/mdb/css/style.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/mdb/css/facilities.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/mdb/css/datatables.min.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/mdb/css/wysiwyg.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/fullcalendar/lib/main.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/mdb/css/bootstrap-multiselect.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/mdb/css/jquery-datepicker.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css" />
+</head>
+<body>
+    <div class="loaderbody" id="loaderbody">
+        <div class="loader"></div>
+    </div>
+    <div class="wrapper d-flex align-items-stretch">
+        <nav id="sidebar" class="navbar-fixed-left">
+            <div class="custom-menu">
+                <button type="button" id="sidebarCollapse" class="btn btn-primary">
+                    <i class="fa fa-bars"></i>
+                    <span class="sr-only">Toggle Menu</span>
+                </button>
+            </div>
+            <div class="pt-3 pb-3 scroll-side">
+                <img src="~/img/logo.svg" class="mx-auto d-block img-fluid" />
+                <div class="text-center">
+                    <ul class="list-unstyled components">
+                        <li class="@(ViewBag.Current == "Pitches" ? "active" : "")">
+                            <a href="~/Pitches">
+                                <span class="fas fa-th-large fa-3x"></span> <br />
+                                Pitches
+                            </a>
+                        </li>
+                        <li class="@(ViewBag.Current == "Calendar" ? "active" : "")">
+                            <a href="~/Calendar">
+                                <span class="far fa-calendar fa-3x"></span> <br />
+                                Calendar
+                            </a>
+                        </li>
+                        <li class="@(ViewBag.Current == "Settings" ? "active" : "")">
+                            <a href="~/Facility/UpdateProfile">
+                                <span class="fas fa-cog fa-3x"></span> <br />
+                                Settings
+                            </a>
+                        </li>
+                        <li class="@(ViewBag.Current == "Dashboard" ? "active" : "")">
+                            <a href="~/Facility/Dashboard">
+                                <span class="fas fa-tachometer-alt fa-3x"></span> <br />
+                                Dashboard
+                            </a>
+                        </li>
+                        <li>
+                            <a href="~/Home/Logout"><i class="fas fa-sign-out-alt fa-lg position-fixed"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Page Content  -->
+        <div id="content">
+            <div class="container">
+
+                <div class="row">
+                    <div class="col-4">
+                        <h2 class="text-white">@ViewBag.Current</h2>
+                    </div>
+                    <div class="col-8 d-flex justify-content-end">
+                        <ul class="header-panel">
+                            <li>
+                                <i class="icon ion-android-notifications-none text-white dropdown-toggle" id="notif" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                                <div class="dropdown-menu dropdown-menu-lg-left dropdown-secondary rounded-lg dropdown dropdown--scrollable"
+                                     aria-labelledby="notif">
+                                    <div class="pt-1 px-4" id="populate-notifications">
+                                    </div>
+                                </div>
+                                @*<ul class="dropdown-menu dropdown-menu-lg-left dropdown-secondary rounded-lg dropdown" id="populate-notifications" ariaaria-labelledby="notif">
+                                    <li class="dropdown-item">
+
+                                    <div class="row mx-0 mb-3">
+                                    <div class="col-3 px-0">
+                                    <img src="~/img/rphoto.png" class="w-70 circle border-green">
+                                    </div>
+                                    <div class="col-9 px-0">
+                                    <p class="medium pt-1 mb-0"><b>David</b> add a new slot.</p>
+                                    <p class="text-grey small mt-n1 mb-0">Now</p>
+                                    </div>
+                                    </div>
+
+                                    </li>
+                                    <li class="dropdown-item">
+
+                                    <div class="row mx-0 mb-3">
+                                    <div class="col-3 px-0">
+                                    <img src="~/img/rphoto.png" class="w-70 circle border-green">
+                                    </div>
+                                    <div class="col-9 px-0">
+                                    <p class="medium pt-1 mb-0"><b>David</b> add a new slot.</p>
+                                    <p class="text-grey small mt-n1 mb-0">Now</p>
+                                    </div>
+                                    </div>
+
+                                    </li>
+
+                                    </ul>*@
+
+
+                                @*<div class="dropdown-menu dropdown-menu-lg-left dropdown-secondary rounded-lg dropdown dropdown--scrollable"
+                                    aria-labelledby="notif">
+                                    <div class="pt-3 px-4" id="populate-notifications">
+                                    @* <div class="row mx-0 mb-3">
+                                    <div class="col-3 px-0">
+                                    <img src="~/img/rphoto.png" class="w-70 circle border-green">
+                                    </div>
+                                    <div class="col-9 px-0">
+                                    <p class="medium pt-1 mb-0"><b>David</b> add a new slot.</p>
+                                    <p class="text-grey small mt-n1 mb-0">Now</p>
+                                    </div>
+                                    </div>*@
+                                @*<div class="row mx-0 mb-3">
+                                    <div class="col-3 px-0">
+                                    <img src="~/img/rphoto.png" class="w-70 circle border-green">
+                                    </div>
+                                    <div class="col-9 px-0">
+                                    <p class="medium pt-1 mb-0"><b>David</b> add a new slot.</p>
+                                    <p class="text-grey small mt-n1 mb-0">Now</p>
+                                    </div>
+                                    </div>
+                                    <div class="row mx-0 mb-3">
+                                    <div class="col-3 px-0">
+                                    <img src="~/img/rphoto.png" class="w-70 circle border-green">
+                                    </div>
+                                    <div class="col-9 px-0">
+                                    <p class="medium pt-1 mb-0"><b>David</b> add a new slot.</p>
+                                    <p class="text-grey small mt-n1 mb-0">Now</p>
+                                    </div>
+                                    </div>
+                                    <div class="row mx-0 mb-3">
+                                    <div class="col-3 px-0">
+                                    <img src="~/img/rphoto.png" class="w-70 circle border-green">
+                                    </div>
+                                    <div class="col-9 px-0">
+                                    <p class="medium pt-1 mb-0"><b>David</b> add a new slot.</p>
+                                    <p class="text-grey small mt-n1 mb-0">Now</p>
+                                    </div>
+                                    </div>
+                                    <div class="row mx-0 mb-3">
+                                    <div class="col-3 px-0">
+                                    <img src="~/img/rphoto.png" class="w-70 circle border-green">
+                                    </div>
+                                    <div class="col-9 px-0">
+                                    <p class="medium pt-1 mb-0"><b>David</b> add a new slot.</p>
+                                    <p class="text-grey small mt-n1 mb-0">Now</p>
+                                    </div>
+                                    </div>
+                                    </div>*@
+
+
+                            </li>
+                            <li class="avatar dropdown log-out">
+                                <a class="nav-link dropdown-toggle text-white" id="navbarDropdownMenuLink-55" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <div class="row">
+                                        @if (_facilityUCtxt != null)
+                                        {
+                                            if (string.IsNullOrEmpty(_facilityUCtxt.FacilityUserInfo.ImageUrl))
+                                            {
+                                                <div class="col-3">
+                                                    <img src="~/img/User_Default_Logo.jpg" class="rounded-circle z-depth-0" style=" width: 35px; height: 35px;">
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="col-3">
+                                                    <img src="@_facilityUCtxt.FacilityUserInfo.ImageUrl" class="rounded-circle z-depth-0" style=" width: 35px; height: 35px;">
+                                                </div>
+                                            }
+
+                                            <div class="col text-capitalize white-text">
+                                                <span class="yellow-text">@_facilityUCtxt.FacilityUserInfo.FirstName</span><br />
+
+                                                @if (_facilityUCtxt.FacilityUserInfo.FacilityUserType == EFacilityUserType.ADMIN)
+                                                {
+                                                    <small>Super Administrator</small>
+                                                }
+                                                else if (_facilityUCtxt.FacilityUserInfo.FacilityUserType == EFacilityUserType.OWNER)
+                                                {
+                                                    <small>Administrator</small>
+                                                }
+                                                else
+                                                {
+                                                    <small class="text-danger">@_facilityUCtxt.FacilityUserInfo.FacilityRole</small>
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-lg-right dropdown-secondary"
+                                     aria-labelledby="navbarDropdownMenuLink-55">
+                                    <a class="dropdown-item text-danger" href="~/Home/Logout">Logout</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <hr />
+
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="~/mdb/js/jquery.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/mdb/js/popper.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/mdb/js/bootstrap.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/mdb/js/mdb.min.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script type="text/javascript" src="~/mdb/js/datatables.min.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script type="text/javascript" src="~/js/facility.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/fullcalendar/lib/main.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/mdb/js/bootstrap-multiselect.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/js/Chart.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/js/site.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/mdb/js/jquery-datepicker.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/js/calendar.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/js/facility-pitch.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/js/reports.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/js/dashboard-facility.js" asp-append-version="true"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD4dXCD7qIUhWDCs-N2PZjFxe8v6l5hRWE" type="text/javascript"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function(){
+           populateNotifcations(@Html.Raw(Json.Serialize(_facilityUCtxt)));
+        });
+        $(window).on('load', function () {
+            $('#loaderbody').fadeOut();
+        });
+    </script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
+

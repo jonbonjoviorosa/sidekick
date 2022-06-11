@@ -1,0 +1,608 @@
+﻿@using Sidekick.Model
+@model FacilityProfile
+
+@{
+    ViewData["Title"] = "Add Facility";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var isEdit = false;
+    if (ViewBag.IsEdit != null)
+    {
+        isEdit = ViewBag.IsEdit;
+    }
+}
+
+<partial name="~/Views/Shared/_GenericModal.cshtml" />
+<partial name="~/Views/Shared/_AddSportModal.cshtml" />
+
+<div class="row p-3 p-lg-5">
+    <div class="col-sm-12">
+        <nav aria-label="breadcrumb">
+            @if (isEdit)
+            {
+                <h3 class="mb-4">Edit Facility</h3>
+            }
+            else
+            {
+                <h3 class="mb-4">Add Facility</h3>
+            }
+
+        </nav>
+
+        <form asp-controller="Facility" asp-action="Add" method="post">
+            @Html.HiddenFor(m => m.FacilityId)
+            @Html.HiddenFor(m => m.FacilityOwnerId)
+            <div class="row mt-3 mb-3">
+                <div class="col-sm-12 d-flex justify-content-end">
+                    <a href="/Facility" class="btn login-button btn-light btn-padding text-dark">Cancel</a>
+                    <button class="btn login-button btn-padding" type="submit" id="save-facility">Save</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-sm-6">
+
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Facility Name</label>
+                                <input type="text" class="form-control" asp-for="Name">
+                                <span asp-validation-for="Name" class="text-danger small"></span>
+                            </div>
+
+                            <div class="form-group">
+
+                                <label class="form-label font-weight-bold">Description</label>
+                                <textarea class="form-control" rows="5" asp-for="Description" onKeyDown="limitText(this.form.Description,this.form.countdown1,1500);"
+                                          onKeyUp="limitText(this.form.Description,this.form.countdown1,1500);"></textarea>
+
+                                <div class="mt-2">
+                                    <font size="1">
+                                        <span>(Maximum Characters: 1500)</span>
+                                        <span class="float-right">You have <input readonly type="text" name="countdown1" size="3" value="1500" class="text-danger"> characters left.</span>
+                                    </font>
+                                </div>
+                                <span asp-validation-for="Description" class="text-danger small"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Email</label>
+                                <input type="email" class="form-control" asp-for="Email" autocomplete="off">
+                                <span asp-validation-for="Email" class="text-danger small"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Password</label>
+                                <input type="password" class="form-control" autocomplete="off" asp-for="Password">
+                                <span asp-validation-for="Password" class="text-danger small"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Confirm Password</label>
+                                <input type="password" class="form-control" asp-for="ConfirmPassword" autocomplete="off">
+                                <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Mobile Number</label>
+                                <input type="text" class="form-control" asp-for="MobileNumber" autocomplete="off">
+                                <span asp-validation-for="MobileNumber" class="text-danger small"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Owner First Name</label>
+                                <input type="text" class="form-control" asp-for="OwnerFirstName" autocomplete="off">
+                                <span asp-validation-for="OwnerFirstName" class="text-danger small"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Owner Last Name</label>
+                                <input type="text" class="form-control" asp-for="OwnerLastName" autocomplete="off">
+                                <span asp-validation-for="OwnerLastName" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label class="form-label font-weight-bold">Location</label>
+
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="Street" asp-for="Street">
+                                        <span asp-validation-for="Street" class="text-danger small"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col">
+                                    <div class="form-group">
+                                        <select class="browser-default custom-select" id="selected-Area"
+                                                asp-items="@(new SelectList(ViewBag.Areas, "AreaId", "AreaName"))">
+                                            <option value="">Select an Area</option>
+                                        </select>
+                                        @*<input type="text" class="form-control" placeholder="Area" asp-for="Area">*@
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label class="form-label font-weight-bold">Latitude</label>
+                                        <input type="text" readonly class="form-control" placeholder="Street" asp-for="Latitude">
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label class="form-label font-weight-bold">Longitude</label>
+                                        <input type="text" readonly class="form-control" placeholder="Street" asp-for="Longitude">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col">
+                                    <div id="map" style="height: 300px;"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group pt-3">
+                                <label class="form-label font-weight-bold">Photos</label>
+                            </div>
+                            <div class="row d-flex align-items-center">
+                                <div class="col-2 pb-3">
+                                    <input type="text" asp-for="ImageUrl" style="display:none;" value="@ViewBag.DefaultIcon">
+                                    <img class="img-fluid" id="imgPrevUploadProfileImage" src="@ViewBag.DefaultIcon" />
+                                </div>
+                                <div class="col-2 d-flex align-items-center">
+                                    <input type="file" class="custom-file-input" id="UploadProfileImage" accept="image/*">
+                                    <a href="" id="UploadProfileImage_link"><i class="fas fa-plus text-black-50"></i></a>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="d-flex justify-content-between">
+                                    <label class="form-label font-weight-bold">Sports</label>
+                                    @*<a href="#" class="text-warning"><i class="fas fa-plus"></i> Add Sport</a>*@
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-12 col-lg-12 mb-2">
+                                        <select class="browser-default selectpicker" asp-for="FacilitySports"
+                                                asp-items="@(new SelectList(ViewBag.Sports, "SportId", "Name"))">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="SelectedSports" hidden>
+
+                            </div>
+                            <div>
+                                <label><b>Opening Hours</b></label>
+                            </div>
+
+                            <div class="row d-flex justify-content-center align-items-center">
+                                <div class="col-lg-3 col-sm-12">
+                                    <div class="custom-control custom-checkbox">
+                                        @Html.CheckBoxFor(x => x.IsEveryday, new { @class = "custom-control-input ckbx-workhours" })
+                                        <label class="custom-control-label" for="IsEveryday">Everyday</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-1 col-sm-6">
+                                    <label class="form-label font-weight-bold mb-0">From</label>
+                                </div>
+
+                                <div class="col-lg-3 col-sm-6">
+                                    <select class="browser-default custom-select" asp-for="TimeStart.TimeOfDay"
+                                            asp-items="@(new SelectList(ViewBag.TimeSlotsAM, "Key", "Value"))">
+                                        @* <option value="00:00:00">Close</option>*@
+                                    </select>
+                                    <span asp-validation-for="TimeStart" class="text-danger small"></span>
+                                </div>
+
+                                <div class="col-lg-1 col-sm-6">
+                                    <label class="form-label font-weight-bold mb-0">To</label>
+                                </div>
+
+                                <div class="col-lg-3 col-sm-6">
+                                    <select class="browser-default custom-select" asp-for="TimeEnd.TimeOfDay"
+                                            asp-items="@(new SelectList(ViewBag.TimeSlotsPM, "Key", "Value"))">
+                                        @*  <option value="00:00:00">Close</option>*@
+                                    </select>
+                                    <span asp-validation-for="TimeEnd" class="text-danger small"></span>
+                                </div>
+                                <div class="col-1"></div>
+                            </div>
+
+                            <div class="row pt-4">
+                                <div class="col-6">
+                                    <div class="custom-control custom-checkbox">
+                                        @*@Html.CheckBoxFor(x => x.IsHalfHourAllowed, new { @class = "custom-control-input ckbx-workhours" })*@
+                                        <input type="checkbox" class="custom-control-input ckbx-workhours" id="IsPersonalized" name="IsPersonalized">
+                                        <label class="custom-control-label" for="IsPersonalized">Personalized</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-6 d-flex justify-content-end">
+                                    <div class="text-warning" id="add-day" onclick="addDay()"><i class="fas fa-plus"></i>Add a Day</div>
+                                </div>
+                            </div>
+
+                            <div id="add-day-slot">
+                                @foreach (var facilityTiming in Model.FacilityTimings)
+                                {
+                                    <partial name="~/Views/Facility/PartialViews/_AddDay.cshtml" model="facilityTiming" />
+                                }
+                            </div>
+
+                            <div class="custom-control custom-checkbox my-3">
+                                <input type="checkbox" class="custom-control-input" id="bookCheck" name="example1">
+                                <label class="custom-control-label" for="bookCheck">Allow players to book 30 minutes</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+
+        //JS to hide input upload
+        $(function () {
+            $("#UploadProfileImage_link").on('click', function (e) {
+                e.preventDefault();
+                $("#UploadProfileImage").trigger('click');
+            });
+        });
+
+        $("#UploadProfileImage").change(function () {
+            validateFacilityImages("UploadProfileImage");
+        });
+
+        $(document).ready(function () {
+
+            $("input:text, form").attr("autocomplete", "off");
+            //$('#Email').val('    ');
+            $("#imageLoadingUploadProfileImage").hide();
+            $(".spinner-border").hide();
+
+            if ('@isEdit' == 'False') {
+                $('#IsEveryday').prop('checked', true);
+                $('select[name="Day"]').each(function () {
+                    $(this).attr('disabled', true);
+                });
+
+                $('select[name="TimeStart"]').each(function () {
+                    $(this).attr('disabled', true);
+                });
+
+                $('select[name="TimeEnd"]').each(function () {
+                    $(this).attr('disabled', true);
+                });
+
+                document.getElementById("add-day").style.pointerEvents = 'none';
+            }
+            else {
+                var facilityObj = @Html.Raw(Json.Serialize(Model));
+                var facilityTimings = facilityObj.facilityTimings;
+                $('#selected-Area').val(facilityObj.areaId);
+                $('select[name="FacilitySports"] > option').each(function () {
+                for (var x = 0; x < facilityObj.facilitySports.length; x++) {
+                        if ($(this).val() == facilityObj.facilitySports[x].sportId) {
+                            $(this).attr('selected', 'selected');
+                        }
+                    }
+                });
+                $('#bookCheck').prop('checked', facilityObj.isHalfHourAllowed);
+
+                $('select[name="FacilitySports"] > option').each(function () {
+                    for (var x = 0; x < facilityObj.facilitySports.length; x++) {
+                        if ($(this).val() == facilityObj.facilitySports[x].sportId) {
+                            $(this).attr('selected', 'selected');
+                        }
+                    }
+                });
+
+                if (!facilityObj.isEveryday) {
+                    $('#IsPersonalized').prop('checked', true);
+                    $('select[name="TimeStart"]').each(function (i) {
+                        for (var x = 0; x < facilityTimings.length; x++) {
+                            if (i == x) {
+                                let parsedTimeStart = new Date(facilityTimings[x].timeStart);
+                                $(this).val(parsedTimeStart.toLocaleTimeString([], { hour: '2-digit', minute: "2-digit", second: "2-digit", hour12: false }));
+                            }
+                        }
+                    });
+
+                    $('select[name="TimeEnd"]').each(function (i) {
+                        for (var x = 0; x < facilityTimings.length; x++) {
+                            if (i == x) {
+                                let parsedTimeEnd = new Date(facilityTimings[i].timeEnd);
+                                $(this).val(parsedTimeEnd.toLocaleTimeString([], { hour: '2-digit', minute: "2-digit", second: "2-digit", hour12: false }));
+                            }
+                        }
+                    });
+
+                    $('select[name="TimeStart.TimeOfDay"]').each(function (i) {
+                        $(this).attr('disabled', true);
+                    });
+                    $('select[name="TimeEnd.TimeOfDay"]').each(function (i) {
+                        $(this).attr('disabled', true);
+                    });
+
+                    $('select[name="Day"]').each(function (i) {
+                        $(this).attr('disabled', false);
+                    });
+
+                    $('select[name="TimeStart"]').each(function (i) {
+                        $(this).attr('disabled', false);
+                    });
+
+                    $('select[name="TimeEnd"]').each(function (i) {
+                        $(this).attr('disabled', false);
+                    });
+
+                    document.getElementById("add-day").style.pointerEvents = 'auto';
+                }
+                else {
+                    $('#IsEveryday').prop('checked', facilityObj.isEveryday);
+                    let parsedTimeStart = new Date(facilityObj.facilityHours.timeStart);
+                    let parsedTimeEnd = new Date(facilityObj.facilityHours.timeEnd);
+                    $('select[name="TimeStart.TimeOfDay"]').val(parsedTimeStart.toLocaleTimeString([], { hour: '2-digit', minute: "2-digit", second: "2-digit", hour12: false }));
+                    $('select[name="TimeEnd.TimeOfDay"]').val(parsedTimeEnd.toLocaleTimeString([], { hour: '2-digit', minute: "2-digit", second: "2-digit", hour12: false }));
+
+                    $('select[name="Day"]').each(function (i) {
+                        $(this).attr('disabled', true);
+                    });
+
+                    $('select[name="TimeStart"]').each(function (i) {
+                        $(this).attr('disabled', true);
+                    });
+
+                    $('select[name="TimeEnd"]').each(function (i) {
+                        $(this).attr('disabled', true);
+                    });
+
+                    document.getElementById("add-day").style.pointerEvents = 'none';
+
+                    $('select[name="TimeStart.TimeOfDay"]').each(function (i) {
+                        $(this).attr('disabled', false);
+                    });
+                    $('select[name="TimeEnd.TimeOfDay"]').each(function (i) {
+                        $(this).attr('disabled', false);
+                    });
+                }
+            }
+
+
+        });
+
+        (function () {
+
+            setTimeout(() => {
+
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function (position) {
+                        var location = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+
+                        var map = new google.maps.Map(
+                            document.getElementById('map'), { zoom: 17, center: location });
+                        currentMarker = new google.maps.Marker({ position: location, map: map });
+
+                        // set default values inside the modal
+                        $('#Latitude').val(location.lat);
+                        $('#Longitude').val(location.lng);
+
+                        google.maps.event.addListener(map, "click", function (e) {
+
+                            //lat and lng is available in e object
+                            var latLng = e.latLng;
+
+                            // reset marker when clicked on map
+                            var newPosition = { lat: latLng.lat(), lng: latLng.lng() };
+                            currentMarker.setMap(null);
+                            currentMarker = new google.maps.Marker({ position: newPosition, map: map });
+
+                            // set form values inside the modal
+                            $('#Latitude').val(newPosition.lat);
+                            $('#Longitude').val(newPosition.lng);
+
+                        });
+                    });
+                }
+            }, 1000);
+
+        })();
+
+        function addDay() {
+            $.ajax({
+                url: "AddDaySlot",
+                cache: false,
+                success: function (html) {
+                    $('#add-day-slot').append(html)
+                }
+            });
+        }
+
+        $(".ckbx-workhours").click(function () {
+            $(".ckbx-workhours").not(this).prop('checked', false);
+        });
+
+        $("#facilityAddSuccessBtn").on('click', function () {
+            window.location.replace(BASEPATH + "/Facility");
+        });
+
+        //$("#errorBtn").on('click', function () {
+        //    window.location.replace(BASEPATH + "/Facility");
+        //});
+
+        $('#IsEveryday').change(function () {
+            console.log('test');
+            $('select[name="Day"]').each(function (i) {
+                $(this).attr('disabled', true);
+            });
+
+            $('select[name="TimeStart"]').each(function (i) {
+                $(this).attr('disabled', true);
+            });
+
+            $('select[name="TimeEnd"]').each(function (i) {
+                $(this).attr('disabled', true);
+            });
+
+            document.getElementById("add-day").style.pointerEvents = 'none';
+
+            $('select[name="TimeStart.TimeOfDay"]').each(function (i) {
+                $(this).attr('disabled', false);
+            });
+            $('select[name="TimeEnd.TimeOfDay"]').each(function (i) {
+                $(this).attr('disabled', false);
+            });
+        });
+
+        $('#IsPersonalized').change(function () {
+            $('select[name="TimeStart.TimeOfDay"]').each(function (i) {
+                $(this).attr('disabled', true);
+            });
+            $('select[name="TimeEnd.TimeOfDay"]').each(function (i) {
+                $(this).attr('disabled', true);
+            });
+
+            $('select[name="Day"]').each(function (i) {
+                $(this).attr('disabled', false);
+            });
+
+            $('select[name="TimeStart"]').each(function (i) {
+                $(this).attr('disabled', false);
+            });
+
+            $('select[name="TimeEnd"]').each(function (i) {
+                $(this).attr('disabled', false);
+            });
+
+            document.getElementById("add-day").style.pointerEvents = 'auto';
+        });
+
+        $('#save-facility').click(function (e) {
+            e.preventDefault();
+            console.log('test');
+            let formData = new FormData();
+            formData.FacilityId = $('#FacilityId').val() == '' ? '00000000-0000-0000-0000-000000000000' : $('#FacilityId').val();
+            formData.FacilityOwnerId = $('#FacilityOwnerId').val();
+            formData.Name = $('#Name').val();
+            formData.Description = $('#Description').val();
+            formData.Email = $('#Email').val();
+            formData.Password = $('#Password').val();
+            formData.ConfirmPassword = $('#ConfirmPassword').val();
+            formData.MobileNumber = $('#MobileNumber').val();
+            formData.ImageUrl = $('#ImageUrl').val();
+            formData.Street = $('#Street').val();
+            formData.AreaId = parseInt($('#selected-Area').val());
+            formData.IsEveryday = $('#IsEveryday').prop('checked');
+            formData.AreaId = parseInt($('#selected-Area').val());
+            formData.Latitude = $('#Latitude').val();
+            formData.Longitude = $('#Longitude').val();
+            formData.OwnerFirstName = $('#OwnerFirstName').val();
+            formData.OwnerLastName = $('#OwnerLastName').val();
+            formData.FacilitySports = [];
+            let sports = $('#FacilitySports').val();
+            for (var i = 0; i < sports.length; i++) {
+                formData.FacilitySports.push({ SportId: sports[i] });
+            }
+            formData.IsHalfHourAllowed = $('#bookCheck').prop('checked');
+            formData.FacilityTimings = [];
+
+            if (!formData.IsEveryday) {
+                $('select[name="Day"]').each(function (i) {
+                    formData.FacilityTimings.push({ Day: "", TimeStart: "", TimeEnd: "" });
+                    formData.FacilityTimings[i].Day = $(this).val();
+                });
+                $('select[name="TimeStart"]').each(function (i) {
+                    formData.FacilityTimings[i].TimeStart = $(this).val();
+                });
+                $('select[name="TimeEnd"]').each(function (i) {
+                    formData.FacilityTimings[i].TimeEnd = $(this).val();
+                });
+            }
+            else {
+                formData.TimeStart = $('#TimeStart_TimeOfDay').val();
+                formData.TimeEnd = $('#TimeEnd_TimeOfDay').val();
+            }
+
+            $.ajax({
+                url: "Add",
+                type: "POST",
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                beforeSend: function () {
+                    $("#GenericModal").modal('show');
+                    $("#GenericModalTitle").text("Please wait..");
+                    $("#savingGenericLoader").show();
+                },
+                dataType: 'json',
+                success: function (result) {
+                    $("#savingGenericLoader").hide();
+                    $("#GenericModal").modal('show');
+
+                    if (result.modelError != null) {
+                        let errorMessage = [];
+                        for (var i = 0; i < result.modelError.length; i++) {
+                            errorMessage.push('<p>' + result.modelError[i].key + ' is required </p>');
+                        }
+
+                        $('#GenericModalMsg').html(errorMessage);
+                        $("#errorIcon").show();
+                        $("#facilityAddErrorBtn").show();
+                        $("#successIcon").hide();
+                        $("#facilityAddSuccessBtn").hide();
+                    }
+                    else if (result.statusCode == 400) {
+                        $("#GenericModalTitle").text(result.message);
+                        $("#errorIcon").show();
+                        $("#facilityAddErrorBtn").show();
+                        $("#successIcon").hide();
+                        $("#facilityAddSuccessBtn").hide();
+                    }
+                    else {
+                        $("#GenericModalTitle").text(result.message);
+                        $("#errorIcon").hide();
+                        $("#facilityAddErrorBtn").hide();
+                        $("#successIcon").show();
+                        $("#facilityAddSuccessBtn").show();
+                    }
+                },
+                failure: function (result) {
+                    console.log(result);
+                }
+            });
+        });
+
+        $('select[name="FacilitySports"]').click(function () {
+            var selectedSports = [];
+            var sport = [];
+
+            $("#sportsList").html("");
+            $.each($("input[name='sports']:checked"), function () {
+                sport = {
+                    SportId: $(this).val()
+                };
+                selectedSports.push(sport);
+
+                $("#sportsList").append(('<p class="badge badge-light p-2 mr-3">' + " #" + $(this).next('label').text() + '</p>'));
+            });
+
+            $("#SelectedSports").val(JSON.stringify(selectedSports));
+            $("#sportModal").modal('hide');
+        });
+    </script>
+}

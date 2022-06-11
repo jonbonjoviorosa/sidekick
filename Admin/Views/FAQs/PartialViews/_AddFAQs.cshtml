@@ -1,0 +1,41 @@
+﻿@model Sidekick.Model.FAQsDto;
+
+<div class="modal fade"
+     id="addFAQsModal"
+     tabindex="-1"
+     aria-labelledby="addFAQsModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body px-5 py-0">
+                <div class="text-center">
+                    <h5 class="modal-title font-weight-bold mb-3">Add New FAQ</h5>
+                </div>
+                <form asp-controller="FAQs" asp-action="Add" method="post">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Question Title</label>
+                                <input type="text" class="form-control" asp-for="Question">
+                                <span asp-validation-for="Question" class="text-danger small"></span>
+                            </div>
+                            <div class="form-group pt-3">
+                                <label class="form-label font-weight-bold">Answer</label>
+                                <textarea class="form-control" rows="10" asp-for="Answer"></textarea>
+                                <span asp-validation-for="Answer" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 text-center">
+                        <input type="submit" value="Save" class="btn login-button btn-padding" id="save" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

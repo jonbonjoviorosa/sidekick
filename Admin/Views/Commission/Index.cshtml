@@ -1,0 +1,167 @@
+﻿@model Sidekick.Model.CommissionTrain;
+
+@{
+    ViewData["Title"] = "Commission";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<partial name="~/Views/Shared/_GenericModal.cshtml" />
+<div class="row p-3 p-lg-5">
+    <div class="col-sm-12">
+        <nav aria-label="breadcrumb">
+            <h3 class="mb-4">Commissions</h3>
+        </nav>
+
+        <div class="col-sm-12 d-flex justify-content-end pr-0">
+            <a class="text-black-50 btn-padding" href="@Url.Action("Export","Commission")" id="export-btn"><i class="fas fa-file-excel fa-2x" style="color:#28a745"></i></a>
+        </div>
+
+        <ul class="nav nav-pills" id="pills-tab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link" id="pills-report-tab" data-toggle="pill" href="#pills-report" role="tab" aria-controls="pills-report" aria-selected="true">Report</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="pills-sports-tab" data-toggle="pill" href="#pills-sports" role="tab" aria-controls="pills-sports" aria-selected="false">Set up Play</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="pills-coach-tab" data-toggle="pill" href="#pills-coach" role="tab" aria-controls="pills-coach" aria-selected="false">Set up Train</a>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane fade show active" id="pills-report" role="tabpanel" aria-labelledby="pills-report-tab">
+                <div class="card yellow-top">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-bordered table-striped display" id="dtMainList">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th scope="col" class="w-auto font-weight-bold">No.</th>
+                                                <th scope="col" class="w-auto font-weight-bold">Player</th>
+                                                <th scope="col" class="w-auto font-weight-bold">Booking Type</th>
+                                                <th scope="col" class="w-auto font-weight-bold">Total Sales</th>
+                                                <th scope="col" class="w-auto font-weight-bold">Commission</th>
+                                                <th scope="col" class="w-auto font-weight-bold">VAT Amount</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (ViewBag.CommissionReports != null)
+                                            {
+                                                int counter = 0;
+                                                @foreach (var item in ViewBag.CommissionReports)
+                                                {
+                                                    counter++;
+                                                    string fullName = item.FirstName + " " + item.LastName;
+                                            <tr>
+                                                <td>@counter</td>
+                                                <td class="text-capitalize">@fullName</td>
+                                                <td>@item.BookingType.ToString()</td>
+                                                <td>@item.TotalSalesAmount.ToString("0.00") AED</td>
+                                                <td>@item.CommissionAmount.ToString("0.00")</td>
+                                                <td>@item.VatAmount.ToString("0.00")</td>
+                                            </tr>
+                                                }
+                                            }
+                                            </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="pills-sports" role="tabpanel" aria-labelledby="pills-sports-tab">
+                <partial name="~/Views/Commission/PartialViews/_ComissionPlays.cshtml" />
+            </div>
+            <div class="tab-pane fade" id="pills-coach" role="tabpanel" aria-labelledby="pills-coach-tab">
+                <partial name="~/Views/Commission/PartialViews/_CommissionTrains.cshtml" model="@Model" />
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            retainDataTablePages();
+
+            var ShowModal = $("#ShowGenericModal").val();
+            if (ShowModal == 'true') {
+                $("#GenericModal").modal('show');
+                $("#successIcon").show();
+                $("#successBtn").show();
+            }
+
+            //duplicate entry
+            if (ShowModal == 'false') {
+                $("#GenericModal").modal('show');
+                $("#errorIcon").show();
+                $("#errorBtn").show();
+            }
+        });
+
+        $("#errorBtn").on('click', function () {
+            window.location.replace(BASEPATH + "/Commission");
+        });
+
+        $("#successBtn").on('click', function () {
+            window.location.replace(BASEPATH + "/Commission");
+        });
+
+        $("#pills-report-tab").on('click', function () {
+            $("#export-btn").show();
+            sessionStorage.setItem("clicked-tab", 0);
+        });
+
+        $("#pills-sports-tab").on('click', function () {
+            $("#export-btn").hide();
+            sessionStorage.setItem("clicked-tab", 1);
+        });
+
+        $("#pills-coach-tab").on('click', function () {
+            $("#export-btn").hide();
+            sessionStorage.setItem("clicked-tab", 2);
+        });
+
+        $(document).ready(function () {
+            var activeTab = sessionStorage.getItem("clicked-tab");
+            if (activeTab == 0) {
+                $("#pills-report-tab").addClass('active');
+                $("#pills-report").addClass('active');
+                $("#pills-report").addClass('show');
+                $("#pills-sports-tab").removeClass('active');
+                $("#pills-sports").removeClass('active');
+                $("#pills-sports").removeClass('show');
+                $("#pills-coach-tab").removeClass('active');
+                $("#pills-coach").removeClass('active');
+                $("#pills-coach").removeClass('show');
+            }
+            else if (activeTab == 1) {
+                $("#pills-report-tab").removeClass('active');
+                $("#pills-report").removeClass('active');
+                $("#pills-report").removeClass('show');
+                $("#pills-sports-tab").addClass('active');
+                $("#pills-sports").addClass('active');
+                $("#pills-sports").addClass('show');
+                $("#pills-coach-tab").removeClass('active');
+                $("#pills-coach").removeClass('active');
+                $("#pills-coach").removeClass('show');
+            }
+            else {
+                $("#pills-report-tab").removeClass('active');
+                $("#pills-report").removeClass('active');
+                $("#pills-report").removeClass('show');
+                $("#pills-sports-tab").removeClass('active');
+                $("#pills-sports").removeClass('active');
+                $("#pills-sports").removeClass('show');
+                $("#pills-coach-tab").addClass('active');
+                $("#pills-coach").addClass('active');
+                $("#pills-coach").addClass('show');
+            }
+        });
+    </script>
+}

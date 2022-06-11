@@ -1,0 +1,180 @@
+﻿@using Sidekick.Model
+@model FacilityPitchVM
+
+@{
+    ViewData["Title"] = "Add Facility Pitch";
+    Layout = "~/Views/Shared/_FLayout.cshtml";
+    var facilityTiming = new List<FacilityPitchTiming>();
+    facilityTiming.Add(new FacilityPitchTiming());
+}
+
+<partial name="~/Views/Shared/_GenericModal.cshtml" />
+
+<div class="row pb-5">
+    <div class="col-sm-12 col-lg-3">
+        <div class="box-settings">
+            <ul class="list-unstyled">
+                <li class="px-3"><a href="~/Facility/UpdateProfile"><i class="fas fa-user mr-3 text-warning"></i>Facility Information</a></li>
+                <li class="active px-3"><a href="~/FacilityPitch"><i class="fas fa-th text-warning mr-3"></i>Pitch Management</a></li>
+                <li class="px-3"><a href="~/FacilityUser"><i class="fas fa-users text-warning mr-3"></i>User Management</a></li>
+                <li class="px-3"><a href="~/FacilityPlayer"><i class="fas fa-user-friends text-warning mr-3"></i>Player Management</a></li>
+                <li class="px-3"><a href="~/Facility/PaymentHistory"><i class="fas fa-file-invoice-dollar text-warning mr-3"></i>Payment History</a></li>
+                <li class="px-3"><a href="~/Facility/Reports"><i class="fas fa-cog text-warning mr-3"></i>Reports</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-lg-9">
+
+        <form asp-action="Add" method="post">
+            @Html.HiddenFor(m => m.FacilityPitchId)
+            @Html.HiddenFor(m => m.FacilityId)
+            @Html.HiddenFor(m => m.Id)
+            <input type="text" id="timingIdToRemove" hidden />
+            <div class="row mt-3 mb-3 d-flex align-items-center">
+                <div class="col-sm-6">
+                    <a href="~/FacilityPitch" class="text-warning"><i class="fas fa-long-arrow-alt-left"></i> Go back</a>
+                </div>
+
+                <div class="col-sm-6 d-flex justify-content-end">
+                    @if (Model.FacilityPitchId == null)
+                    {
+                        <input type="submit" id="submit-pitch" value="submit" class="btn login-button btn-save mr-3" />
+                    }
+                    else
+                    {
+                        <input type="submit" id="submit-pitch" value="submit" class="btn login-button btn-save mr-3" />
+                    }
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label class="form-label font-weight-bold">Pitch Name</label>
+                                        <input type="text" id="pitch-name" class="form-control" asp-for="Name" value="@(Model == null ? "" : Model.Name)">
+                                        <span id="errName" class="text-danger small text-hide">Pitch Name is Required</span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <label class="form-label font-weight-bold">Sport</label>
+                                    @*@Html.DropDownListFor(s => s.SportId, new SelectList(ViewBag.Sports, "SportId", "Name"), new { @class = "browser-default selectpicker" })*@
+                                    <select class="browser-default selectpicker" asp-for="SportId"
+                                            asp-items="@(new SelectList(ViewBag.Sports, "SportId", "Name"))">
+                                        <option value="" disabled selected>Select an option</option>
+                                    </select>
+                                    <span id="errSportId" class="text-danger small text-hide">Sport is Required</span>
+                                </div>
+                                <div class="col">
+                                    <label class="form-label font-weight-bold">Number of Players</label>
+                                    <div class="row">
+                                        <div class="col-7">
+                                            <select class="browser-default custom-select" asp-for="MaxPlayers">
+                                                <option value="" disabled selected>Select an option</option>
+                                            </select>
+                                            <span id="errMaxPlayers" class="text-danger small text-hide">Number of Players is Required</span>
+                                        </div>
+                                        <div class="col-5">
+                                            <span class="text-danger" style="font-size: 11px;">@*@(Model == null ? "" : Model.MaxPlayers)*@ 30 players max</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label class="form-label font-weight-bold">Team Size</label>
+                                    <select class="browser-default selectpicker" asp-for="TeamSize"
+                                            asp-items="@(new SelectList(ViewBag.Sizes, "SizeId", "SizeName"))">
+                                        <option value="" disabled selected>Select an option</option>
+                                    </select>
+                                    <span id="errTeamSize" class="text-danger small text-hide">Team Size is Required</span>
+                                </div>
+                                <div class="col">
+                                    <label class="form-label font-weight-bold">Surface</label>
+                                    <select class="browser-default selectpicker" asp-for="SurfaceId"
+                                            asp-items="@(new SelectList(ViewBag.Surfaces, "SurfaceId", "Name"))">
+                                        <option value="" disabled selected>Select an option</option>
+                                    </select>
+                                    <span id="errSurface" class="text-danger small text-hide">Surface is Required</span>
+                                </div>
+                                <div class="col">
+                                    <label class="form-label font-weight-bold">Location</label>
+                                    <select class="browser-default selectpicker" asp-for="LocationId"
+                                            asp-items="@(new SelectList(ViewBag.Locations, "LocationId" , "Name" ))">
+                                        <option value="" disabled selected>Select an option</option>
+                                    </select>
+                                    <span id="errLocationId" class="text-danger small text-hide">Location is Required</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Price per Slot</label>
+                            </div>
+                            <div class="form-group">
+                                <div class="custom-control custom-checkbox mr-5">
+                                    <div class="row">
+                                        <div class="col-2">
+                                            <input type="checkbox" class="custom-control-input" id="fixedCheck" @((Model != null && Model.IsFixedPrice) ? "checked='checked'" : "") asp-for="IsFixedPrice">
+                                            <label class="custom-control-label" for="fixedCheck">Fixed Price</label>
+                                        </div>
+                                        <div id="showFixedPriceInput" hidden>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <input type="text" style="width:90px" class="form-control" placeholder="Price" asp-for="FixedPrice" value="@(Model == null ? "" : Model.FixedPrice)" />
+                                                </div>
+                                                <div class="col">
+                                                    AED
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <label><strong>Customized Pricing</strong></label>
+                            </div>
+                            <div id="pitch-timing">
+                                @foreach (var pitchTiming in Model.FacilityPitchTimings)
+                                {
+                                    <partial name="~/Views/FacilityPitch/PartialViews/_SlotTiming.cshtml" model="pitchTiming" />
+                                }
+                            </div>
+                        </div>
+                        <div class="row pt-3 m-1">
+                            <div class="col-sm-12">
+                                <a href="#" onclick="addSlot()" class="text-warning"><i class="fas fa-plus"></i> Add Slot</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+        $("#successBtn").on('click', function () {
+            window.location.replace(BASEPATH + "/FacilityPitch");
+        });
+
+    $(document).ready(function () {
+        var facilityPitch = JSON.parse('@Html.Raw(Json.Serialize(Model))');
+        for (i = 1; i <= 30; i++) {
+            $('#MaxPlayers').append($('<option></option>').val(i).html(i))
+        }
+        populateFields(facilityPitch);
+
+
+    });
+    </script>
+}

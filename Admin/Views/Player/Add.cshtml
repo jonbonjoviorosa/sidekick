@@ -1,0 +1,136 @@
+﻿@model Sidekick.Model.Player.PlayerViewModel;
+
+@{
+    ViewData["Title"] = "Add Player";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<partial name="~/Views/Shared/_GenericModal.cshtml" />
+
+<div class="row p-3 p-lg-5">
+    <div class="col-sm-12">
+        <nav aria-label="breadcrumb">
+            <h3 class="mb-4">Add Player</h3>
+        </nav>
+        <form asp-action="AddOrEditUserPlayer" method="post" autocomplete="off">
+            <div class="row mt-3 mb-3">
+                <div class="col-sm-12 d-flex justify-content-end">
+                    <a href="/Player" class="btn login-button btn-light btn-padding text-dark">Cancel</a>
+                    <button class="btn login-button btn-padding" type="submit">Save</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <input type="text" class="d-none" asp-for="ImageUrl">
+                        <div class="col-sm-2 col-md-3 col-lg-2">
+                            <img style="width: 125px; height: 125px;" class="rounded-circle" id="imgPrevUploadProfileImage" src="~/img/User_Default_Logo.jpg" />
+                        </div>
+                        <div class="col-sm-3 d-flex justify-content-center flex-column text-left pl-0">
+                            <input type="file" class="custom-file-input" id="UploadProfileImage" accept="image/*">
+                            <a href="" id="UploadProfileImage_link" class="text-warning">Upload Profile Photo</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">First Name</label>
+                                <input type="text" class="form-control" autocomplete="off" asp-for="FirstName">
+                                <span asp-validation-for="FirstName" class="text-danger small"></span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Last Name</label>
+                                <input type="text" class="form-control" autocomplete="off" asp-for="LastName">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">E-mail</label>
+                                <input type="email" class="form-control" autocomplete="off" asp-for="Email">
+                                <span asp-validation-for="Email" class="text-danger small"></span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Location</label>
+                                <div class="d-flex">
+                                    <select class="browser-default custom-select" asp-for="AreaId"
+                                            asp-items="ViewBag.Areas">
+                                    </select>
+                                    <span asp-validation-for="AreaId" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Password</label>
+                                <input type="password" class="form-control" autocomplete="off" asp-for="Password">
+                                <span asp-validation-for="Password" class="text-danger small"></span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Confirm Password</label>
+                                <input type="password" class="form-control" autocomplete="off" asp-for="ConfirmPassword">
+                                <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Mobile number</label>
+                                <input type="text" class="form-control" autocomplete="off" asp-for="MobileNumber">
+                                <span asp-validation-for="MobileNumber" class="text-danger small"></span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Nationality</label>
+                                <select class="browser-default custom-select" asp-for="NationalityId"
+                                        asp-items="ViewBag.Nationalities">
+                                </select>
+                                <span asp-validation-for="NationalityId" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+
+        //JS to hide input upload
+        $(function () {
+            $("#UploadProfileImage_link").on('click', function (e) {
+                e.preventDefault();
+                $("#UploadProfileImage").trigger('click');
+            });
+        });
+
+        $("#UploadProfileImage").change(function () {
+            validateImages("UploadProfileImage");
+        });
+
+        $(document).ready(function () {
+            $("#imageLoadingUploadProfileImage").hide();
+            $(".spinner-border").hide();
+        });
+
+        $("#successBtn").on('click', function () {
+            window.location.replace(BASEPATH + "/FacilityUser");
+        });
+    </script>
+}

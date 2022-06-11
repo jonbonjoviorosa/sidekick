@@ -1,0 +1,104 @@
+﻿@using Sidekick.Model
+@model IEnumerable<CoachViewModel>
+
+@{
+    ViewData["Title"] = "Coach List";
+}
+
+<partial name="~/Views/Shared/_GenericModal.cshtml" />
+<partial name="~/Views/Shared/_YesNoModal.cshtml" />
+
+<div class="row p-3 p-lg-5">
+    <div class="col-sm-12">
+        <nav aria-label="breadcrumb">
+            <h3 class="mb-4">Coach List</h3>
+        </nav>
+        <div class="col-sm-12 d-flex justify-content-end mb-3">
+             <a class="text-black-50 btn-padding " href="@Url.Action("Export","Coach")"><i class="fas fa-file-excel fa-2x" style="color:#28a745"></i></a>
+            @*<a class="btn login-button border-0 btn-padding" href="~/Coach/Add">Add Coach</a>*@
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table cellspacing="5" cellpadding="5">
+                                <tbody>
+                                    <tr>
+                                        <td><b>Filter by Dates:</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align:center"><b>From</b></td>
+                                        <td><input type="text" class="form-control" id="minDate" name="minDate"></td>
+                                        <td class=""><b>To</b></td>
+                                        <td><input type="text" class="form-control" id="maxDate" name="maxDate"></td>
+                                    </tr>
+
+
+                                </tbody>
+                            </table>
+                            <table class="table table-hover table-bordered table-striped display" id="dtMainList">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th scope="col" class="w-auto font-weight-bold">User No.</th>
+                                        <th scope="col" class="w-auto font-weight-bold">Profile</th>
+                                        <th scope="col" class="w-auto font-weight-bold">Name</th>
+                                        <th scope="col" class="w-auto font-weight-bold">Email</th>
+                                        <th scope="col" class="w-auto font-weight-bold">Mobile No.</th>
+                                        <th scope="col" class="w-auto font-weight-bold">Date Created</th>
+                                       @* <th scope="col" class="w-auto font-weight-bold">Last Coaching</th>*@
+                                        <th scope="col" class="w-auto font-weight-bold">Status</th>
+                                       @* <th scope="col" class="w-auto font-weight-bold">Action</th>*@
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model != null)
+                                    {
+                                        foreach (CoachViewModel item in Model.Where(c => c.Status == "Active"))
+                                        {
+                                            <tr>
+                                                <td>@item.UserNo</td>
+                                                <td><img src="@item.ImageUrl" class="rounded-circle img-fluid tables-profile-image" /></td>
+                                                <td>@item.ProfileName</td>
+                                                <td>@item.Email</td>
+                                                <td>@item.MobileNo</td>
+                                                <td>@item.DateCreated.GetValueOrDefault().ToString("dd/MM/yyyy")</td>
+                                               @* <td>@item.LastCoachingDate</td>*@
+                                                <td>
+                                                    @if (item.Status == "Active")
+                                                    {
+                                                        <p class="badge badge-success text-capitalize">ACTIVE</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p class="badge badge-light text-capitalize">INACTIVE</p>
+                                                    }
+                                                </td>                                              
+                                                @*<td class="text-center">
+                                                    <input type="hidden" id="coach-userid" value="@item.coachuserid"/>
+                                                    <a href="~/coach/edit?u=@item.coachuserid"><i class="fas fa-pen fa-lg mr-3 text-warning"></i></a>
+                                                    <a class="btn-delete-coach"><i class="fas fa-times fa-lg text-dark"></i></a>
+                                                </td>*@
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            retainDataTablePages();
+            renderDatePicker();
+            
+        });
+    </script>
+}

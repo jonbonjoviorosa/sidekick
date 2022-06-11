@@ -1,0 +1,156 @@
+﻿@using Sidekick.Model
+@model IEnumerable<FAQsDto>
+
+@{
+    var faqs = new Sidekick.Model.FAQsDto();
+    ViewData["Title"] = "FAQ's";
+}
+
+<partial name="~/Views/Shared/_GenericModal.cshtml" />
+<partial name="~/Views/Shared/_YesNoModal.cshtml" />
+
+<div class="row">
+    <partial name="~/Views/FAQs/PartialViews/_EditFAQs.cshtml" model="faqs" />
+</div>
+
+<div class="row">
+    <partial name="~/Views/FAQs/PartialViews/_AddFAQs.cshtml" model="faqs" />
+</div>
+
+<div class="row p-3 p-lg-5">
+    <div class="col-sm-12">
+        <nav aria-label="breadcrumb">
+            <h3 class="mb-4">FAQs</h3>
+        </nav>
+        <form>
+            <div class="row mt-3 mb-3">
+                <div class="col-sm-12 d-flex justify-content-end">
+                    <a class="btn login-button btn-padding text-black" href="#addFAQsModal" data-toggle="modal" data-target="#addFAQsModal">Add New</a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h5>@TempData["Message"]</h5>
+                    <div class="field_wrapper">
+                        @if (Model != null)
+                        {
+                            int ctr = 1;
+                            foreach (FAQsDto item in Model)
+                            {
+                                ctr++;
+                                <div>
+                                    <p id="faqID" hidden>@item.FAQsId</p>
+                                    <div class="col-sm-12 d-flex justify-content-end">
+                                        <a class="text-warning mr-3" href="#editFAQsModal" data-toggle="modal" data-target="#editFAQsModal" onclick="editFAQs(`@item.FAQsId`, `@item.Question`, `@item.Answer`)">Edit</a>
+                                        <a class="text-danger deleteFAQ" onclick="changeStatus(`@item.FAQsId`, false)">Remove</a>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label font-weight-bold">Question Title</label>
+                                        <input type="text" class="form-control" value="@item.Question" disabled>
+                                    </div>
+                                    <div class="form-group pt-3">
+                                        <label class="form-label font-weight-bold">Answer</label>
+                                        <textarea class="form-control" rows="7" disabled>@item.Answer</textarea>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                    @*<a class="add_button text-warning" href="#"><i class="fa fa-plus"></i> Add New Question</a>*@
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript">
+        function editFAQs(FAQsId, Question, Answer) {
+            $('#FAQsId').val(FAQsId);
+            $('#FAQsquestion').val(Question);
+            $('#FAQsanswer').val(Answer);
+        }
+
+        $("#successBtn").on('click', function () {
+            window.location.replace(BASEPATH + "/FAQs");
+        });
+
+        $("#errorBtn").on('click', function () {
+            window.location.replace(BASEPATH + "/FAQs");
+        });
+
+        //$(document).on('click', '.deleteFAQ', function () {
+        //    $('#YesNoModal').modal('show');
+
+        //    var thisElem = $(this);
+        //    var thisProduct = thisElem.closest('tr').find('.faqs-id-list');
+        //    console.log(thisProduct);
+
+        //    var faqID = $("#faqID").text();
+        //    $("#btnYesDelete").click(function () {
+        //        $("#YesNoModal").modal('hide');
+        //        changeStatus(faqID, false);
+        //    });
+        //});
+
+        function changeStatus(rid, stat) {
+            var parameters = {
+                Id: rid,
+                IsEnabled: stat
+            };
+
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: BASEPATH + "/FAQs/Status",
+                    contentType: 'application/json',
+                    data: JSON.stringify(parameters),
+                    success: function (result) {
+                        if (result.statusCode != 200) {
+                            $("#GenericModal").modal('show');
+                            $("#GenericModalTitle").text(result.message);
+                            $("#errorIcon").show();
+                            $("#successBtn").hide();
+                             $("#errorBtn").show();
+                        }
+                        else {
+                            $("#GenericModal").modal('show');
+                            $("#GenericModalTitle").text(result.message);
+                            $("#successIcon").show();
+                            $('#successBtn').show();
+                        }
+                    }
+                }
+            );
+        }
+
+        //$(document).ready(function () {
+        //    var wrapper = $('.field_wrapper');
+        //    var addButton = $('.add_button');
+
+        //    $(addButton).click(function () {
+        //        var fieldHTML = '<div>' +
+        //            '<div class="col-sm-12 d-flex justify-content-end">' +
+        //            '<a class="remove_button text-danger" href="javascript:void(0);">Remove</a>' +
+        //            '</div>' +
+        //            '<div class="form-group">' +
+        //            '<label class="form-label font-weight-bold">Question Title</label>' +
+        //            '<input type="text" class="form-control">' +
+        //            '</div>' +
+        //            '<div class="form-group pt-3">' +
+        //            '<label class="form-label font-weight-bold">Answer</label>' +
+        //            '<textarea class="form-control" rows="4"></textarea>' +
+        //            '</div>' +
+        //            '</div>';
+        //        $(wrapper).append(fieldHTML);
+        //    });
+
+        //    $(wrapper).on('click', '.remove_button', function (e) {
+        //        e.preventDefault();
+        //        $(this).parent('div').parent('div').remove();
+        //    });
+        //});
+    </script>
+}

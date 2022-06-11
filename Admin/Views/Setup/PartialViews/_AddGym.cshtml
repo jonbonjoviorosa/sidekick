@@ -1,0 +1,101 @@
+﻿
+@model Sidekick.Model.Gym.Gym;
+@{
+    var areas = new List<SelectListItem>();
+    if (ViewBag.Areas != null)
+    {
+        foreach (var area in ViewBag.Areas)
+        {
+            areas.Add(new SelectListItem
+            {
+                Value = area.AreaId.ToString(),
+                Text = area.AreaName
+            });
+        }
+    }
+}
+
+<div class="modal fade"
+     id="addGymModal"
+     tabindex="-1"
+     aria-labelledby="addGymModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 900px;">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body px-4 py-0">
+                <div class="text-center">
+                    <h5 class="modal-title font-weight-bold mb-4" id="gymModalLabel">Add Gym Center</h5>
+                </div>
+                <form asp-controller="Setup" asp-action="AddOrEditGym" method="post">
+                    <div class="row">
+
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Gym Name</label>
+                                <input type="text" class="form-control" asp-for="GymName" id="gym-name">
+                                <span asp-validation-for="GymName" class="text-danger small"></span>
+                                @Html.HiddenFor(u => u.GymId)
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Area</label>
+                                @Html.DropDownList("areaId", areas, new { @class = "form-control", @id = "AreaId", @name = "AreaId" })
+                                @Html.ValidationMessageFor(model => model.AreaId, "", new { @class = "text-danger small" })
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Gym Address</label>
+                                <input type="text" class="form-control" asp-for="GymAddress" id="gym-address">
+                                <span asp-validation-for="GymAddress" class="text-danger small"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label font-weight-bold">Add gym center Logo</label>
+                                <div class="d-flex align-items-center">
+                                    <input type="text" asp-for="Icon" style="display:none" id="edited-gym-icon">
+                                    <img src="~/img/default-img.jpg" id="imgPrevEditGymIconImage" class="img-fluid rounded-circle mr-3" style="width: 55px; height: 55px;" />
+                                    <input type="file" class="custom-file-input img-fluid rounded-circle mr-3" id="EditGymIconImage" style="width: 100px; height: 55px;" accept="image/*">
+                                    <a href="" id="EditGymIcon_link" style="margin-left:-110px" class="text-warning py-3"><i class="fas fa-plus"></i> Upload Badge Image</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-7">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <label class="form-label font-weight-bold edit-gym-lat">Gym Latitude</label>
+                                        <input type="text" readonly class="form-control" asp-for="GymLat" id="gym-latitude">
+                                        <span asp-validation-for="GymLat" class="text-danger small"></span>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="form-label font-weight-bold edit-gym-long">Gym Longitude</label>
+                                        <input type="text" readonly class="form-control" asp-for="GymLong" id="gym-longitude">
+                                        <span asp-validation-for="GymLong" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div id="map" style="height: 300px;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer border-0 text-center mt-2">
+                        <div id="addDiv">
+                            <input type="submit" value="Add Gym" class="btn login-button btn-padding" id="ok-sports-btn" />
+                        </div>
+                        <div id="editDiv">
+                            <input type="submit" value="Edit Gym" class="btn login-button btn-padding" id="ok-sports-btn" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

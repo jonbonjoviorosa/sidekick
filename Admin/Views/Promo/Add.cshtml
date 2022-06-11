@@ -1,0 +1,202 @@
+﻿@using Sidekick.Model;
+@using Sidekick.Model.Enums;
+@model Sidekick.Model.Promo.Promo;
+
+@{
+    ViewData["Title"] = "New Promotion";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var facilities = new List<SelectListItem>();
+    if (ViewBag.Facilities != null)
+    {
+        foreach (var facility in ViewBag.Facilities)
+        {
+            facilities.Add(new SelectListItem
+            {
+                Value = facility.FacilityId.ToString(),
+                Text = facility.Name
+            });
+        }
+    }
+    var coaches = new List<SelectListItem>();
+    coaches.Add(new SelectListItem { Value = Guid.Empty.ToString(), Text = "Select All Coaches" });
+    if(ViewBag.Coaches != null)
+    {
+        foreach (var coach in ViewBag.Coaches)
+        {
+            coaches.Add(new SelectListItem
+            {
+                Value = coach.CoachUserId.ToString(),
+                Text = coach.ProfileName
+            });
+        }
+    }
+    var isEdit = ViewBag.IsEdit;
+}
+
+<partial name="~/Views/Shared/_GenericModal.cshtml" />
+
+<div class="row p-3 p-lg-5">
+    <div class="col-sm-12">
+        <nav aria-label="breadcrumb">
+            @if (isEdit)
+            {
+                <h3 class="mb-4">Edit Promotion</h3>
+            }
+            else
+            {
+                <h3 class="mb-4">New Promotion</h3>
+            }
+
+        </nav>
+
+
+
+        <form asp-action="AddOrEditPromo" asp-controller="Promo" method="post">
+            <div class="row mb-3">
+                @Html.HiddenFor(p => p.PromoId)
+                <div class="col-sm-12 d-flex justify-content-end">
+                    <div class="d-flex align-items-center mr-3">
+                        <label class="switch mr-2 my-0">
+                            <input type="checkbox" asp-for="IsActive">
+                            <span class="slider round"></span>
+                        </label>
+                        <label class="font-weight-bold m-0" id="active-label">Active</label>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label>Promotion Name</label>
+                                        <input type="text" class="form-control" asp-for="Name">
+                                         <span asp-validation-for="Name" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label>Promotion Type</label>
+                                        <select class="browser-default selectpicker" asp-for="PromoType" asp-items="Html.GetEnumSelectList<PromoType>()">
+                                        </select>
+                                        <span asp-validation-for="PromoType" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label>Promo Amount</label>
+                                        <input type="text" class="form-control" asp-for="Amount">
+                                        <span asp-validation-for="Amount" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label>Promotion Code</label>
+                                        <input type="text" class="form-control" asp-for="Code">
+                                         <span asp-validation-for="Code" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label>Promotion Starts From</label>
+                                        <input type="text" class="form-control" id="start" asp-for="StartsFrom" autocomplete="off">
+                                         <span asp-validation-for="StartsFrom" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label>Promotion Valid To</label>
+                                        <input type="text" class="form-control" id="end" asp-for="ValidTo" autocomplete="off">
+                                         <span asp-validation-for="ValidTo" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label>Select Coach to link to</label>
+                                        @Html.DropDownList("coachId", coaches, new { @class = "form-control", @id = "CoachId", @name = "CoachId" })
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" asp-for="ByFacility">
+                                            <label class="custom-control-label" for="ByFacility">All Facilities</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="byFCheck" name="byFCheck">
+                                            <label class="custom-control-label" for="byFCheck">By Facility</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.DropDownList("facilityId", facilities, new { @class = "form-control", @id = "FacilityId", @name = "FacilityId" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label>Select Event Type</label>
+                                    <select class="browser-default selectpicker" asp-for="EventType" asp-items="Html.GetEnumSelectList<EventTypes>()">
+                                    </select>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-4 mb-4 text-center">
+                        <div class="col-sm-12">
+                            <a class="btn white-button mr-3 btn-padding" href="~/Promo/Index">Cancel</a>
+                            <input type="submit" value="Save" class="btn login-button mr-3 btn-padding" id="save-promo" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#example-getting-started').multiselect({
+                includeSelectAllOption: false,
+                buttonWidth: '100%',
+                numberDisplayed: 4
+            });
+
+             var ShowModal = $("#ShowGenericModal").val();
+            if (ShowModal == 'true') {
+                $("#GenericModal").modal('show');
+                $("#successIcon").show();
+                $('#successBtn').hide();
+                $("#successAddPromoBtn").show();
+            }
+
+            //duplicate entry
+            if (ShowModal == 'false') {
+                $("#GenericModal").modal('show');
+                $("#errorIcon").show();
+                $('#errorBtn').hide();
+                $("#errorAddPromoBtn").show();
+            }
+            $('#FacilityId').prop('disabled', true);
+
+            $('#IsActive').prop('checked', true);
+
+            $('#start').val("");
+            $('#end').val("");
+
+            if ('@isEdit' == "True") {
+                let promo = @Html.Raw(Json.Serialize(Model));
+                renderPromoValues(promo);            
+            }
+        });      
+    </script>
+}

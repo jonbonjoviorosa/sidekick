@@ -1,0 +1,292 @@
+﻿@using Sidekick.Model
+@model PaymentViewModel
+
+@{
+    ViewData["Title"] = "Payment";
+}
+
+<div class="row p-3 p-lg-5">
+    <div class="col-sm-12">
+        <nav aria-label="breadcrumb">
+            <h3 class="mb-4">Payment</h3>
+        </nav>
+        <ul class="nav nav-pills" id="pills-tab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="pills-facilities-tab" data-toggle="pill" href="#pills-facilities" role="tab" aria-controls="pills-home" aria-selected="true">Facilities</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-coach" role="tab" aria-controls="pills-profile" aria-selected="false">Coaching</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane fade show active" id="pills-facilities" role="tabpanel" aria-labelledby="pills-facilities-tab">
+                <div class="card yellow-top">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="table-responsive">
+                                    <table cellspacing="5" cellpadding="5">
+                                        <tbody>
+                                            <tr>
+                                                <td><b>Filter by Dates:</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align:center"><b>From</b></td>
+                                                <td><input type="text" class="form-control" id="minDate" name="minDate"></td>
+                                                <td class=""><b>To</b></td>
+                                                <td><input type="text" class="form-control" id="maxDate" name="maxDate"></td>
+                                            </tr>
+
+
+                                        </tbody>
+                                    </table>
+                                    <table class="table table-hover table-bordered table-striped display" id="dtMainList">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th scope="col" class="w-auto font-weight-bold">No.</th>
+                                                <th scope="col" class="w-auto font-weight-bold">Player</th>
+                                                <th scope="col" class="w-auto font-weight-bold">Pitch</th>
+                                                <th scope="col" class="w-auto font-weight-bold">Date Booked</th>
+                                                <th scope="col" class="w-auto font-weight-bold">Slot</th>
+                                                <th scope="col" class="w-auto font-weight-bold">Payment Date</th>
+                                                <th scope="col" class="w-auto font-weight-bold">Total</th>
+                                                <th scope="col" class="w-auto font-weight-bold">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model.PaymentFacilityPitches != null)
+                                            {
+                                                @foreach (var item in Model.PaymentFacilityPitches)
+                                                {
+                                                    <tr>
+                                                        <td>@item.ReferenceNumber</td>
+                                                        <td>@item.PlayerName</td>
+                                                        <td>@item.FacilityPitchName</td>
+                                                        <td>@item.DateBooked.ToString("dd/MM/yyyy")</td>
+                                                        <td>@item.Slot</td>
+                                                        <td>@item.PaymentDate.ToString("dd/MM/yyyy")</td>
+                                                        <td>@item.AmountPaid AED</td>
+                                                        @if (item.Status == PaymentStatus.Paid)
+                                                        {
+                                                            <td>
+                                                                <p class="badge badge-success text-capitalize">COMPLETED</p>
+                                                            </td>
+                                                        }
+                                                        else if (item.Status == PaymentStatus.Pending)
+                                                        {
+                                                            <td><p class="badge badge-warning text-capitalize">PENDING</p></td>
+                                                        }
+                                                        else if (item.Status == PaymentStatus.Failed)
+                                                        {
+                                                            <td><p class="badge badge-danger text-capitalize">FAILED</p></td>
+                                                        }
+                                                        else if (item.Status == PaymentStatus.Cancelled)
+                                                        {
+                                                            <td><p class="badge badge-warning text-capitalize">CANCELLED</p></td>
+                                                        }
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="pills-coach" role="tabpanel" aria-labelledby="pills-coach-tab">
+                <div class="card yellow-top">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="table-responsive">
+                                    <table cellspacing="5" cellpadding="5">
+                                        <tbody>
+                                            <tr>
+                                                <td><b>Filter by Dates:</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align:center"><b>From</b></td>
+                                                <td><input type="text" class="form-control" id="minDateCoachingPayment" name="minDateCoachingPayment"></td>
+                                                <td class=""><b>To</b></td>
+                                                <td><input type="text" class="form-control" id="maxDateCoachingPayment" name="maxDateCoachingPayment"></td>
+                                            </tr>
+
+
+                                        </tbody>
+                                    </table>
+                                    <table class="table table-hover table-bordered table-striped display" id="coachingPaymentList">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th scope="col" class="w-auto font-weight-bold">No.</th>
+                                                <th scope="col" class="w-auto font-weight-bold">Participant</th>
+                                                <th scope="col" class="w-auto font-weight-bold">Coach</th>
+                                                <th scope="col" class="w-auto font-weight-bold">Date Booked</th>
+                                                <th scope="col" class="w-auto font-weight-bold">Slot</th>
+                                                <th scope="col" class="w-auto font-weight-bold">Payment Date</th>
+                                                <th scope="col" class="w-auto font-weight-bold">Total</th>
+                                                <th scope="col" class="w-auto font-weight-bold">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model.PaymentCoachings != null)
+                                            {
+                                                @foreach (var trainBooking in Model.PaymentCoachings)
+                                                {
+                                                    <tr>
+                                                        <td>@trainBooking.ReferenceNumber</td>
+                                                        <td>@trainBooking.ParticipantName</td>
+                                                        <td>@trainBooking.CoachName</td>
+                                                        <td>@trainBooking.DateBooked.ToString("dd/MM/yyyy")</td>
+                                                        <td>@trainBooking.Slot</td>
+                                                        <td>@trainBooking.PaymentDate.ToString("dd/MM/yyyy")</td>
+                                                        <td>@trainBooking.AmountPaid AED</td>
+                                                        @if (trainBooking.Status == PaymentStatus.Paid)
+                                                        {
+                                                            <td>
+                                                                <p class="badge badge-success text-capitalize">COMPLETED</p>
+                                                            </td>
+                                                        }
+                                                        else if (trainBooking.Status == PaymentStatus.Pending)
+                                                        {
+                                                            <td><p class="badge badge-warning text-capitalize">PENDING</p></td>
+                                                        }
+                                                        else if (trainBooking.Status == PaymentStatus.Failed)
+                                                        {
+                                                            <td><p class="badge badge-danger text-capitalize">FAILED</p></td>
+                                                        }
+                                                        else if (trainBooking.Status == PaymentStatus.Cancelled)
+                                                        {
+                                                            <td><p class="badge badge-warning text-capitalize">CANCELLED</p></td>
+                                                        }
+                                                    </tr>
+                                                }
+                                            }
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts{
+<script type="text/javascript">
+    $(document).ready(function () {
+        retainDataTablePages();
+        renderDatePicker();
+        $("#minDateCoachingPayment, #maxDateCoachingPayment").datepicker({
+            minDate: new Date(1999, 10 - 1, 25),
+            dateFormat: 'dd/mm/yy',
+        });
+
+        $('#minDateCoachingPayment, #maxDateCoachingPayment').on('change', function () {
+                let minDate = $('#minDateCoachingPayment').val();
+                let maxDate = $('#maxDateCoachingPayment').val();
+                let table = $('#coachingPaymentList').DataTable();
+                if (minDate === '' || maxDate === '') {
+                    $.fn.dataTable.ext.search = [];
+                }
+                 $.fn.dataTable.ext.search = [];
+
+                $.fn.dataTable.ext.search.push(
+                    function (settings, data, dataIndex) {
+                        var min = transformDateTable(minDate);
+                        var max = transformDateTable(maxDate);
+                        var date = transformDateTable(data[5]);
+
+                        if (
+                            (min === null && max === null) ||
+                            (min === null && date <= max) ||
+                            (min <= date && max === null) ||
+                            (min <= date && date <= max)
+                        ) {
+                            return true;
+                        }
+                        return false;
+                    }
+                );
+                table.draw();
+            });
+
+        let SESSION_PRODUCT_PAGES = 'SESSION_PRODUCT_PAGES';
+        let SESSION_PRODUCT_PAGE = 'SESSION_PRODUCT_PAGE';
+        let SESSION_PRODUCT_PAGE_LENGTH = 'SESSION_PRODUCT_PAGE_LENGTH';
+
+        let pageLength = 10;
+        let currentPageLength = localStorage.getItem(SESSION_PRODUCT_PAGE_LENGTH);
+        if (currentPageLength) {
+            pageLength = +currentPageLength;
+        }
+
+        var dtMainList = $('#coachingPaymentList').DataTable({
+            "orderCellsTop": true,
+            "search": true,
+            "info": true,
+            "lengthChange": false,
+            "columnDefs": [
+                { orderable: true, className: 'reorder', targets: 0 },
+            ],
+            "autoWidth": true,
+            "pageLength": pageLength,
+            "pagingType": "full_numbers",
+            "sPaginationType": "listbox",
+            "aaSorting": [],
+        });
+
+        $('#coachingPaymentList').on('page.dt', function () {
+            var info = dtMainList.page.info();
+            localStorage.setItem(SESSION_PRODUCT_PAGES, info.pages);
+            localStorage.setItem(SESSION_PRODUCT_PAGE, info.page);
+        });
+
+        $('#coachingPaymentList').on('length.dt', function (e, settings, len) {
+            localStorage.setItem(SESSION_PRODUCT_PAGE_LENGTH, len);
+        });
+
+        let currentPage = localStorage.getItem(SESSION_PRODUCT_PAGE);
+        if (currentPage) {
+            dtMainList.page(+currentPage).draw('page');
+        }
+
+        addExtraButtons();
+        $('#coachingPaymentList').on("draw.dt", function (e) {
+            addExtraButtons();
+        });
+
+        function addExtraButtons() {
+
+            $("#coachingPaymentList_paginate .first").after("<li class='paginate_button page-item'><a class='page-link quick_previous'><<</a></li>");
+            $("#coachingPaymentList_paginate .last").before("<li class='paginate_button page-item'><a class='page-link quick_next'>>></a></li>");
+            var currentPage = dtMainList.page.info();
+            if (currentPage.pages - 1 == currentPage.page) {
+                $(".quick_next").addClass("disabled")
+            } else if (currentPage.page == 0) {
+                $(".quick_previous").addClass("disabled")
+            }
+
+            $(".quick_next").on("click", quickNext);
+            $(".quick_previous").on("click", quickPrevious);
+
+            function quickNext(e) {
+
+                var pageToGoTo = (currentPage.page + 2) >= currentPage.pages ? currentPage.pages - 1 : (currentPage.page + 2);
+                dtMainList.page(pageToGoTo).draw(false);
+            }
+
+            function quickPrevious(e) {
+
+                var pageToGoTo = (currentPage.page - 2) <= 0 ? 0 : (currentPage.page - 2);
+                dtMainList.page(pageToGoTo).draw(false);
+            }
+        }
+    });
+</script>
+}

@@ -1,0 +1,90 @@
+﻿@using Sidekick.Model
+@model LegalDocumentDto
+
+
+@{
+    ViewData["Title"] = "Privacy Policy";
+}
+
+<partial name="~/Views/Shared/_GenericModal.cshtml" />
+
+<form asp-controller="FAQs" asp-action="PrivacyPolicy" method="post">
+    <div class="row p-3 p-lg-5">
+        <div class="col-sm-12">
+            <nav aria-label="breadcrumb">
+                <h3 class="mb-4">Policies</h3>
+            </nav>
+            <ul class="nav nav-pills">
+                <li class="nav-item">
+                    <a class="nav-link active">Privacy Policy</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="~/FAQs/CancellationPolicy">Cancellation Policy</a>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="pills-privacy" role="tabpanel" aria-labelledby="pills-privacy-tab">
+                    <div class="card yellow-top">
+                        <div class="card-body">
+                            @Html.HiddenFor(t => t.Body)
+                            <textarea id="privacy"></textarea>
+                            <button class="btn login-button btn-padding mt-4 mb-4" type="submit" id="save-button">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if ($('#privacy').val() == '') {
+                $('#save-button').attr('disabled', 'disabled');
+            }
+
+         var ShowModal = $("#ShowGenericModal").val();
+            if (ShowModal == 'true') {
+                $("#GenericModal").modal('show');
+                $("#successIcon").show();
+                $('#successBtn').hide();
+                $("#successBtnPrivacy").show();
+            }
+
+            //duplicate entry
+            if (ShowModal == 'false') {
+                $("#GenericModal").modal('show');
+                $("#errorIcon").show();
+                $("#errorBtnPrivacy").show();
+            }
+
+             $("#errorBtnPrivacy").on('click', function () {
+                window.location.replace(BASEPATH + "/FAQs/PrivacyPolicy");
+            });
+
+            $("#successBtnPrivacy").on('click', function () {
+                window.location.replace(BASEPATH + "/FAQs/PrivacyPolicy");
+            });
+        });
+        
+
+       
+
+        $('#privacy').mdbWYSIWYG();
+        $(".mdb-wysiwyg-textarea").html($("#Body").val());
+
+        $(".mdb-wysiwyg-textarea").on('input change keyup', function () {
+            //console.log($(".mdb-wysiwyg-textarea").html());
+            $("#Body").val($(".mdb-wysiwyg-textarea").html());
+            if ($('.mdb-wysiwyg-textarea').html() != '') {
+                $('#save-button').removeAttr('disabled');
+            }
+            else {
+                $('#save-button').attr('disabled', 'disabled');
+            }
+        });
+    </script>
+}
+

@@ -1,0 +1,93 @@
+﻿@using Sidekick.Model
+@model IEnumerable<FacilityPlayerViewModel>
+
+@{
+    ViewData["Title"] = "Player Management";
+    Layout = "~/Views/Shared/_FLayout.cshtml";
+    int counter = 0;
+}
+<partial name="~/Views/Shared/_GenericModal.cshtml" />
+<div class="row pb-5">
+    <div class="col-sm-12 col-lg-3">
+        <div class="box-settings">
+            <ul class="list-unstyled">
+                <li class="px-3"><a href="~/Facility/UpdateProfile"><i class="fas fa-user mr-3 text-warning"></i>Facility Information</a></li>
+                <li class="px-3"><a href="~/FacilityPitch"><i class="fas fa-th text-warning mr-3"></i>Pitch Management</a></li>
+                <li class="px-3"><a href="~/FacilityUser"><i class="fas fa-users text-warning mr-3"></i>User Management</a></li>
+                <li class="active px-3"><a href="~/FacilityPlayer"><i class="fas fa-user-friends text-warning mr-3"></i>Player Management</a></li>
+                <li class="px-3"><a href="~/Facility/PaymentHistory"><i class="fas fa-file-invoice-dollar text-warning mr-3"></i>Payment History</a></li>
+                <li class="px-3"><a href="~/Facility/Reports"><i class="fas fa-cog text-warning mr-3"></i>Reports</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-sm-12 col-lg-9">
+        <div class="row mb-3">
+            <div class="col-12">
+                <a href="#" class="px-75 py-1 text-white mr-2 f-s11 ph-link active">Player</a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+
+                    <table class="table table-hover table-bordered table-striped display" id="dtMainList">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col" class="th-sm font-weight-bold">User No.</th>
+                                <th scope="col" class="th-sm font-weight-bold">Profile</th>
+                                <th scope="col" class="th-sm font-weight-bold">Name</th>
+                                <th scope="col" class="th-sm font-weight-bold">Area</th>
+                                @*<th scope="col" class="th-sm font-weight-bold">City</th>*@
+                                <th scope="col" class="th-sm font-weight-bold">Date Created</th>
+                                <th scope="col" class="th-sm font-weight-bold">Last Booking</th>
+                                @*<th scope="col" class="th-sm font-weight-bold">Action</th>*@
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @if (Model != null)
+                            {
+
+                                foreach (FacilityPlayerViewModel item in Model)
+                                {
+                                    counter++;
+                                    string fullName = item.FirstName + " " + item.LastName;
+                                    <tr>
+                                        <td>@counter</td>
+                                        <td><img src="@item.ProfileImgUrl" class="rounded-circle img-fluid tables-profile-image" /></td>
+                                        <td>@item.Name</td>
+                                        <td>@item.AreaName</td>
+                                        @*<td></td>*@
+                                        <td>@item.CreatedDate.ToString("dd/MM/yyyy")</td>
+                                        <td>@item.LastBooking</td>
+
+                                        @*<td>
+                                                @using (Html.BeginForm("Delete", "FacilityPlayer", new { userNo = @item.UserNo }, FormMethod.Post))
+                                                {
+                                                    <button type="submit" class="text-danger deactivate-link"><i class="fas fas fa-times fa-lg text-dark"></i></button>
+                                                }
+                                            </td>*@
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            retainDataTablePages();
+        });
+    </script>
+
+    <script type="text/javascript">
+        $("#successBtn").on('click', function () {
+            window.location.replace(BASEPATH + "/FacilityPlayer");
+        });
+    </script>
+}

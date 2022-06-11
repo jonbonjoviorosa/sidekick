@@ -1,0 +1,42 @@
+﻿
+<div class="row">
+    <!-- Add Sport Modal -->
+    <div class="modal fade"
+         id="sportModal"
+         tabindex="-1"
+         aria-labelledby="sportModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                </div>
+                <form>
+                    <div class="modal-body px-5 py-0">
+                        <div class="text-center">
+                            <h5 class="modal-title" id="sportModalLabel">List of Sports</h5>
+                            <br />
+                        </div>
+
+                        @if (ViewBag.Sports != null)
+                        {
+                            foreach (var item in ViewBag.Sports)
+                            {
+                                var ckboxId = "ckboxId" + item.SportId;
+                                <div class="form-group">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="@ckboxId" value="@item.SportId" name="sports">
+                                        <label class="custom-control-label" for="@ckboxId">@item.Name</label>
+                                    </div>
+                                </div>
+                            }
+                        }
+
+                    </div>
+                    <div class="modal-footer border-0 text-center">
+                        <button type="button" class="btn login-button btn-padding" id="ok-sports-btn">Add</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

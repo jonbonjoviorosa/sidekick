@@ -1,0 +1,113 @@
+﻿@model Sidekick.Model.DasboardViewModel;
+
+@{
+    ViewData["Title"] = "Reports";
+    Layout = "~/Views/Shared/_FLayout.cshtml";
+}
+
+<div class="row pb-5">
+    <div class="col-lg-3 col-sm-12">
+        <div class="box-settings">
+            <ul class="list-unstyled">
+                <li class="px-3"><a href="~/Facility/UpdateProfile"><i class="fas fa-user mr-3 text-warning"></i>Facility Information</a></li>
+                <li class="px-3"><a href="~/FacilityPitch"><i class="fas fa-th text-warning mr-3"></i>Pitch Management</a></li>
+                <li class="px-3"><a href="~/FacilityUser"><i class="fas fa-users text-warning mr-3"></i>User Management</a></li>
+                <li class="px-3"><a href="~/FacilityPlayer"><i class="fas fa-user-friends text-warning mr-3"></i>Player Management</a></li>
+                <li class="px-3"><a href="~/Facility/PaymentHistory"><i class="fas fa-file-invoice-dollar text-warning mr-3"></i>Payment History</a></li>
+                <li class="active px-3"><a href="~/Facility/Reports"><i class="fas fa-cog text-warning mr-3"></i>Reports</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-9 col-sm-12">
+        <div class="row mb-3">
+            <div class="col-sm-12">
+                <small class="text-white">Reports</small>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                @*Possibility to select day / week / month*@
+                <div class="row mb-4">
+                    <div class="col-sm-12 d-flex justify-content-end align-items-center">
+                        <div style="display:-webkit-box !important">
+                            <label class="small mr-2">From</label>
+                            @* <select class="transparent px-4 py-1 border-grey-200 small mr-3 gray-text-border-circle">
+                                <option>24 January 2020</option>
+                                </select>*@
+                            <input type="text" class="form-control transparent px-4 py-1 border-grey-200 small mr-3 gray-text-border-circle" id="from" autocomplete="off" style="width:150px">
+                            <label class="small mr-2">To</label>
+                            @*<select class="transparent px-4 py-1 border-grey-200 small mr-2 gray-text-border-circle">
+                                <option>24 January 2020</option>
+                                </select>*@
+                            <input type="text" class="form-control transparent px-4 py-1 border-grey-200 small mr-2 gray-text-border-circle" id="to" autocomplete="off" style="width:150px">
+                            <a class="btn login-button border-0 report-button-filter" onclick="reloadChart()">Submit</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="yellow-top">
+                    <div class="row mt-4">
+                        <div class="col-sm-3">
+                            <div class="box-reports">
+                                <h4>AED 0.00</h4>
+                                <p class="medium">Total Revenue AED</p>
+                            </div>
+                             <div class="box-reports">
+                                <h4 id="slot-booked-period">10</h4>
+                                <p class="medium">Total Bookings</p>
+                            </div>
+                            <div class="box-reports">
+                                <h4 id="players-period">7</h4>
+                                <p class="medium">Total Players</p>
+                            </div>
+                           
+                        </div>
+                        <div class="col-sm-9" id="chart-year">
+                            <canvas id="myChart" style="width:100%;max-width:700px"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+
+<script type="text/javascript">
+                 $(document).ready(function () {
+
+                let dataObject = JSON.parse('@Html.Raw(Json.Serialize(Model))');
+                let dateToday = new Date();
+                 renderStatistics(dataObject, dateToday, false);
+                });
+
+                $("#from").datepicker({
+                    onSelect: function () {
+                        var selected = $(this).val();
+                        let to = $('#to').val();
+                        if(to != ''){
+                            let dataObject = JSON.parse('@Html.Raw(Json.Serialize(Model))');
+                            let fromDate = new Date($(this).val());
+                            let toDate = new Date(to);
+                            renderRangeStatistics(dataObject, fromDate,  toDate, false);
+                            }
+                        }
+                       
+                });
+                $("#to").datepicker({
+                     onSelect: function () {
+                        var selected = $(this).val();
+                         let from = $('#from').val();
+                        if(from != ''){
+                             let dataObject = JSON.parse('@Html.Raw(Json.Serialize(Model))');
+                            let toDate = new Date($(this).val());
+                            let fromDate = new Date(from);
+                            renderRangeStatistics(dataObject, fromDate,  toDate, false);
+                            }
+                        }
+                });
+</script>
+}

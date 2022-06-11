@@ -1,0 +1,50 @@
+﻿@using Sidekick.Model;
+@model FacilityPitchTiming
+
+<div class="row d-flex align-items-center mt-2" id="dayRow">
+    <input type="text" asp-for="FacilityPitchTimingId" hidden/>
+    <input type="text" id="facilityPitchId" hidden />
+    <div class="col-2">
+            <select class="browser-default custom-select" asp-for="@Model.Day">               
+                <option value="@DayOfWeek.Sunday">Sunday</option>
+            <option value="@DayOfWeek.Monday">Monday</option>
+            <option value="@DayOfWeek.Tuesday">Tuesday</option>
+            <option value="@DayOfWeek.Wednesday">Wednesday</option>
+            <option value="@DayOfWeek.Thursday">Thursday</option>
+            <option value="@DayOfWeek.Friday">Friday</option>
+            <option value="@DayOfWeek.Saturday">Saturday</option>
+            </select>
+       
+    </div>
+    <div class="col-1">
+        <label class="form-label font-weight-bold">From</label>
+    </div>
+    <div class="col-2">
+        <select class="browser-default custom-select" asp-for="@Model.TimeStart"
+                asp-items="@(new SelectList(ViewBag.TimeSlotsAM, "Key", "Value"))">
+            @*<option value="00:00:00">Close</option>*@
+        </select>
+    </div>
+    <div class="col-1">
+        <label class="form-label font-weight-bold">To</label>
+    </div>
+    <div class="col-2">
+        <select class="browser-default custom-select" asp-for="@Model.TimeEnd"
+                asp-items="@(new SelectList(ViewBag.TimeSlotsPM, "Key", "Value"))">
+            @*<option value="00:00:00">Close</option>*@
+        </select>
+    </div>
+    <div class="col-2">
+        <input type="text" id="checkIfCustomPrice" class="form-control" asp-for="@Model.CustomPrice">
+    </div>
+    <div class="col">
+        <span class="ml-2">
+            AED
+        </span>
+    </div>
+    <div class="col" id="remove-slot">
+        <span>
+            <a href="#" onclick="removeSlot(this, '@Model.FacilityPitchTimingId')" class="text-warning"><i class="far fa-times-circle fa-lg"></i></a>
+        </span>
+    </div>
+</div>

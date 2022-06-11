@@ -1,0 +1,39 @@
+﻿@using Sidekick.Model;
+@model FacilityTiming
+
+<div class="row pt-3 d-flex justify-content-center-lg align-items-center facility-timing-id">
+    <div class="col-lg-3 col-sm-12">
+        <select class="browser-default custom-select" asp-for="Day">
+            <option value="@DayOfWeek.Sunday">Sunday</option>
+            <option value="@DayOfWeek.Monday">Monday</option>
+            <option value="@DayOfWeek.Tuesday">Tuesday</option>
+            <option value="@DayOfWeek.Wednesday">Wednesday</option>
+            <option value="@DayOfWeek.Thursday">Thursday</option>
+            <option value="@DayOfWeek.Friday">Friday</option>
+            <option value="@DayOfWeek.Saturday">Saturday</option>
+        </select>        
+    </div>
+    <div class="col-lg-1 col-sm-3">
+        <label class="form-label font-weight-bold">From</label>
+    </div>
+
+    <div class="col-lg-3 col-sm-9">
+        <select class="browser-default custom-select" asp-for="TimeStart"
+                asp-items="@(new SelectList(ViewBag.TimeSlotsAM, "Key", "Value"))">
+         @*   <option value="00:00:00">Close</option>*@
+        </select>
+    </div>
+
+    <div class="col-lg-1 col-sm-3">
+        <label class="form-label font-weight-bold">To</label>
+    </div>
+    <div class="col-lg-3 col-sm-7">
+        <select class="browser-default custom-select" asp-for="TimeEnd"
+                asp-items="@(new SelectList(ViewBag.TimeSlotsPM, "Key", "Value"))">
+          @*  <option value="00:00:00">Close</option>*@
+        </select>
+    </div>
+    @*<div class="col-lg-1 col-sm-2">
+        <a href="#" class="text-warning"><i class="fas fa-plus"></i></a>
+    </div>*@
+</div>

@@ -1,0 +1,200 @@
+﻿@using Sidekick.Model
+@model FacilityPitchVM
+
+@{
+    ViewData["Title"] = "Pitches";
+    Layout = "~/Views/Shared/_FLayout.cshtml";
+    var bookings = ViewBag.PitchDetail.Bookings;
+}
+<partial name="~/Views/Shared/_GenericModal.cshtml" />
+<div class="row view-pitch">
+    <div class="col-sm-12">
+        <div class="row">
+            <div class="col-sm-4">
+                <a href="~/Pitches">
+                    <i class="fas fa-arrow-left text-white back-btn"></i>
+                </a>
+            </div>
+            <div class="col-sm-4">
+                <h5 class="text-white text-center pt-2 pitch-name">@Model.Name</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-12">
+        <div class="row py-4">
+            <div class="col-lg-4 col-sm-12 px-3 mb-sm-5 mb-lg-0">
+                <div class="white rounded scroll-none h-100">
+                    <div class="p-3">
+                        @if (Model.BookingPitchTimings.Count != 0)
+                        {
+                            <h5 class="font-weight-semi-bold">Booking</h5>
+                        }
+                        else
+                        {
+                            <h5 class="font-weight-semi-bold">No Bookings for this Pitch</h5>
+                        }
+
+                    </div>
+                    <div class="p-3">
+                        @if (Model.BookingPitchTimings.Count != 0)
+                        {
+                            @foreach (var timing in Model.BookingPitchTimings)
+                            {
+                                <div class="per-datetime grey-200 rounded-sm p-3 mb-3 pos-relative" onclick="viewDetails('@timing.FacilityPitchTimingId', '@Model.MaxPlayers')">
+                                    <p class="mb-0 text-red">@timing.TimeStart.ToShortTimeString() - @timing.TimeEnd.ToShortTimeString()</p>
+                                    <p class="mb-0 pos-absolute pos-right-center  mr-3">@timing.Date.ToString("dd MMM yyyy")</p>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+
+                @*<div class="w-100 my-4 text-center pb-3">
+                    <label class="px-0 rounded border-yellow text-yellow mx-1">
+                    <a href="#"><i class="icon ion-ios-arrow-back text-yellow"></i></a>
+                    </label>
+                    <label class="px-0 rounded border-yellow text-yellow mx-1 active">
+                    <a href="#"><i class="icon ion-ios-arrow-forward text-yellow"></i></a>
+                    </label>
+                    </div>*@
+            </div>
+            @*Details of this one will change based on selected booking*@
+            <div class="col-lg-5 col-sm-12 px-3 my-sm-5 my-lg-0">
+                <input type="text" id="facilityPitchTimingId" hidden />
+                <div class="white rounded scroll-none h-100">
+                    <div class="p-3 pos-relative">
+                        <p class="font-weight-semi-bold">@ViewBag.Sport</p>
+                        <p class="font-weight-semi-bold pos-relative text-red ml-n2 mb-2 "><i class="icon ion-location text-red"></i>@Model.Location</p>
+                        @if (Model.BookingPitchTimings.Count != 0)
+                        {
+                            <p class="font-weight-semi-bold text-red  mb-2" id="booking-time">@Model.BookingPitchTimings[0].TimeStart.ToShortTimeString() - @Model.BookingPitchTimings[0].TimeEnd.ToShortTimeString()</p>
+                            <p class="font-weight-semi-bold" id="booking-date">@Model.BookingPitchTimings[0].CreatedDate.Value.ToString("dd MMM yyyy")</p>
+
+                            <div class="pos-absolute pos-top-right text-right m-3">
+                                @if (@Model.BookingPitchTimings[0].IsFree)
+                                {
+                                    <h5 class="text-red mb-2 font-weight-semi-bold" id="booking-price">Free</h5>
+                                }
+                                else
+                                {
+                                    <h5 class="text-red mb-2 font-weight-semi-bold" id="booking-price">@Model.BookingPitchTimings[0].CustomPrice AED</h5>
+                                }
+
+                                <p class="text-grey medium" style="margin-top:-15px">Price / Player</p>
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="font-weight-semi-bold text-red  mb-2" id="booking-time">No Selected Booking</p>
+
+
+                            <div class="pos-absolute pos-top-right text-right m-3">
+                                <h5 class="text-red mb-2 font-weight-semi-bold" id="booking-price">0 AED</h5>
+                                <p class="text-grey medium" style="margin-top:-15px">Price / Player</p>
+                            </div>
+                        }
+                        @if (Model.BookingPitchTimings.Count != 0)
+                        {
+                            <div class="pos-absolute pos-bottom-right text-right mr-3 mb-4 pb-2">
+                                <button class="white border-yellow text-yellow rounded  py-1 px-3" style="margin:5px;margin-right:-5px;" id="cancel-booking">Cancel booking</button>
+                            </div>
+                        }
+                    </div>
+                    <div class="px-3">
+                        <div class="row">
+                            <div class="col-3">
+                                @if (Model.FacilityPitchTimings.Count != 0 && Model.OnLoadPlayerDetails != null)
+                                {
+                                    <p class="mb-0 font-weight-semi-bold" id="booking-player-count">@Model.OnLoadPlayerDetails.Count/@Model.MaxPlayers Players</p>
+                                }
+                                else
+                                {
+                                    <p class="mb-0 font-weight-semi-bold" id="booking-player-count">No Players</p>
+                                }
+                            </div>
+                            <div class="col-9 py-2">
+                                <div class="grey-100 pos-relative">
+                                    <div class="yellow w-70 pt-1 pb-2"></div>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-success" role="progressbar" style="width: 100%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="@Model.MaxPlayers"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="render-player">
+
+                            <div class="row py-3" id="render-player-detail">
+                                @if (@Model.BookingPitchTimings.Count != 0)
+                                {
+                                    @foreach (var player in @Model.OnLoadPlayerDetails)
+                                    {
+                                        <div class="col-sm-4">
+
+                                            <div class="row mx-0 mb-3 align-items-center">
+                                                <div class="col-3 px-0">
+                                                    <img src="@player.ProfileImgUrl" class="w-100 circle">
+                                                </div>
+                                                <div class="col-9 px-2">
+                                                    <p class="medium mb-0">@player.FirstName @player.LastName</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+
+                            </div>
+
+
+                            @* <div class="col-4">
+                                    <div class="row mx-0 mb-3 align-items-center border-yellow rounded captain-tag-pl">
+                                    <div class="col-3 px-0">
+                                    <img src="~/img/rphoto.png" class="w-100 circle">
+                                    </div>
+                                    <div class="col-9 px-2">
+                                    <p class="medium mb-0">David James<br /><span class="small">Captain</span></p>
+                                    </div>
+                                    </div>
+                                    </div>
+                                <div id="render-player">*@
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-3 col-sm-12 px-3 mb-sm-5 mb-lg-0">
+                <div class="white rounded scroll-none h-100" style="margin-bottom:15px">
+                    <div class="p-3">
+                        <h5 class="font-weight-semi-bold">Contact Players</h5>
+                    </div>
+                    <div class="p-3">
+                        <p class="medium">Select players in the list and send them your message.</p>
+                        <textarea rows="7" class="w-100 p-3 border-grey-100 grey-50 rounded-sm" placeholder="Write your message"></textarea>
+                    </div>
+                    <div class="text-center py-sm-3 py-lg-0">
+                        <button class="yellow py-2 px-4 border-0 rounded text-black font-weight-semi-bold">Send a message to all players.</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function(){
+
+            var onLoadTimingId = '@Html.Raw(ViewBag.FacilityPitchTimingId)';
+            $('#facilityPitchTimingId').val(onLoadTimingId);
+        });
+        function viewDetails(timingId, maxPlayers) {
+            //let obj = JSON.parse('@Html.Raw(Json.Serialize(ViewBag.PitchDetail.MappedBookings))');
+
+
+            bindPitchDetails(timingId, maxPlayers);
+        }
+    </script>
+}

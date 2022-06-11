@@ -1,0 +1,517 @@
+﻿@model Sidekick.Model.SetupConfiguration.SetupConfiguration
+
+@{
+    var surface = new Sidekick.Model.Surface();
+    var location = new Sidekick.Model.Location();
+    var teamSize = new Sidekick.Model.SetupConfiguration.Size.TeamSize();
+    var sport = new Sidekick.Model.SportDto();
+    var specialty = new Sidekick.Model.Specialty.Specialty();
+    var goal = new Sidekick.Model.SetupConfiguration.Goals.Goal();
+    var gym = new Sidekick.Model.Gym.Gym();
+    var level = new Sidekick.Model.SetupConfiguration.Level.Level();
+    var role = new Sidekick.Model.FacilityUserType();
+    ViewData["Title"] = "Setup";
+}
+
+<partial name="~/Views/Shared/_GenericModal.cshtml" />
+<partial name="~/Views/Shared/_YesNoModal.cshtml" />
+
+@*Delete Sport Modal*@
+<div class="row">
+    <partial name="~/Views/Setup/PartialViews/_DeleteSport.cshtml" model="sport" />
+</div>
+
+@*Delete Surface Modal*@
+<div class="row">
+    <partial name="~/Views/Setup/PartialViews/_DeleteSurface.cshtml" model="surface" />
+</div>
+
+@*Delete Location Modal*@
+<div class="row">
+    <partial name="~/Views/Setup/PartialViews/_DeleteLocation.cshtml" model="location" />
+</div>
+
+@*Delete Size Modal*@
+<div class="row">
+    <partial name="~/Views/Setup/PartialViews/_DeleteSize.cshtml" model="teamSize" />
+</div>
+
+@*Delete Gym Modal*@
+<div class="row">
+    <partial name="~/Views/Setup/PartialViews/_DeleteGym.cshtml" model="gym" />
+</div>
+
+@*Delete Specialty Modal*@
+<div class="row">
+    <partial name="~/Views/Setup/PartialViews/_DeleteSpecialty.cshtml" model="specialty" />
+</div>
+
+@*Delete Goal Modal*@
+<div class="row">
+    <partial name="~/Views/Setup/PartialViews/_DeleteGoal.cshtml" model="goal" />
+</div>
+
+@*Delete Level Modal*@
+<div class="row">
+    <partial name="~/Views/Setup/PartialViews/_DeleteLevel.cshtml" model="level" />
+</div>
+
+@*Delete Role Modal*@
+<div class="row">
+    <partial name="~/Views/Setup/PartialViews/_DeleteRole.cshtml" model="role" />
+</div>
+
+@*Add Sport*@
+<div class="row">
+    <partial name="~/Views/Setup/PartialViews/_AddSport.cshtml" model="sport" />
+</div>
+
+@*Edit Sport*@
+<div class="row">
+    <partial name="~/Views/Setup/PartialViews/_EditSport.cshtml" model="sport" />
+</div>
+
+@*Add Location*@
+<div class="row">
+    <partial name="~/Views/Setup/PartialViews/_AddLocation.cshtml" model="location" />
+</div>
+
+@*Edit Location*@
+<div class="row">
+    <partial name="~/Views/Setup/PartialViews/_EditLocation.cshtml" model="location" />
+</div>
+
+@*Add Surface*@
+<div class="row">
+    <partial name="~/Views/Setup/PartialViews/_AddSurface.cshtml" model="surface" />
+</div>
+
+@*Edit Surface*@
+<div class="row">
+    <partial name="~/Views/Setup/PartialViews/_EditSurface.cshtml" model="surface" />
+</div>
+
+@*Add Size*@
+<div class="row">
+    <partial name="~/Views/Setup/PartialViews/_AddSize.cshtml" model="teamSize" />
+</div>
+
+@*Edit Size*@
+<div class="row">
+    <partial name="~/Views/Setup/PartialViews/_EditSize.cshtml" model="teamSize" />
+</div>
+
+@*Add Specialities*@
+<div class="row">
+    <partial name="~/Views/Setup/PartialViews/_AddSpecialty.cshtml" model="specialty" />
+</div>
+
+@*Edit Specialities*@
+<div class="row">
+    <partial name="~/Views/Setup/PartialViews/_EditSpecialty.cshtml" model="specialty" />
+</div>
+
+@*Add Gym*@
+<div class="row">
+    <partial name="~/Views/Setup/PartialViews/_AddGym.cshtml" model="gym" />
+</div>
+
+@*Edit Gym*@
+<div class="row">
+    <partial name="~/Views/Setup/PartialViews/_EditGym.cshtml" model="gym" />
+</div>
+
+@*Add Goal*@
+<div class="row">
+    <partial name="~/Views/Setup/PartialViews/_AddGoal.cshtml" model="goal" />
+</div>
+
+@*Edit Goal*@
+<div class="row">
+    <partial name="~/Views/Setup/PartialViews/_EditGoal.cshtml" model="goal" />
+</div>
+
+@*Add Levels*@
+<div class="row">
+    <partial name="~/Views/Setup/PartialViews/_AddLevel.cshtml" model="level" />
+</div>
+
+@*Edit Levels*@
+<div class="row">
+    <partial name="~/Views/Setup/PartialViews/_EditLevel.cshtml" model="level" />
+</div>
+
+@*Add Role*@
+<div class="row">
+    <partial name="~/Views/Setup/PartialViews/_AddRole.cshtml" model="role" />
+</div>
+
+@*Add Role*@
+<div class="row">
+    <partial name="~/Views/Setup/PartialViews/_EditRole.cshtml" model="role" />
+</div>
+
+<div class="row p-3 p-lg-5">
+    <div class="col-sm-12">
+        <nav aria-label="breadcrumb">
+            <h3 class="mb-4">Setup Configuration</h3>
+        </nav>
+        <ul class="nav nav-pills" id="pills-tab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link" id="pills-play-tab" data-toggle="pill" href="#pills-play" role="tab" aria-controls="pills-play" aria-selected="true">Play</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="pills-train-tab" data-toggle="pill" href="#pills-train" role="tab" aria-controls="pills-train" aria-selected="false">Train</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="pills-admin-tab" data-toggle="pill" href="#pills-admin" role="tab" aria-controls="pills-admin" aria-selected="false">Facility admin</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane fade show active" id="pills-play" role="tabpanel" aria-labelledby="pills-play-tab">
+                <div class="card yellow-top">
+                    <partial name="~/Views/Setup/PartialViews/_Sports.cshtml" model="Model" />
+                </div>
+                <div class="card my-3">
+                    <partial name="~/Views/Setup/PartialViews/_Location.cshtml" model="Model" />
+                </div>
+                <div class="card my-3">
+                    <partial name="~/Views/Setup/PartialViews/_Surface.cshtml" model="Model" />
+                </div>
+                <div class="card my-3">
+                    <partial name="~/Views/Setup/PartialViews/_Size.cshtml" model="Model" />
+                </div>
+            </div>
+            <div class="tab-pane fade" id="pills-train" role="tabpanel" aria-labelledby="pills-train-tab">
+                <div class="card yellow-top">
+                    <partial name="~/Views/Setup/PartialViews/_Specialty.cshtml" model="Model" />
+                </div>
+                <div class="card my-3">
+                    <partial name="~/Views/Setup/PartialViews/_Gym.cshtml" model="Model" />
+                </div>
+                <div class="card my-3">
+                    <partial name="~/Views/Setup/PartialViews/_Goal.cshtml" model="Model" />
+                </div>
+                <div class="card my-3">
+                    <partial name="~/Views/Setup/PartialViews/_Level.cshtml" model="Model" />
+                </div>
+            </div>
+            <div class="tab-pane fade" id="pills-admin" role="tabpanel" aria-labelledby="pills-admin-tab">
+                <partial name="~/Views/Setup/PartialViews/_Role.cshtml" model="Model" />
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @*to be transferred in the future in a new js file*@
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            //retainDataTablePages();
+            $("#imageLoadingUploadIconImage").hide();
+            $(".spinner-border").hide();
+
+            var retrieveImage = $("#ImageUrl").val();
+            $("#imgPrevUploadIconImage").attr("src", retrieveImage);
+            $("#imgPrevUploadIconImage").show();
+
+            var ShowModal = $("#ShowGenericModal").val();
+            if (ShowModal == 'true') {
+                $("#GenericModal").modal('show');
+                $("#successIcon").show();
+                $("#successBtn").show();
+            }
+
+            //duplicate entry
+            if (ShowModal == 'false') {
+                $("#GenericModal").modal('show');
+                $("#errorIcon").show();
+                $("#errorBtn").show();
+            }
+        });
+
+        $(function () {
+            $("#errorBtn").on('click', function () {
+                window.location.replace(BASEPATH + "/Setup");
+            });
+
+            $("#successBtn").on('click', function () {
+                window.location.replace(BASEPATH + "/Setup");
+            });
+        });
+
+
+        function editSurface(surfaceId, name) {
+            $('#surface-name').val(name);
+            $('#SurfaceId').val(surfaceId);
+            console.log('test');
+        }
+
+        function editLocation(locationId, name) {
+            $('#location-name').val(name);
+            $('#LocationId').val(locationId);
+            console.log(locationId);
+        }
+        function editSize(sizeId, name) {
+            $('#size-name').val(name);
+            $('#SizeId').val(sizeId);
+        }
+        function editGoal(goalId, name) {
+            $('#goal-name').val(name);
+            $('#GoalId').val(goalId);
+        }
+        function editLevel(levelId, name) {
+            $('#level-name').val(name);
+            $('#LevelId').val(levelId);
+        }
+        function editRole(roleId, name) {
+            $('#role-name').val(name);
+            $('#FacilityRoleId').val(roleId);
+        }
+
+        function editSport(sportId, name, maxPlayers, maxPrice, icon) {
+            $('#name').val(name);
+            $('#SportId').val(sportId);
+            $('#max-players').val(maxPlayers);
+            $('#max-price').val(maxPrice);
+            $('#edited-sport-icon').val(icon);
+            $('#imgPrevEditSportIconImage').attr('src', icon);
+        }
+
+        function editGym(gymId, name, icon, gymAddress, gymLongitude, gymLatitude, areaId) {
+            $('#gym-name').val(name);
+            $('#GymId').val(gymId);
+            $('#gym-address').val(gymAddress);
+            $('#gym-longitude').val(gymLongitude);
+            $('#gym-latitude').val(gymLatitude);
+            $('#edited-gym-icon').val(icon);
+            $('#imgPrevEditGymIconImage').attr('src', icon);
+          
+            $('select').val(areaId).change();
+
+            if (name == "") {
+                $("#AreaId").val(1);
+                $('#addDiv').show()
+                $('#editDiv').hide()
+                $("#gymModalLabel").text("Add Gym Center");
+            }
+            else {
+                $('#addDiv').hide()
+                $('#editDiv').show()
+                $("#gymModalLabel").text("Edit Gym Center");
+            }
+            reloadMap();
+        }
+
+        (function () {
+
+            setTimeout(() => {
+
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function (position) {
+                        var location = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+
+                        var map = new google.maps.Map(
+                            document.getElementById('map'), { zoom: 17, center: location });
+                        currentMarker = new google.maps.Marker({ position: location, map: map });
+
+                        // set default values inside the modal
+                        $('#gym-latitude').val(location.lat);
+                        $('#gym-longitude').val(location.lng);
+
+                        google.maps.event.addListener(map, "click", function (e) {
+
+                            //lat and lng is available in e object
+                            var latLng = e.latLng;
+
+                            // reset marker when clicked on map
+                            var newPosition = { lat: latLng.lat(), lng: latLng.lng() };
+                            currentMarker.setMap(null);
+                            currentMarker = new google.maps.Marker({ position: newPosition, map: map });
+
+                            // set form values inside the modal
+                            $('#gym-latitude').val(newPosition.lat);
+                            $('#gym-longitude').val(newPosition.lng);
+
+                        });
+                    });
+                }
+            }, 1000);
+
+        })();
+
+        function editSpecialty(specialtyId, name, icon) {
+            $('#specialty-name').val(name);
+            $('#SpecialtyId').val(specialtyId);
+            $('#edited-specialty-icon').val(icon);
+            $("#editSpecialtyIconImage").attr("src", icon);
+        }
+
+        function deleteSport(Id, name) {
+            $('#appendDeleteSportText').html('Are you sure you want to delete ' + name + '?');
+            $('#delete-sport-name').val(Id);
+        }
+
+        function deleteSurface(surfaceId, name) {
+            $('#appendDeleteSurfaceText').html('Are you sure you want to delete ' + name + '?');
+            $('#delete-surface-name').val(surfaceId);
+        }
+
+        function deleteLocation(locationId, name) {
+            $('#appendDeleteLocationText').html('Are you sure you want to delete ' + name + '?');
+            $('#delete-location-id').val(locationId);
+        }
+
+        function deleteSize(sizeId, name) {
+            $('#appendDeleteSizeText').html('Are you sure you want to delete ' + name + '?');
+            $('#delete-size-id').val(sizeId);
+        }
+
+        function deleteGym(gymId, name) {
+            $('#appendDeleteGymText').html('Are you sure you want to delete ' + name + '?');
+            $('#delete-gym-name').val(gymId);
+        }
+
+        function deleteSpecialty(specialtyId, name) {
+            $('#appendDeleteSpecialtyText').html('Are you sure you want to delete ' + name + '?');
+            $('#delete-specialty-id').val(specialtyId);
+        }
+
+        function deleteGoal(goalId, name) {
+            $('#appendDeleteGoalText').html('Are you sure you want to delete ' + name + '?');
+            $('#delete-goal-id').val(goalId);
+        }
+
+        function deleteLevel(levelId, name) {
+            $('#appendDeleteLevelText').html('Are you sure you want to delete ' + name + '?');
+            $('#delete-level-id').val(levelId);
+        }
+
+        function deleteRole(facilityRoleId, name) {
+            $('#appendDeleteRoleText').html('Are you sure you want to delete ' + name + '?');
+            $('#delete-role-id').val(facilityRoleId);
+            $('#delete-role-name').val(name);
+        }
+
+        $(function () {
+            $("#UploadIcon_link").on('click', function (e) {
+                e.preventDefault();
+                $("#UploadIconImage").trigger('click');
+            });
+        });
+
+        (function () {
+            $("#EditSportIcon_link").on('click', function (e) {
+                e.preventDefault();
+                $("#EditSportIconImage").trigger('click');
+            });
+        });
+
+        $(function () {
+            $("#EditIcon_link").on('click', function (e) {
+                e.preventDefault();
+                $("#EditSpecialtyIconImage").trigger('click');
+            });
+        });
+
+        $(function () {
+            $("#UploadSportIcon_link").on('click', function (e) {
+                e.preventDefault();
+                $("#UploadSportIconImage").trigger('click');
+            });
+        });
+
+        $(function () {
+            $("#UploadGymIcon_link").on('click', function (e) {
+                e.preventDefault();
+                $("#UploadGymIconImage").trigger('click');
+            });
+        });
+
+        $(function () {
+            $("#EditGymIcon_link").on('click', function (e) {
+                e.preventDefault();
+                $("#EditGymIconImage").trigger('click');
+            });
+        });
+
+        $("#EditSpecialtyIconImage").change(function () {
+            validateFacilityImages("EditSpecialtyIconImage");
+        });
+
+        $("#EditSportIconImage").change(function () {
+            validateFacilityImages("EditSportIconImage");
+        });
+
+        $("#UploadIconImage").change(function () {
+            validateFacilityImages("UploadIconImage");
+        });
+
+        $("#UploadSportIconImage").change(function () {
+            validateFacilityImages("UploadSportIconImage");
+        });
+
+        $("#UploadGymIconImage").change(function () {
+            validateFacilityImages("UploadGymIconImage");
+        });
+
+        $("#EditGymIconImage").change(function () {
+            validateFacilityImages("EditGymIconImage");
+        });
+
+        $("#pills-play-tab").on('click', function () {
+            sessionStorage.setItem("clicked-setup-tab", 0);
+        });
+
+        $("#pills-train-tab").on('click', function () {
+            sessionStorage.setItem("clicked-setup-tab", 1);
+        });
+
+        $("#pills-admin-tab").on('click', function () {
+            sessionStorage.setItem("clicked-setup-tab", 2);
+        });
+
+        $(document).ready(function () {
+            var activeTab = sessionStorage.getItem("clicked-setup-tab");
+            if (activeTab == 0) {
+                $("#pills-play-tab").addClass('active');
+                $("#pills-play").addClass('active');
+                $("#pills-play").addClass('show');
+                $("#pills-train-tab").removeClass('active');
+                $("#pills-train").removeClass('active');
+                $("#pills-train").removeClass('show');
+                $("#pills-admin-tab").removeClass('active');
+                $("#pills-admin").removeClass('active');
+                $("#pills-admin").removeClass('show');
+            }
+            else if (activeTab == 1) {
+                $("#pills-play-tab").removeClass('active');
+                $("#pills-play").removeClass('active');
+                $("#pills-play").removeClass('show');
+                $("#pills-train-tab").addClass('active');
+                $("#pills-train").addClass('active');
+                $("#pills-train").addClass('show');
+                $("#pills-admin-tab").removeClass('active');
+                $("#pills-admin").removeClass('active');
+                $("#pills-admin").removeClass('show');
+            }
+            else {
+                $("#pills-play-tab").removeClass('active');
+                $("#pills-play").removeClass('active');
+                $("#pills-play").removeClass('show');
+                $("#pills-sports-tab").removeClass('active');
+                $("#pills-sports").removeClass('active');
+                $("#pills-sports").removeClass('show');
+                $("#pills-admin-tab").addClass('active');
+                $("#pills-admin").addClass('active');
+                $("#pills-admin").addClass('show');
+            }
+        });
+    </script>
+}

@@ -1,0 +1,224 @@
+﻿@using Sidekick.Admin.Helpers
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor _httpCtxtAc;
+@using Sidekick.Model;
+
+@{
+    ISession session = _httpCtxtAc.HttpContext.Session;
+
+    var _adminUCtxt = session.GetObjectFromJson<AdminUserContext>("adminUserContext");
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin</title>
+    <link rel="icon" type="image/png" href="~/favicon.png" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+    <link rel="stylesheet" href="~/mdb/css/mdb.min.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/mdb/css/style.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/mdb/css/datatables.min.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/mdb/css/wysiwyg.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/mdb/css/jquery-datepicker.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/mdb/css/bootstrap-multiselect.css" asp-append-version="true" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css"/>
+</head>
+<body>
+    <div class="loaderbody" id="loaderbody">
+        <div class="loader"></div>
+    </div>
+    <div class="wrapper d-flex align-items-stretch">
+        <nav id="sidebar" class="navbar-fixed-left">
+            <div class="custom-menu">
+                <button type="button" id="sidebarCollapse" class="btn btn-primary">
+                    <i class="fa fa-bars"></i>
+                    <span class="sr-only">Toggle Menu</span>
+                </button>
+            </div>
+
+            <div class="pt-3 pb-3 scroll-side">
+                <img src="~/img/logo.svg" class="mx-auto d-block" style="width: 65%;" />
+
+                <ul class="list-unstyled components mt-3">
+                    <li class="@(ViewBag.Current == "Dashboard" ? "active" : "")">
+                        <a href="~/Admin"><span class="fas fa-th mr-3 ml-3"></span>Dashboard</a>
+                    </li>
+                    <li class="@(ViewBag.Current == "Event Management" ? "active" : "")">
+                        <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><span class="fas fa-store-alt mr-3 ml-3"></span> Event Management</a>
+                        <ul class="collapse list-unstyled" id="pageSubmenu">
+                            <li>
+                                <a href="~/Coaching" class="pl-5">Train Bookings</a>
+                            </li>
+                            <li>
+                                <a href="~/BookingPitch" class="pl-5">Play Bookings</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="@(ViewBag.Current == "User Management" ? "active" : "")">
+                        <a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><span class="fas fa-users mr-3 ml-3"></span> User Management</a>
+                        <ul class="collapse list-unstyled" id="pageSubmenu2">
+                            <li>
+                                <a href="~/Player" class="pl-5">Player List</a>
+                            </li>
+                            <li>
+                                <a href="~/Coach" class="pl-5">Coach List</a>
+                            </li>
+                            <li>
+                                <a href="~/Facility" class="pl-5">Facilities List</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="@(ViewBag.Current == "Commission" ? "active" : "")">
+                        <a href="~/Commission"><span class="fas fa-file-invoice-dollar mr-3 ml-3"></span>Commissions</a>
+                    </li>
+                    <li class="@(ViewBag.Current == "Payment" ? "active" : "")">
+                        <a href="~/Payment"><span class="fas fa-credit-card mr-3 ml-3"></span>Payments</a>
+                    </li>
+                    <li class="@(ViewBag.Current == "Setup" ? "active" : "")">
+                        <a href="~/Setup"><span class="fas fa-cogs mr-3 ml-3"></span>Setup Configuration</a>
+                    </li>
+                    <li @(ViewBag.Current == "Banners" ? "active" : "")>
+                        <a href="#pageSubmenu4" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><span class="fas fa-percent mr-3 ml-3"></span>Banners & Offers</a>
+                        <ul class="collapse list-unstyled" id="pageSubmenu4">
+                            <li>
+                                <a href="~/Banner" class="pl-5">Banners</a>
+                            </li>
+                            <li>
+                                <a href="~/Promo" class="pl-5">Promos</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="@(ViewBag.Current == "Request" ? "active" : "")">
+                        <a href="~/Request"><span class="fas fa-comments mr-3 ml-3"></span>Request</a>
+                    </li>
+                    <li class="@(ViewBag.Current == "FAQ" ? "active" : "")">
+                        <a href="#pageSubmenu3" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><span class="fas fa-question-circle mr-3 ml-3"></span> FAQs & Legal Documents</a>
+                        <ul class="collapse list-unstyled" id="pageSubmenu3">
+                            <li>
+                                <a href="~/FAQs" class="pl-5">FAQs</a>
+                            </li>
+                            <li>
+                                <a href="~/FAQs/TermsAndConditions" class="pl-5">Terms and Conditions</a>
+                            </li>
+                            <li>
+                                <a href="~/FAQs/PrivacyPolicy" class="pl-5">Policies</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+            </div>
+        </nav>
+
+        <!-- Page Content  -->
+        <div id="content">
+            <!-- Navbar -->
+            <nav class="navbar navbar-expand-md navbar-light navbar-custom navbar-fixed-top">
+
+                <!-- Links -->
+                <div class="collapse navbar-collapse" id="basicExampleNav4">
+
+                    <!-- Right -->
+                    <ul class="navbar-nav ml-auto nav-flex-icons float-right">
+                        <li class="nav-item avatar dropdown log-out">
+                            <a class="nav-link dropdown-toggle text-white" id="navbarDropdownMenuLink-55" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <div class="row d-flex">
+
+                                    @if (_adminUCtxt != null)
+                                    {
+                                        if (string.IsNullOrEmpty(_adminUCtxt.AdminInfo.ImageUrl))
+                                        {
+                                            <div class="col-3">
+                                                <img src="~/img/User_Default_Logo.jpg" class="rounded-circle z-depth-0" style=" width: 35px; height: 35px;">
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="col-3">
+                                                <img src="@_adminUCtxt.AdminInfo.ImageUrl" class="rounded-circle z-depth-0" style=" width: 35px; height: 35px;">
+                                            </div>
+                                        }
+
+                                        <div class="col text-capitalize">
+                                            <span class="yellow-text">@_adminUCtxt.AdminInfo.FirstName</span><br />
+
+                                            @if (_adminUCtxt.AdminInfo.AdminType == EAdminType.SUPERADMIN)
+                                            {
+                                                <small>Super Administrator</small>
+                                            }
+                                            else if (_adminUCtxt.AdminInfo.AdminType == EAdminType.SUPERADMIN)
+                                            {
+                                                <small>Administrator</small>
+                                            }
+                                            else if (_adminUCtxt.AdminInfo.AdminType == EAdminType.ORGANIZER)
+                                            {
+                                                <small>Organizer</small>
+                                            }
+                                            else if (_adminUCtxt.AdminInfo.AdminType == EAdminType.STAFF)
+                                            {
+                                                <small>Staff</small>
+                                            }
+                                            else
+                                            {
+                                                <small class="text-danger">Invalid User Type</small>
+                                            }
+                                        </div>
+                                    }
+
+                                </div>
+
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-lg-right dropdown-secondary"
+                                 aria-labelledby="navbarDropdownMenuLink-55">
+                                <a class="dropdown-item text-danger" href="~/Home/Logout">Logout</a>
+                            </div>
+                        </li>
+                    </ul>
+
+                </div>
+                <!-- Links -->
+
+            </nav>
+            <!-- Navbar -->
+
+            <div class="container pb-1">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="~/mdb/js/jquery.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/mdb/js/popper.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/mdb/js/bootstrap.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/mdb/js/mdb.min.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script type="text/javascript" src="~/mdb/js/wysiwyg.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/mdb/js/jquery-datepicker.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/mdb/js/datatables.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/mdb/js/bootstrap-multiselect.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/js/site.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/js/facility.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/js/promo.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/js/dashboard.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/js/commission.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/js/request.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/js/userManagement.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/js/playBookings.js" asp-append-version="true"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD4dXCD7qIUhWDCs-N2PZjFxe8v6l5hRWE" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        $(window).on('load', function () {
+            $('#loaderbody').fadeOut();
+        });
+    </script>
+
+    @RenderSection("Scripts", required: false)
+
+</body>
+</html>

@@ -1,0 +1,53 @@
+﻿@using Sidekick.Model.Enums;
+@model IEnumerable<Sidekick.Model.Promo.Promo>;
+@{ 
+    int ctr = 0;
+}
+
+<table class="table table-hover table-bordered table-striped display" id="dtMainList">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col" class="w-auto font-weight-bold">ID</th>
+            <th scope="col" class="w-auto font-weight-bold">Promo Name</th>
+            <th scope="col" class="w-auto font-weight-bold">Promo Code</th>
+            <th scope="col" class="w-auto font-weight-bold">Promo Type</th>
+            <th scope="col" class="w-auto font-weight-bold">Amount</th>
+            <th scope="col" class="w-auto font-weight-bold">Date From</th>
+            <th scope="col" class="w-auto font-weight-bold">Date To</th>
+            <th scope="col" class="w-auto font-weight-bold">Status</th>
+            <th scope="col" class="w-auto font-weight-bold">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (ViewBag.Play != null && ViewBag.Play.Count != 0)
+        {
+            foreach (var promo in ViewBag.Play)
+            {
+                ctr++;
+                <tr>
+                    <td>@ctr</td>
+                    <td>@promo.Name</td>
+                    <td>@promo.Code</td>
+                    <td>@promo.PromoType</td>
+                    <td>@promo.Amount</td>
+                    <td>@promo.StartsFrom.ToShortDateString()</td>
+                    <td>@promo.ValidTo.ToShortDateString()</td>
+                    <td>
+                        @if (promo.IsActive)
+                        {
+                            <p class="badge badge-success text-capitalize">ACTIVE</p>
+                        }
+                        else
+                        {
+                            <p class="badge badge-light text-capitalize">INACTIVE</p>
+                        }
+                    </td>
+                    <td class="text-center">
+                        <a href="@Url.Action("Add", "Promo", new {promoId = promo.PromoId})"><i class="fas fa-pen fa-lg mr-3 text-warning"></i></a>
+                        <a href="@Url.Action("DeletePromo", "Promo", new {promoId = promo.PromoId})"><i class="fas fa-times fa-lg text-dark"></i></a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

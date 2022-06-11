@@ -1,0 +1,140 @@
+﻿@using Sidekick.Model
+@model IEnumerable<FacilityPlayer>
+
+@{
+    ViewData["Title"] = "Players List";
+    int counter = 0;
+}
+
+<partial name="~/Views/Shared/_GenericModal.cshtml" />
+<partial name="~/Views/Shared/_YesNoModal.cshtml" />
+
+<div class="row p-3 p-lg-5">
+    <div class="col-sm-12">
+        <nav aria-label="breadcrumb">
+            <h3 class="mb-4">Players List</h3>
+        </nav>
+        <div class="col-sm-12 d-flex justify-content-end mb-3">
+             <a class="text-black-50 btn-padding " href="@Url.Action("Export","Player")"><i class="fas fa-file-excel fa-2x" style="color:#28a745"></i></a>
+            <a class="btn login-button border-0 btn-padding" href="~/Player/Add">Add Player</a>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table cellspacing="5" cellpadding="5">
+                                <tbody>
+                                    <tr>
+                                        <td><b>Filter by Dates:</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align:center"><b>From</b></td>
+                                        <td><input type="text" class="form-control" id="minDate" name="minDate"></td>
+                                        <td class=""><b>To</b></td>
+                                        <td><input type="text" class="form-control" id="maxDate" name="maxDate"></td>
+                                    </tr>
+
+
+                                </tbody>
+                            </table>
+                            <table class="table table-hover table-bordered table-striped display" id="dtMainList">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th scope="col" class="w-auto font-weight-bold">User No.</th>
+                                        <th scope="col" class="w-auto font-weight-bold">Profile</th>
+                                        <th scope="col" class="w-auto font-weight-bold">Name</th>
+                                        <th scope="col" class="w-auto font-weight-bold">Email</th>
+                                        <th scope="col" class="w-auto font-weight-bold">Mobile No.</th>
+                                        <th scope="col" class="w-auto font-weight-bold">Date Created</th>
+                                        <th scope="col" class="w-auto font-weight-bold">Last Booking</th>
+                                        @*<th scope="col" class="w-auto font-weight-bold">Status</th>*@
+                                        <th scope="col" class="w-auto font-weight-bold">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model != null)
+                                    {
+                                        foreach (var item in Model)
+                                        {
+                                            counter++;
+                                    <tr>
+                                        <td>@counter</td>
+                                        <td><img src="@item.ProfileImgUrl" class="rounded-circle img-fluid tables-profile-image" /></td>
+                                        <td>@item.FirstName @item.LastName</td>
+                                        <td>@item.Email</td>
+                                        <td>@item.ContactNumber</td>
+                                        <td>@item.DateCreated.GetValueOrDefault().ToString("dd/MM/yyyy")</td>
+                                        @if (item.LastBooking != null)
+                                        {
+                                            <td>@item.LastBooking.GetValueOrDefault().ToString("dd/MM/yyyy")</td>
+                                        }
+                                        else
+                                        {
+                                            <td>-</td>
+                                        }
+
+                                        @* <td>
+            @if (item.IsEnabled == true)
+            {
+                <p class="badge badge-success text-capitalize">ACTIVE</p>
+            }
+            else
+            {
+                <p class="badge badge-light text-capitalize">INACTIVE</p>
+            }
+        </td>*@
+
+                                        <td class="text-center">
+                                            <input type="hidden" id="player-userId" value="@item.UserId" />
+                                            <a href="~/Player/Edit?u=@item.UserId"><i class="fas fa-pen fa-lg mr-3 text-warning"></i></a>
+                                            <a class="btn-delete-player"><i class="fas fa-times fa-lg text-dark"></i></a>
+                                        </td>
+                                    </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{ 
+    <script type="text/javascript">
+        $(document).ready(function () {
+            renderDatePicker();
+            retainDataTablePages();
+
+            var ShowModal = $("#ShowGenericModal").val();
+            if (ShowModal == 'true') {
+                $("#GenericModal").modal('show');
+                $("#successIcon").show();
+                $("#successBtn").hide();
+                $("#successAddPlayerBtn").show();
+            }
+
+            //duplicate entry
+            if (ShowModal == 'false') {
+                $("#GenericModal").modal('show');
+                $("#errorIcon").show();
+                $("#errorBtn").hide();
+                $("#errorAddPlayerBtn").show();
+            }
+        });
+
+        $(function () {
+            $("#errorAddPlayerBtn").on('click', function () {
+                window.location.replace(BASEPATH + "/Player");
+            });
+
+            $("#successAddPlayerBtn").on('click', function () {
+                window.location.replace(BASEPATH + "/Player");
+            });
+        });
+    </script>
+}
